@@ -21,7 +21,9 @@ import {
   Shield,
   X,
   School,
-  Sparkles
+  Sparkles,
+  ClipboardList,
+  BarChart3
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -50,6 +52,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: t('nav.settings'), href: '/settings', icon: Settings },
   ];
 
+  navItems.push({ name: t('nav.gradebook'), href: '/gradebook', icon: ClipboardList });
+  navItems.push({ name: t('nav.myGrades'), href: '/my-grades', icon: BarChart3 });
   navItems.push({ name: t('nav.aiAssistant'), href: '/ai-assistant', icon: Sparkles });
 
   if (isAdmin) {

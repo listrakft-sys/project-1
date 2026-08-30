@@ -13,6 +13,8 @@ export const es = {
     settings: 'Configuración',
     admin: 'Administración',
     aiAssistant: 'Asistente de IA',
+    gradebook: 'Cuaderno de Notas',
+    myGrades: 'Mis Calificaciones',
   },
   auth: {
     login: 'Iniciar Sesión',

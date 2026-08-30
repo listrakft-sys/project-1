@@ -237,6 +237,8 @@ model Class {
   schedules      Schedule[]
   homework       Homework[]
   announcements  Announcement[]
+  grades         Grade[]
+  attendance     Attendance[]
 
   @@unique([schoolId, name])
   @@index([schoolId])
@@ -258,6 +260,8 @@ model Subject {
   teachers    Teacher[]
   lessons     Lesson[]
   homework    Homework[]
+  grades      Grade[]
+  attendance  Attendance[]
 
   @@unique([schoolId, code])
   @@index([schoolId])
@@ -279,6 +283,8 @@ model Teacher {
   subjects       Subject[]
   lessons        Lesson[]
   homework       Homework[]
+  grades         Grade[]
+  attendance     Attendance[]
 
   @@index([schoolId])
   @@index([userId])
@@ -302,6 +308,8 @@ model Student {
 
   homeworkSubmissions HomeworkSubmission[]
   reports             Report[]
+  grades              Grade[]
+  attendance          Attendance[]
 
   @@index([schoolId])
   @@index([classId])
@@ -619,4 +627,78 @@ model AIMessage {
 
   @@index([conversationId])
   @@index([role])
+}
+
+// ── Gradebook (Журнал оценок) ──────────────────────────────────
+
+enum GradeType {
+  ORAL        // устный ответ
+  WRITTEN     // письменная работа
+  TEST        // контрольная
+  QUIZ        // тест
+  HOMEWORK    // домашняя работа
+  PROJECT     // проект
+  PARTICIPATION // участие
+  FINAL       // итоговая
+}
+
+enum AttendanceStatus {
+  PRESENT     // присутствовал
+  ABSENT      // отсутствовал
+  LATE        // опоздал
+  EXCUSED     // отсутствовал по уважительной причине
+  EARLY_LEAVE // ушёл раньше
+}
+
+model Grade {
+  id          String     @id @default(uuid())
+  studentId   String
+  student     Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String
+  teacher     Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  classId     String
+  class       Class      @relation(fields: [classId], references: [id], onDelete: Cascade)
+  lessonId    String?    // ссылка на урок (опционально)
+  type        GradeType  @default(WRITTEN)
+  score       Float      // полученный балл
+  maxScore    Float      @default(10) // максимальный балл
+  weight      Float      @default(1.0) // вес оценки (для средневзвешенной)
+  comment     String?    // комментарий учителя
+  date        DateTime   @default(now()) // дата выставления
+  term        String     @default("1") // четверть/семестр: "1", "2", "3", "4"
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([studentId])
+  @@index([subjectId])
+  @@index([classId])
+  @@index([teacherId])
+  @@index([date])
+  @@index([term])
+}
+
+model Attendance {
+  id          String          @id @default(uuid())
+  studentId   String
+  student     Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  classId     String
+  class       Class           @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId   String?
+  subject     Subject?        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String?
+  teacher     Teacher?        @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  lessonId    String?         // ссылка на урок
+  status      AttendanceStatus @default(PRESENT)
+  date        DateTime         @default(now()) // дата занятия
+  note        String?          // комментарий (опоздал на N минут и т.д.)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@unique([studentId, date, classId])
+  @@index([studentId])
+  @@index([classId])
+  @@index([date])
+  @@index([status])
 }

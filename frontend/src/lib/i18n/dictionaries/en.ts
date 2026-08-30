@@ -15,6 +15,8 @@ export const en: Dictionary = {
     settings: 'Settings',
     admin: 'Admin',
     aiAssistant: 'AI Assistant',
+    gradebook: 'Gradebook',
+    myGrades: 'My Grades',
   },
   auth: {
     login: 'Log In',
