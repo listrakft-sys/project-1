@@ -200,6 +200,54 @@
     .float-icon:nth-child(4) { bottom: 25%; right: 8%; animation-delay: 2s; }
     .float-icon:nth-child(5) { top: 50%; left: 5%; animation-delay: 4s; }
 
+    /* ===== CHALK WRITING ===== */
+    .chalk-art {
+      position: absolute; z-index: 0;
+      font-family: 'Caveat', cursive;
+      color: rgba(240, 244, 240, 0.18);
+      pointer-events: none;
+      user-select: none;
+      text-shadow: 0 0 1px rgba(255,255,255,0.1);
+    }
+    .chalk-art.bright { color: rgba(240, 244, 240, 0.3); }
+    .chalk-yellow { color: rgba(245, 183, 61, 0.25); }
+    .chalk-green { color: rgba(74, 157, 94, 0.3); }
+    .chalk-blue { color: rgba(58, 123, 181, 0.3); }
+    .chalk-pink { color: rgba(232, 122, 157, 0.25); }
+
+    @keyframes chalk-flicker {
+      0%, 100% { opacity: 1; }
+      47% { opacity: 0.92; }
+      48% { opacity: 0.78; }
+      49% { opacity: 0.92; }
+      92% { opacity: 1; }
+      93% { opacity: 0.85; }
+      94% { opacity: 1; }
+    }
+    .chalk-flicker { animation: chalk-flicker 7s ease-in-out infinite; }
+
+    .chalk-doodle {
+      position: absolute; z-index: 0;
+      opacity: 0.15; pointer-events: none;
+    }
+    .chalk-svg path, .chalk-svg line, .chalk-svg circle, .chalk-svg ellipse, .chalk-svg polygon {
+      stroke: rgba(240, 244, 240, 0.25);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .chalk-svg.yellow path { stroke: rgba(245, 183, 61, 0.3); }
+    .chalk-svg.green path, .chalk-svg.green line { stroke: rgba(74, 157, 94, 0.3); }
+    .chalk-svg.blue path { stroke: rgba(58, 123, 181, 0.3); }
+
+    .chalk-eq {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 22px; color: rgba(240, 244, 240, 0.2);
+      position: absolute; z-index: 0; pointer-events: none;
+      white-space: nowrap;
+    }
+
     .hero-stats {
       display: flex; gap: 40px; justify-content: center; margin-top: 64px;
       flex-wrap: wrap;
@@ -437,11 +485,107 @@
 
 <!-- ===== HERO — CHALKBOARD ===== -->
 <section class="hero" id="top">
+  <!-- Floating school icons -->
   <div class="float-icon">📚</div>
   <div class="float-icon">✏️</div>
   <div class="float-icon">📐</div>
   <div class="float-icon">🔬</div>
   <div class="float-icon">🎒</div>
+
+  <!-- ===== CHALK WRITING ON THE BOARD ===== -->
+
+  <!-- Top-left: lesson header -->
+  <div class="chalk-art bright chalk-flicker" style="top: 80px; left: 48px; font-size: 24px; transform: rotate(-2deg);">
+    TEMA DEL DÍA ↓
+  </div>
+  <div class="chalk-art" style="top: 112px; left: 52px; font-size: 42px; transform: rotate(-1deg);">
+    Plataforma Escolar 🎓
+  </div>
+
+  <!-- Math equation top-right -->
+  <div class="chalk-eq" style="top: 90px; right: 56px; transform: rotate(3deg);">
+    E = mc²
+  </div>
+  <div class="chalk-eq chalk-flicker" style="top: 130px; right: 48px; transform: rotate(-2deg); font-size: 18px; color: rgba(245,183,61,0.2);">
+    ∫ f(x)dx = F(x) + C
+  </div>
+
+  <!-- Pythagorean theorem doodle (SVG) -->
+  <svg class="chalk-doodle chalk-svg yellow" style="top: 150px; right: 70px; width: 90px; height: 90px; transform: rotate(5deg);" viewBox="0 0 100 100">
+    <path d="M 20 80 L 80 80 L 20 20 Z" />
+    <path d="M 20 20 L 80 80" stroke-dasharray="4,3" />
+    <text x="30" y="72" fill="rgba(245,183,61,0.2)" font-size="10" font-family="Caveat">a²</text>
+    <text x="55" y="50" fill="rgba(245,183,61,0.2)" font-size="10" font-family="Caveat">b²</text>
+    <text x="48" y="92" fill="rgba(245,183,61,0.2)" font-size="9" font-family="Caveat">c²=a²+b²</text>
+  </svg>
+
+  <!-- Left side: class schedule written in chalk -->
+  <div class="chalk-art" style="top: 200px; left: 40px; font-size: 16px; line-height: 2.2; transform: rotate(-1deg);">
+    <div style="opacity:0.7">— Horario —</div>
+    <div>08:00 · Matemáticas</div>
+    <div>09:00 · Ciencias</div>
+    <div>10:00 · Historia</div>
+    <div>11:00 · Recreo ☀</div>
+    <div>12:00 · Lengua</div>
+  </div>
+
+  <!-- Doodle: smiley face -->
+  <svg class="chalk-doodle chalk-svg" style="top: 180px; left: 180px; width: 60px; height: 60px;" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="40" />
+    <circle cx="38" cy="42" r="3" fill="rgba(240,244,240,0.15)" stroke="none" />
+    <circle cx="62" cy="42" r="3" fill="rgba(240,244,240,0.15)" stroke="none" />
+    <path d="M 35 60 Q 50 72 65 60" />
+  </svg>
+
+  <!-- Doodle: arrow pointing to title -->
+  <svg class="chalk-doodle chalk-svg green" style="top: 250px; left: 200px; width: 120px; height: 60px; transform: rotate(-15deg);" viewBox="0 0 120 60">
+    <path d="M 10 30 Q 40 10 80 30" />
+    <path d="M 80 30 L 70 20 M 80 30 L 70 40" />
+  </svg>
+
+  <!-- Right side: student note -->
+  <div class="chalk-art chalk-flicker" style="bottom: 120px; right: 50px; font-size: 18px; text-align: right; transform: rotate(2deg);">
+    <div style="opacity:0.7">— Recordatorio —</div>
+    <div>✓ Tarea de Matemáticas</div>
+    <div>✓ Leer cap. 5 Historia</div>
+    <div>✗ Entregar proyecto</div>
+    <div>✓ Mensaje al profesor</div>
+  </div>
+
+  <!-- Doodle: star -->
+  <svg class="chalk-doodle chalk-svg yellow" style="bottom: 180px; right: 200px; width: 50px; height: 50px; transform: rotate(10deg);" viewBox="0 0 50 50">
+    <polygon points="25,5 30,18 44,18 33,28 37,42 25,34 13,42 17,28 6,18 20,18" />
+  </svg>
+
+  <!-- Bottom-left: chemical formula doodle -->
+  <div class="chalk-eq" style="bottom: 100px; left: 48px; transform: rotate(-3deg); font-size: 16px;">
+    H₂O → 🌊 &nbsp; CO₂ → 🌿
+  </div>
+
+  <!-- Doodle: DNA helix (simple) -->
+  <svg class="chalk-doodle chalk-svg blue" style="bottom: 160px; left: 100px; width: 50px; height: 80px; transform: rotate(8deg);" viewBox="0 0 50 80">
+    <path d="M 10 10 Q 40 25 10 40 Q 40 55 10 70" />
+    <path d="M 40 10 Q 10 25 40 40 Q 10 55 40 70" />
+    <line x1="15" y1="15" x2="35" y2="15" />
+    <line x1="35" y1="30" x2="15" y2="30" />
+    <line x1="15" y1="45" x2="35" y2="45" />
+    <line x1="35" y1="60" x2="15" y2="60" />
+  </svg>
+
+  <!-- Random chalk scribbles -->
+  <svg class="chalk-doodle chalk-svg" style="top: 350px; right: 30px; width: 80px; height: 40px; transform: rotate(-5deg); opacity: 0.1;" viewBox="0 0 80 40">
+    <path d="M 5 20 Q 15 5 25 20 Q 35 35 45 20 Q 55 5 65 20 Q 70 25 75 20" />
+  </svg>
+
+  <!-- Underline under "Escolar" -->
+  <svg class="chalk-doodle chalk-svg yellow" style="top: 300px; left: 50%; margin-left: -60px; width: 120px; height: 12px;" viewBox="0 0 120 12">
+    <path d="M 5 6 Q 30 2 60 6 Q 90 10 115 5" stroke-width="3" />
+  </svg>
+
+  <!-- "¡Bienvenidos!" handwritten at the very bottom -->
+  <div class="chalk-art chalk-flicker" style="bottom: 20px; left: 50%; transform: translateX(-50%) rotate(-1deg); font-size: 28px; color: rgba(245,183,61,0.2);">
+    ¡Bienvenidos a la clase! ✏️
+  </div>
 
   <div class="hero-content">
     <div class="chalk-badge animate-fade-up">
