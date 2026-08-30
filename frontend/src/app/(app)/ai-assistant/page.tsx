@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import apiClient from '@/lib/api/client';
 import { useAuthStore } from '@/lib/store/auth';
+import { useTranslation } from '@/lib/i18n';
 
 // ── Types ──────────────────────────────────────────────
 interface AIMessage {
@@ -22,16 +23,9 @@ interface AIConversation {
   updatedAt: string;
 }
 
-const CHAT_TYPES = [
-  { value: 'GENERAL', label: '🤖 General', desc: 'Preguntas generales y ayuda' },
-  { value: 'STUDENT_HELP', label: '📚 Ayuda estudiantil', desc: 'Tutor y explicaciones' },
-  { value: 'HOMEWORK_HELP', label: '📝 Tareas', desc: 'Guía paso a paso' },
-  { value: 'LESSON_EXPLAIN', label: '📖 Lecciones', desc: 'Explicación de temas' },
-  { value: 'TEACHER_ASSIST', label: '👨‍🏫 Asistente docente', desc: 'Planes y materiales' },
-];
-
 export default function AIAssistantPage() {
-  const { user } = useAuthStore();
+  const { t, user: authUser } = useAuthStore();
+  const { t: tr } = useTranslation();
   const [conversations, setConversations] = useState<AIConversation[]>([]);
   const [activeConv, setActiveConv] = useState<AIConversation | null>(null);
   const [messages, setMessages] = useState<AIMessage[]>([]);
@@ -44,7 +38,14 @@ export default function AIAssistantPage() {
   const [error, setError] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // ── Load conversations ─────────────────────────────────
+  const CHAT_TYPES = [
+    { value: 'GENERAL', label: tr('ai.general') },
+    { value: 'STUDENT_HELP', label: tr('ai.studentHelp') },
+    { value: 'HOMEWORK_HELP', label: tr('ai.homeworkHelp') },
+    { value: 'LESSON_EXPLAIN', label: tr('ai.lessonExplain') },
+    { value: 'TEACHER_ASSIST', label: tr('ai.teacherAssist') },
+  ];
+
   useEffect(() => {
     loadConversations();
   }, []);
@@ -69,7 +70,7 @@ export default function AIAssistantPage() {
       setActiveConv(res.data.data);
       setMessages(res.data.data.messages || []);
     } catch (err) {
-      setError('Error al cargar la conversación');
+      setError('Error loading conversation');
     }
   };
 
@@ -89,7 +90,7 @@ export default function AIAssistantPage() {
       setNewChatTitle('');
       loadConversations();
     } catch (err) {
-      setError('Error al crear conversación');
+      setError('Error creating conversation');
     } finally {
       setCreating(false);
     }
@@ -98,7 +99,7 @@ export default function AIAssistantPage() {
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
     if (!activeConv) {
-      setError('Crea o selecciona una conversación primero');
+      setError(tr('ai.noConversations'));
       return;
     }
 
@@ -123,8 +124,7 @@ export default function AIAssistantPage() {
       setMessages((prev) => [...prev, aiMessage]);
       loadConversations();
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error al enviar mensaje');
-      // Remove the temp user message on error
+      setError(err.response?.data?.error?.message || 'Error sending message');
       setMessages((prev) => prev.filter((m) => m.id !== userMsg.id));
     } finally {
       setLoading(false);
@@ -140,7 +140,7 @@ export default function AIAssistantPage() {
         setMessages([]);
       }
     } catch (err) {
-      setError('Error al eliminar conversación');
+      setError('Error deleting conversation');
     }
   };
 
@@ -164,14 +164,14 @@ export default function AIAssistantPage() {
             onClick={() => setShowNewChat(!showNewChat)}
             className="w-full px-4 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition flex items-center justify-center gap-2"
           >
-            <span className="text-lg">+</span> Nueva Conversación
+            <span className="text-lg">+</span> {tr('ai.newChat')}
           </button>
 
           {showNewChat && (
             <div className="mt-3 space-y-2">
               <input
                 type="text"
-                placeholder="Título (opcional)"
+                placeholder={tr('ai.newChat')}
                 value={newChatTitle}
                 onChange={(e) => setNewChatTitle(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
@@ -192,7 +192,7 @@ export default function AIAssistantPage() {
                 disabled={creating}
                 className="w-full px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700 transition disabled:opacity-50"
               >
-                {creating ? 'Creando...' : 'Crear'}
+                {creating ? '...' : tr('common.create')}
               </button>
             </div>
           )}
@@ -201,7 +201,7 @@ export default function AIAssistantPage() {
         <div className="flex-1 overflow-y-auto p-2">
           {conversations.length === 0 ? (
             <p className="text-center text-gray-400 text-sm mt-8 px-4">
-              No hay conversaciones. ¡Crea una para empezar!
+              {tr('ai.noConversations')}
             </p>
           ) : (
             conversations.map((conv) => (
@@ -250,10 +250,8 @@ export default function AIAssistantPage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center max-w-md">
               <div className="text-6xl mb-4">🤖</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">AI Assistant</h2>
-              <p className="text-gray-500">
-                Crea una nueva conversación para empezar a chatear con el asistente de IA.
-              </p>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">{tr('ai.title')}</h2>
+              <p className="text-gray-500">{tr('ai.description')}</p>
               <div className="mt-6 grid grid-cols-2 gap-3">
                 {CHAT_TYPES.map((t) => (
                   <div
@@ -265,7 +263,6 @@ export default function AIAssistantPage() {
                     className="p-3 border border-gray-200 rounded-xl cursor-pointer hover:border-indigo-300 hover:bg-indigo-50 transition text-left"
                   >
                     <p className="font-semibold text-sm text-gray-700">{t.label}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{t.desc}</p>
                   </div>
                 ))}
               </div>
@@ -287,7 +284,7 @@ export default function AIAssistantPage() {
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               {messages.length === 0 && (
                 <div className="text-center text-gray-400 mt-12">
-                  <p>Envía un mensaje para empezar la conversación 👇</p>
+                  <p>👇</p>
                 </div>
               )}
               {messages.map((msg) => (
@@ -349,7 +346,7 @@ export default function AIAssistantPage() {
                       sendMessage();
                     }
                   }}
-                  placeholder="Escribe tu mensaje..."
+                  placeholder={tr('ai.typeMessage')}
                   rows={1}
                   className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm resize-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   style={{ maxHeight: '120px' }}
@@ -363,7 +360,7 @@ export default function AIAssistantPage() {
                 </button>
               </div>
               <p className="text-xs text-gray-400 mt-2">
-                Powered by NVIDIA NIM · Llama 3.2 90B · {user?.role}
+                {tr('ai.poweredBy')} · {authUser?.role}
               </p>
             </div>
           </>

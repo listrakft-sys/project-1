@@ -50,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: t('nav.settings'), href: '/settings', icon: Settings },
   ];
 
-  navItems.push({ name: 'AI Assistant', href: '/ai-assistant', icon: Sparkles });
+  navItems.push({ name: t('nav.aiAssistant'), href: '/ai-assistant', icon: Sparkles });
 
   if (isAdmin) {
     navItems.push({ name: t('nav.admin'), href: '/admin', icon: Shield });
