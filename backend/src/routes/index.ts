@@ -18,6 +18,7 @@ import complaintsRoutes from '../modules/complaints/complaints.routes';
 import permissionsRoutes from '../modules/permissions/permissions.routes';
 import aiRoutes from '../modules/ai/ai.routes';
 import gradebookRoutes from '../modules/gradebook/gradebook.routes';
+import adminRoutes from '../modules/admin/admin.routes';
 
 const router = Router();
 
@@ -40,5 +41,6 @@ router.use('/complaints', complaintsRoutes);
 router.use('/permissions', permissionsRoutes);
 router.use('/ai', aiRoutes);
 router.use('/gradebook', gradebookRoutes);
+router.use('/admin', adminRoutes);
 
 export default router;

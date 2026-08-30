@@ -4,13 +4,34 @@ import { useAuthStore } from '@/lib/store/auth';
 import apiClient from '@/lib/api/client';
 
 export interface AdminStats {
-  totalUsers: number;
-  totalStudents: number;
-  totalTeachers: number;
-  totalClasses: number;
-  totalSubjects: number;
-  pendingComplaints: number;
+  totals: {
+    users: number;
+    students: number;
+    teachers: number;
+    classes: number;
+    subjects: number;
+    lessons: number;
+    announcements: number;
+    schedules: number;
+    pendingComplaints: number;
+  };
+  thisWeek: {
+    newUsers: number;
+    newComplaints: number;
+    newAnnouncements: number;
+  };
+  metrics: {
+    attendanceRate: number;
+    gradeAverage: number;
+  };
 }
+
+// Fallback for loading state
+export const emptyStats: AdminStats = {
+  totals: { users: 0, students: 0, teachers: 0, classes: 0, subjects: 0, lessons: 0, announcements: 0, schedules: 0, pendingComplaints: 0 },
+  thisWeek: { newUsers: 0, newComplaints: 0, newAnnouncements: 0 },
+  metrics: { attendanceRate: 0, gradeAverage: 0 },
+};
 
 export function useAdmin() {
   const { user } = useAuthStore();
@@ -25,16 +46,14 @@ export function useAdmin() {
       const res = await apiClient.get('/admin/stats');
       return res.data?.data || res.data;
     } catch {
-      // Fallback mock stats if endpoint returns 404 or empty during dev
-      return {
-        totalUsers: 142,
-        totalStudents: 98,
-        totalTeachers: 24,
-        totalClasses: 8,
-        totalSubjects: 12,
-        pendingComplaints: 3,
-      };
+      return emptyStats;
     }
+  };
+
+  // Recent activity
+  const fetchActivity = async (limit = 20) => {
+    const res = await apiClient.get('/admin/activity', { params: { limit } });
+    return res.data?.data || res.data;
   };
 
   // Users
@@ -44,12 +63,12 @@ export function useAdmin() {
   };
 
   const updateUserRole = async (userId: string, role: string) => {
-    const res = await apiClient.put(`/users/${userId}/role`, { role });
+    const res = await apiClient.put(`/admin/users/${userId}/role`, { role });
     return res.data;
   };
 
   const updateUserStatus = async (userId: string, status: string) => {
-    const res = await apiClient.put(`/users/${userId}/status`, { status });
+    const res = await apiClient.put(`/admin/users/${userId}/status`, { status });
     return res.data;
   };
 
@@ -186,6 +205,7 @@ export function useAdmin() {
     isSuperAdmin,
     isSchoolAdmin,
     fetchStats,
+    fetchActivity,
     fetchUsers,
     updateUserRole,
     updateUserStatus,
