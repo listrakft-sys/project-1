@@ -75,10 +75,11 @@ interface MessageData {
 
 // ── Main Page ─────────────────────────────────────────────
 export default function ParentChatPage() {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   if (user?.role === 'PARENT') return <ParentView />;
   if (user?.role === 'TEACHER') return <TeacherView />;
-  return <div className="text-center py-12 text-muted-foreground">Access restricted to parents and teachers.</div>;
+  return <div className="text-center py-12 text-muted-foreground">{t('parentChat.accessRestricted')}</div>;
 }
 
 // ── Parent View ───────────────────────────────────────────
@@ -107,11 +108,8 @@ function ParentView() {
       setTeachers(teachersRes.data?.data || []);
       setGroupConvs(groupsRes.data?.data || []);
       setAvailableGroups(availRes.data?.data || []);
-    } catch {
-      // Silent
-    } finally {
-      setLoading(false);
-    }
+    } catch {}
+    finally { setLoading(false); }
   }, []);
 
   useEffect(() => { loadData(); }, [loadData]);
@@ -120,10 +118,7 @@ function ParentView() {
     try {
       const res = await api.post('/parent-chat/start', { teacherUserId });
       const conv = res.data?.data?.conversation;
-      if (conv) {
-        setSelectedConvType('PARENT_TEACHER');
-        setSelectedConvId(conv.id);
-      }
+      if (conv) { setSelectedConvType('PARENT_TEACHER'); setSelectedConvId(conv.id); }
     } catch {}
   };
 
@@ -131,11 +126,7 @@ function ParentView() {
     try {
       const res = await api.post('/parent-chat/groups', { classId });
       const conv = res.data?.data?.conversation;
-      if (conv) {
-        setSelectedConvType('PARENT_GROUP');
-        setSelectedConvId(conv.id);
-        loadData();
-      }
+      if (conv) { setSelectedConvType('PARENT_GROUP'); setSelectedConvId(conv.id); loadData(); }
     } catch {}
   };
 
@@ -145,97 +136,75 @@ function ParentView() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
             <Users2 className="h-6 w-6 text-primary" />
             {t('nav.parentChat')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Чат для родителей — общайтесь с другими родителями и учителями</p>
+          <p className="text-sm text-muted-foreground mt-1">{t('parentChat.parentTeacherChat')}</p>
         </div>
-        <button
-          onClick={() => setShowLinkModal(true)}
-          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2"
-        >
+        <button onClick={() => setShowLinkModal(true)}
+          className="px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-2">
           <Plus className="h-4 w-4" />
           {t('nav.linkChild')}
         </button>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-2 border-b border-border overflow-x-auto">
-        <TabButton active={tab === 'groups'} onClick={() => setTab('groups')} icon={Users2} label="Родительские группы" count={groupConvs.length} />
+        <TabButton active={tab === 'groups'} onClick={() => setTab('groups')} icon={Users2} label={t('parentChat.parentGroups')} count={groupConvs.length} />
         <TabButton active={tab === 'teachers'} onClick={() => setTab('teachers')} icon={GraduationCap} label={t('nav.teachers')} count={teachers.length} />
         <TabButton active={tab === 'children'} onClick={() => setTab('children')} icon={Heart} label={t('nav.myChildren')} count={children.length} />
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground">Загрузка…</div>
+        <div className="text-center py-12 text-muted-foreground">{t('parentChat.loadingData')}</div>
       ) : tab === 'groups' ? (
-        <GroupsTab
-          groupConvs={groupConvs}
-          availableGroups={availableGroups}
-          onOpenGroup={(id) => { setSelectedConvType('PARENT_GROUP'); setSelectedConvId(id); }}
-          onJoinGroup={joinGroup}
-        />
+        <GroupsTab groupConvs={groupConvs} availableGroups={availableGroups}
+          onOpenGroup={(id) => { setSelectedConvType('PARENT_GROUP'); setSelectedConvId(id); }} onJoinGroup={joinGroup} />
       ) : tab === 'teachers' ? (
         <TeacherList teachers={teachers} onStartChat={startTeacherChat} />
       ) : (
         <ChildrenList children={children} />
       )}
 
-      {showLinkModal && (
-        <LinkChildModal onClose={() => setShowLinkModal(false)} onLinked={() => { setShowLinkModal(false); loadData(); }} />
-      )}
+      {showLinkModal && <LinkChildModal onClose={() => setShowLinkModal(false)} onLinked={() => { setShowLinkModal(false); loadData(); }} />}
     </div>
   );
 }
 
 // ── Groups Tab ────────────────────────────────────────────
-function GroupsTab({
-  groupConvs,
-  availableGroups,
-  onOpenGroup,
-  onJoinGroup,
-}: {
-  groupConvs: ConversationInfo[];
-  availableGroups: ClassGroupInfo[];
-  onOpenGroup: (id: string) => void;
-  onJoinGroup: (classId: string) => void;
+function GroupsTab({ groupConvs, availableGroups, onOpenGroup, onJoinGroup }: {
+  groupConvs: ConversationInfo[]; availableGroups: ClassGroupInfo[];
+  onOpenGroup: (id: string) => void; onJoinGroup: (classId: string) => void;
 }) {
+  const { t } = useTranslation();
   const groupsWithChat = availableGroups.filter(g => g.groupExists && g.isMember);
   const groupsAvailable = availableGroups.filter(g => !g.groupExists || !g.isMember);
 
   return (
     <div className="space-y-6">
-      {/* Existing group chats */}
       {groupsWithChat.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Мои группы</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">{t('parentChat.myGroups')}</h3>
           <div className="bg-card rounded-xl border border-border overflow-hidden">
             {groupsWithChat.map((g, idx) => {
               const conv = groupConvs.find(c => c.id === g.conversationId);
               return (
-                <button
-                  key={g.classId}
-                  onClick={() => g.conversationId && onOpenGroup(g.conversationId)}
-                  className={`w-full flex items-center gap-3 p-4 text-left hover:bg-muted/50 transition-colors ${idx > 0 ? 'border-t border-border' : ''}`}
-                >
+                <button key={g.classId} onClick={() => g.conversationId && onOpenGroup(g.conversationId)}
+                  className={`w-full flex items-center gap-3 p-4 text-left hover:bg-muted/50 transition-colors ${idx > 0 ? 'border-t border-border' : ''}`}>
                   <div className="w-10 h-10 rounded-full bg-primary/15 text-primary flex items-center justify-center shrink-0">
                     <Users2 className="h-5 w-5" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">Родители класса {g.className}</p>
+                    <p className="text-sm font-medium text-foreground">{t('parentChat.classParents')} {g.className}</p>
                     <p className="text-xs text-muted-foreground truncate mt-0.5">
-                      {conv?.lastMessage?.content || 'Нет сообщений'}
-                      {conv?.participantCount && ` · ${conv.participantCount} родителей`}
+                      {conv?.lastMessage?.content || t('parentChat.noMessages')}
+                      {conv?.participantCount ? ` · ${conv.participantCount} ${t('parentChat.groupParents')}` : ''}
                     </p>
                   </div>
                   {conv?.unreadCount ? (
-                    <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium shrink-0">
-                      {conv.unreadCount}
-                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium shrink-0">{conv.unreadCount}</span>
                   ) : null}
                 </button>
               );
@@ -244,10 +213,9 @@ function GroupsTab({
         </div>
       )}
 
-      {/* Available groups to join */}
       {groupsAvailable.length > 0 && (
         <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">Доступные группы</h3>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">{t('parentChat.availableGroups')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {groupsAvailable.map(g => (
               <div key={g.classId} className="p-4 bg-card rounded-xl border border-border">
@@ -256,18 +224,16 @@ function GroupsTab({
                     <Users2 className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-foreground">Класс {g.className}</p>
+                    <p className="text-sm font-medium text-foreground">{t('parentChat.classLabel')} {g.className}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Ребёнок: {g.childName} · {g.schoolName}
+                      {t('parentChat.childLabel')}: {g.childName} · {g.schoolName}
                     </p>
                   </div>
                 </div>
-                <button
-                  onClick={() => onJoinGroup(g.classId)}
-                  className="mt-3 w-full px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
-                >
+                <button onClick={() => onJoinGroup(g.classId)}
+                  className="mt-3 w-full px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
                   <MessageSquare className="h-3.5 w-3.5" />
-                  {g.groupExists ? 'Войти в группу' : 'Создать группу'}
+                  {g.groupExists ? t('parentChat.enterGroup') : t('parentChat.createGroup')}
                 </button>
               </div>
             ))}
@@ -275,11 +241,10 @@ function GroupsTab({
         </div>
       )}
 
-      {/* Empty state */}
       {groupsWithChat.length === 0 && groupsAvailable.length === 0 && (
         <div className="text-center py-16 text-muted-foreground">
           <Users2 className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p className="text-sm">Сначала привяжите ребёнка, чтобы увидеть родительские группы его класса</p>
+          <p className="text-sm">{t('parentChat.noGroups')}</p>
         </div>
       )}
     </div>
@@ -314,10 +279,10 @@ function TeacherView() {
           <Users2 className="h-6 w-6 text-primary" />
           {t('nav.parentChat')}
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">Диалоги с родителями учеников</p>
+        <p className="text-sm text-muted-foreground mt-1">{t('parentChat.parentConversations')}</p>
       </div>
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground">Загрузка…</div>
+        <div className="text-center py-12 text-muted-foreground">{t('parentChat.loadingData')}</div>
       ) : (
         <ChatList conversations={conversations} onSelect={setSelectedConvId} />
       )}
@@ -327,11 +292,12 @@ function TeacherView() {
 
 // ── Chat List ─────────────────────────────────────────────
 function ChatList({ conversations, onSelect }: { conversations: ConversationInfo[]; onSelect: (id: string) => void }) {
+  const { t } = useTranslation();
   if (conversations.length === 0) {
     return (
       <div className="text-center py-16 text-muted-foreground">
         <MessageSquare className="h-12 w-12 mx-auto mb-3 opacity-30" />
-        <p className="text-sm">Пока нет диалогов</p>
+        <p className="text-sm">{t('parentChat.noConversations')}</p>
       </div>
     );
   }
@@ -345,14 +311,14 @@ function ChatList({ conversations, onSelect }: { conversations: ConversationInfo
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <p className="text-sm font-medium text-foreground truncate">{conv.otherParticipant?.name || conv.name || 'Чат'}</p>
+              <p className="text-sm font-medium text-foreground truncate">{conv.otherParticipant?.name || conv.name || t('nav.parentChat')}</p>
               {conv.lastMessage && (
                 <span className="text-xs text-muted-foreground shrink-0 ml-2">
-                  {new Date(conv.lastMessage.createdAt).toLocaleDateString('ru', { day: '2-digit', month: 'short' })}
+                  {new Date(conv.lastMessage.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short' })}
                 </span>
               )}
             </div>
-            <p className="text-xs text-muted-foreground truncate mt-0.5">{conv.lastMessage?.content || 'Нет сообщений'}</p>
+            <p className="text-xs text-muted-foreground truncate mt-0.5">{conv.lastMessage?.content || t('parentChat.noMessages')}</p>
           </div>
           {conv.unreadCount > 0 && (
             <span className="px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs font-medium shrink-0">{conv.unreadCount}</span>
@@ -371,7 +337,6 @@ function TeacherList({ teachers, onStartChat }: { teachers: TeacherInfo[]; onSta
       <div className="text-center py-16 text-muted-foreground">
         <GraduationCap className="h-12 w-12 mx-auto mb-3 opacity-30" />
         <p className="text-sm">{t('nav.noTeachers')}</p>
-        <p className="text-xs mt-1">Привяжите ребёнка, чтобы увидеть его учителей</p>
       </div>
     );
   }
@@ -386,7 +351,7 @@ function TeacherList({ teachers, onStartChat }: { teachers: TeacherInfo[]; onSta
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-foreground">{teacher.name}</p>
-                {teacher.isHomeroom && <span className="px-1.5 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">Классный руководитель</span>}
+                {teacher.isHomeroom && <span className="px-1.5 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">{t('parentChat.homeroom')}</span>}
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">{teacher.subjects.join(', ')}</p>
             </div>
@@ -424,13 +389,13 @@ function ChildrenList({ children }: { children: ChildInfo[] }) {
             <div>
               <p className="text-sm font-medium text-foreground">{child.studentName}</p>
               <p className="text-xs text-muted-foreground">
-                {child.className ? `Класс ${child.className}` : 'Без класса'} · {child.relationship || 'Ребёнок'}
+                {child.className ? `${t('parentChat.classLabel')} ${child.className}` : t('parentChat.noClass')} · {child.relationship || t('parentChat.childOf')}
               </p>
             </div>
           </div>
           {child.isPrimary && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-primary/10 text-primary font-medium">
-              <Heart className="h-3 w-3" /> Основной контакт
+              <Heart className="h-3 w-3" /> {t('parentChat.primaryContact')}
             </span>
           )}
         </div>
@@ -441,6 +406,7 @@ function ChildrenList({ children }: { children: ChildInfo[] }) {
 
 // ── Chat Detail View ──────────────────────────────────────
 function ChatDetailView({ conversationId, convType, onBack }: { conversationId: string; convType: string; onBack: () => void }) {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [conversation, setConversation] = useState<any>(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
@@ -479,7 +445,7 @@ function ChatDetailView({ conversationId, convType, onBack }: { conversationId: 
       const res = await api.post(`/conversations/${conversationId}/messages`, { content: input.trim() });
       const newMsg = res.data?.data || res.data;
       setMessages(prev => [...prev, {
-        id: newMsg.id, senderId: user!.id, senderName: 'Вы',
+        id: newMsg.id, senderId: user!.id, senderName: '—',
         content: input.trim(), createdAt: newMsg.createdAt || new Date().toISOString(), isOwn: true,
       }]);
       setInput('');
@@ -487,7 +453,7 @@ function ChatDetailView({ conversationId, convType, onBack }: { conversationId: 
   };
 
   const isGroup = convType === 'PARENT_GROUP';
-  const title = conversation?.name || (isGroup ? 'Родительская группа' : 'Чат с учителем');
+  const title = conversation?.name || (isGroup ? t('parentChat.parentGroups') : t('nav.parentChat'));
 
   return (
     <div className="flex flex-col h-[calc(100vh-12rem)]">
@@ -501,17 +467,17 @@ function ChatDetailView({ conversationId, convType, onBack }: { conversationId: 
         <div>
           <p className="text-sm font-medium text-foreground">{title}</p>
           <p className="text-xs text-muted-foreground">
-            {isGroup ? `Группа родителей · ${conversation?.participants?.length || 0} участников` : 'Родитель ↔ Учитель'}
+            {isGroup ? `${conversation?.participants?.length || 0} ${t('parentChat.groupParticipants')}` : t('parentChat.parentTeacherChat')}
           </p>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20 border-x border-border">
         {loading ? (
-          <div className="text-center text-muted-foreground text-sm">Загрузка сообщений…</div>
+          <div className="text-center text-muted-foreground text-sm">{t('parentChat.loadingMessages')}</div>
         ) : messages.length === 0 ? (
           <div className="text-center text-muted-foreground text-sm py-8">
-            {isGroup ? 'Начните общение с другими родителями класса!' : 'Напишите первое сообщение учителю.'}
+            {isGroup ? t('parentChat.startConversation') : t('parentChat.writeTeacher')}
           </div>
         ) : (
           messages.map(msg => (
@@ -522,7 +488,7 @@ function ChatDetailView({ conversationId, convType, onBack }: { conversationId: 
                 {isGroup && !msg.isOwn && <p className="text-xs font-medium text-muted-foreground mb-0.5">{msg.senderName}</p>}
                 <p>{msg.content}</p>
                 <p className={`text-xs mt-1 ${msg.isOwn ? 'text-primary-foreground/60' : 'text-muted-foreground'}`}>
-                  {new Date(msg.createdAt).toLocaleTimeString('ru', { hour: '2-digit', minute: '2-digit' })}
+                  {new Date(msg.createdAt).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}
                 </p>
               </div>
             </div>
@@ -534,7 +500,7 @@ function ChatDetailView({ conversationId, convType, onBack }: { conversationId: 
       <div className="p-3 bg-card rounded-b-xl border border-t-0 border-border flex items-center gap-2">
         <input type="text" value={input} onChange={e => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-          placeholder="Введите сообщение…" className="flex-1 px-4 py-2 rounded-full border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
+          placeholder={t('parentChat.typeMessage')} className="flex-1 px-4 py-2 rounded-full border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary focus:outline-none" />
         <button onClick={sendMessage} disabled={sending || !input.trim()}
           className="p-2.5 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50">
           <Send className="h-4 w-4" />
@@ -574,29 +540,29 @@ function LinkChildModal({ onClose, onLinked }: { onClose: () => void; onLinked: 
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-card rounded-xl border border-border w-full max-w-md p-6 shadow-xl" onClick={e => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-foreground">{t('nav.linkChild')}</h2>
+          <h2 className="text-lg font-semibold text-foreground">{t('parentChat.linkChildTitle')}</h2>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted transition-colors"><X className="h-5 w-5 text-muted-foreground" /></button>
         </div>
         <div className="mb-4">
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">Кто ребёнок для вас?</label>
+          <label className="text-xs font-medium text-muted-foreground mb-1 block">{t('parentChat.relationship')}</label>
           <select value={relationship} onChange={e => setRelationship(e.target.value)}
             className="w-full px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary">
-            <option value="">Выберите…</option>
-            <option value="mother">Мать</option>
-            <option value="father">Отец</option>
-            <option value="guardian">Опекун</option>
-            <option value="grandparent">Бабушка/Дедушка</option>
-            <option value="other">Другое</option>
+            <option value="">{t('parentChat.selectRelationship')}</option>
+            <option value="mother">{t('parentChat.mother')}</option>
+            <option value="father">{t('parentChat.father')}</option>
+            <option value="guardian">{t('parentChat.guardian')}</option>
+            <option value="grandparent">{t('parentChat.grandparent')}</option>
+            <option value="other">{t('parentChat.other')}</option>
           </select>
         </div>
         <div className="relative mb-4">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input type="text" value={search} onChange={e => { setSearch(e.target.value); searchStudents(e.target.value); }}
-            placeholder="Поиск ученика по имени…" className="w-full pl-9 pr-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary" autoFocus />
+            placeholder={t('parentChat.searchStudent')} className="w-full pl-9 pr-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary" autoFocus />
         </div>
         <div className="max-h-60 overflow-y-auto space-y-1">
-          {searching ? <p className="text-sm text-muted-foreground text-center py-4">Поиск…</p>
-          : results.length === 0 && search.length >= 2 ? <p className="text-sm text-muted-foreground text-center py-4">Ученики не найдены</p>
+          {searching ? <p className="text-sm text-muted-foreground text-center py-4">{t('parentChat.searching')}</p>
+          : results.length === 0 && search.length >= 2 ? <p className="text-sm text-muted-foreground text-center py-4">{t('parentChat.noStudents')}</p>
           : results.map(student => (
             <button key={student.id} onClick={() => linkStudent(student.id)} disabled={linking}
               className="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors text-left disabled:opacity-50">
@@ -607,7 +573,7 @@ function LinkChildModal({ onClose, onLinked }: { onClose: () => void; onLinked: 
                 <p className="text-sm font-medium text-foreground">
                   {student.user?.profile ? `${student.user.profile.firstName} ${student.user.profile.lastName}` : student.user?.username}
                 </p>
-                <p className="text-xs text-muted-foreground">{student.class?.name || 'Без класса'}</p>
+                <p className="text-xs text-muted-foreground">{student.class?.name || t('parentChat.noClass')}</p>
               </div>
             </button>
           ))}
