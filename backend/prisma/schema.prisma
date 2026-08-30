@@ -1,0 +1,581 @@
+// ═══════════════════════════════════════════════════════════════
+// School Platform — Prisma Schema
+// Database: PostgreSQL
+// Full spec: social-educational school platform
+// Languages: Español, Deutsch, English
+// ═══════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ───────────────────────────────────────────────────────
+
+enum UserRole {
+  SUPER_ADMIN
+  SCHOOL_ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum LessonStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum HomeworkStatus {
+  ASSIGNED
+  IN_PROGRESS
+  SUBMITTED
+  GRADED
+  LATE
+  OVERDUE
+}
+
+enum NotificationType {
+  ANNOUNCEMENT
+  HOMEWORK
+  MESSAGE
+  LESSON
+  SCHEDULE
+  SYSTEM
+  REPORT
+  COMPLAINT
+  GENERAL
+}
+
+enum ReportType {
+  ACADEMIC
+  ATTENDANCE
+  BEHAVIOR
+  PROGRESS
+  CUSTOM
+}
+
+enum ConversationType {
+  DIRECT
+  GROUP
+  CLASS
+  PARENT_TEACHER
+}
+
+enum ParticipantRole {
+  ADMIN
+  MEMBER
+}
+
+enum ComplaintType {
+  HARASSMENT
+  SPAM
+  INAPPROPRIATE_CONTENT
+  BULLYING
+  OTHER
+}
+
+enum ComplaintStatus {
+  PENDING
+  REVIEWING
+  RESOLVED
+  DISMISSED
+}
+
+enum PrivacyLevel {
+  PUBLIC
+  STUDENTS_ONLY
+  TEACHERS_ONLY
+  SCHOOL_ONLY
+  PRIVATE
+}
+
+enum WhoCanMessage {
+  EVERYONE
+  SCHOOL_ONLY
+  CLASS_ONLY
+  NO_ONE
+}
+
+// ── Models ──────────────────────────────────────────────────────
+
+model User {
+  id              String      @id @default(uuid())
+  email           String      @unique
+  username        String      @unique  // @username — unique nickname
+  password        String
+  role            UserRole
+  status          UserStatus  @default(PENDING)
+  isEmailVerified Boolean     @default(false)
+  preferredLang   String      @default("es")  // Español default
+  lastLogin       DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  profile             Profile?
+  privacySettings     PrivacySettings?
+  teacher             Teacher?
+  student             Student?
+  sentMessages        Message[]           @relation("SentMessages")
+  conversationParticipations ConversationParticipant[]
+  notifications       Notification[]
+  announcements       Announcement[]
+  createdReports      Report[]            @relation("ReportCreatedBy")
+  reportsAssignedTo   Report[]            @relation("ReportForUser")
+  complaintsFiled     Complaint[]         @relation("ComplaintFiledBy")
+  complaintsFiledAgainst Complaint[]     @relation("ComplaintAgainst")
+  complaintsHandled   Complaint[]        @relation("ComplaintHandledBy")
+  blockedBy           BlockedUser[]       @relation("BlockedUserRef")
+  blockedUsers        BlockedUser[]       @relation("BlockingUserRef")
+  userPermissions     UserPermission[]
+  refreshTokens       RefreshToken[]
+
+  @@index([role])
+  @@index([status])
+  @@index([email])
+  @@index([username])
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName   String
+  lastName    String
+  middleName  String?
+  avatar      String?
+  phone       String?
+  gender      Gender?
+  dateOfBirth DateTime?
+  address     String?
+  city        String?
+  country     String?
+  bio         String?
+  emergencyContact String?
+  emergencyPhone   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model PrivacySettings {
+  id                  String          @id @default(uuid())
+  userId              String          @unique
+  user                User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profileVisibility   PrivacyLevel    @default(SCHOOL_ONLY)
+  showEmail           Boolean         @default(false)
+  showPhone           Boolean         @default(false)
+  showAddress         Boolean         @default(false)
+  whoCanMessage       WhoCanMessage   @default(SCHOOL_ONLY)
+  showOnlineStatus    Boolean         @default(true)
+  searchableByName    Boolean         @default(true)
+  searchableByUsername Boolean        @default(true)
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+}
+
+model School {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  address     String?
+  city        String?
+  country     String?
+  phone       String?
+  email       String?  @unique
+  website     String?
+  logo        String?
+  adminId     String?  // user id of the school admin
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  classes       Class[]
+  subjects      Subject[]
+  teachers      Teacher[]
+  students      Student[]
+  announcements Announcement[]
+  schedules     Schedule[]
+
+  @@index([adminId])
+}
+
+model Class {
+  id               String   @id @default(uuid())
+  schoolId         String
+  school           School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name             String   // e.g. "8B"
+  grade            Int      // e.g. 8
+  section          String?
+  capacity         Int?
+  room             String?
+  homeroomTeacherId String? // teacher id
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  students       Student[]
+  lessons        Lesson[]
+  schedules      Schedule[]
+  homework       Homework[]
+  announcements  Announcement[]
+
+  @@unique([schoolId, name])
+  @@index([schoolId])
+  @@index([grade])
+}
+
+model Subject {
+  id          String   @id @default(uuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name        String   // e.g. "Mathematik"
+  code        String   // e.g. "MATH"
+  description String?
+  color       String?  // UI accent color
+  language    String?  // language of the subject material (independent of UI language)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  teachers    Teacher[]
+  lessons     Lesson[]
+  homework    Homework[]
+
+  @@unique([schoolId, code])
+  @@index([schoolId])
+}
+
+model Teacher {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId      String
+  school        School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  employeeId    String?
+  qualification  String?
+  specialization String?
+  joinDate      DateTime @default(now())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  subjects       Subject[]
+  lessons        Lesson[]
+  homework       Homework[]
+
+  @@index([schoolId])
+  @@index([userId])
+}
+
+model Student {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  schoolId        String
+  school          School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classId         String?
+  class           Class?   @relation(fields: [classId], references: [id])
+  studentCardId    String?
+  enrollmentDate  DateTime @default(now())
+  guardianName    String?
+  guardianPhone   String?
+  guardianEmail   String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  homeworkSubmissions HomeworkSubmission[]
+  reports             Report[]
+
+  @@index([schoolId])
+  @@index([classId])
+  @@index([userId])
+}
+
+model Lesson {
+  id          String       @id @default(uuid())
+  classId     String
+  class       Class        @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String
+  teacher     Teacher      @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  materials   String[]     @default([])  // file URLs / content references
+  room        String?
+  status      LessonStatus @default(SCHEDULED)
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([classId])
+  @@index([teacherId])
+  @@index([subjectId])
+  @@index([startDate])
+}
+
+model Schedule {
+  id          String   @id @default(uuid())
+  schoolId    String
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classId     String
+  class       Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId   String?
+  teacherId   String?
+  dayOfWeek   Int      // 0 = Sunday … 6 = Saturday
+  startTime   String   // "08:00"
+  endTime     String   // "09:30"
+  room        String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([classId])
+  @@index([dayOfWeek])
+}
+
+model Homework {
+  id          String   @id @default(uuid())
+  classId     String
+  class       Class    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  subjectId   String
+  subject     Subject  @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  teacherId   String
+  teacher     Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  dueDate     DateTime
+  attachments String[]  @default([])
+  maxScore    Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  submissions HomeworkSubmission[]
+
+  @@index([classId])
+  @@index([subjectId])
+  @@index([teacherId])
+  @@index([dueDate])
+}
+
+model HomeworkSubmission {
+  id          String         @id @default(uuid())
+  homeworkId  String
+  homework    Homework       @relation(fields: [homeworkId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     Student        @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  content     String?
+  attachments String[]       @default([])
+  status      HomeworkStatus  @default(ASSIGNED)
+  grade       Float?
+  feedback    String?
+  submittedAt DateTime?
+  gradedAt    DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([homeworkId, studentId])
+  @@index([homeworkId])
+  @@index([studentId])
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  schoolId    String?
+  school      School?  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classId     String?
+  class       Class?   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id])
+  title       String
+  content     String
+  audience    String   @default("school") // "school", "class", "all"
+  isPinned    Boolean  @default(false)
+  isPublic    Boolean  @default(false)
+  attachments String[]  @default([])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([schoolId])
+  @@index([classId])
+  @@index([authorId])
+}
+
+model Conversation {
+  id          String           @id @default(uuid())
+  type        ConversationType @default(DIRECT)
+  name        String?          // e.g. group chat name
+  createdBy   String
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([createdBy])
+}
+
+model ConversationParticipant {
+  id             String          @id @default(uuid())
+  conversationId String
+  conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           ParticipantRole @default(MEMBER)
+  lastReadAt     DateTime        @default(now())
+  joinedAt       DateTime        @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([conversationId])
+  @@index([userId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  attachments    String[]     @default([])
+  readBy         String[]     @default([]) // Array of user IDs who read the message
+  editedAt       DateTime?
+  deletedAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType @default(GENERAL)
+  title     String
+  content   String
+  data      Json?            // Extra contextual payload
+  link      String?          // Deep link to relevant resource
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model Report {
+  id          String     @id @default(uuid())
+  type        ReportType @default(ACADEMIC)
+  studentId   String?
+  student     Student?   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  classId     String?
+  createdById String
+  createdBy   User       @relation("ReportCreatedBy", fields: [createdById], references: [id])
+  forUserId   String?
+  forUser     User?      @relation("ReportForUser", fields: [forUserId], references: [id])
+  title       String
+  content     String
+  data        Json?      // Report details/metrics
+  period      String?    // e.g. "Q1 2026", "Spring 2026"
+  status      String     @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([studentId])
+  @@index([createdById])
+  @@index([forUserId])
+}
+
+model Complaint {
+  id            String          @id @default(uuid())
+  filedById     String
+  filedBy       User            @relation("ComplaintFiledBy", fields: [filedById], references: [id])
+  againstUserId String?
+  againstUser   User?           @relation("ComplaintAgainst", fields: [againstUserId], references: [id])
+  type          ComplaintType   @default(OTHER)
+  description   String
+  evidence      String[]        @default([])
+  status        ComplaintStatus @default(PENDING)
+  handledById   String?
+  handledBy     User?           @relation("ComplaintHandledBy", fields: [handledById], references: [id])
+  resolution    String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([filedById])
+  @@index([againstUserId])
+  @@index([handledById])
+  @@index([status])
+}
+
+model BlockedUser {
+  id          String   @id @default(uuid())
+  userId      String   // The user who is blocked
+  user        User     @relation("BlockedUserRef", fields: [userId], references: [id], onDelete: Cascade)
+  blockedById String   // The user who did the blocking
+  blockedBy   User     @relation("BlockingUserRef", fields: [blockedById], references: [id], onDelete: Cascade)
+  reason      String?
+  createdAt   DateTime @default(now())
+
+  @@unique([userId, blockedById])
+  @@index([userId])
+  @@index([blockedById])
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  name        String   @unique // e.g. "users.create"
+  resource    String   // e.g. "users"
+  action      String   // e.g. "create"
+  description String?
+  createdAt   DateTime @default(now())
+
+  userPermissions UserPermission[]
+
+  @@unique([resource, action])
+}
+
+model UserPermission {
+  id           String     @id @default(uuid())
+  userId       String
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  permissionId String
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  granted      Boolean    @default(true) // true = grant, false = explicit deny
+  createdAt    DateTime   @default(now())
+
+  @@unique([userId, permissionId])
+  @@index([userId])
+}
+
+model RefreshToken {
+  id          String    @id @default(uuid())
+  token       String    @unique
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  replacedBy  String?
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@index([token])
+}

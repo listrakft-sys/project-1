@@ -1,0 +1,40 @@
+import { Router } from 'express';
+import authRoutes from '../modules/auth/auth.routes';
+import usersRoutes from '../modules/users/users.routes';
+import schoolsRoutes from '../modules/schools/schools.routes';
+import classesRoutes from '../modules/classes/classes.routes';
+import subjectsRoutes from '../modules/subjects/subjects.routes';
+import teachersRoutes from '../modules/teachers/teachers.routes';
+import studentsRoutes from '../modules/students/students.routes';
+import lessonsRoutes from '../modules/lessons/lessons.routes';
+import schedulesRoutes from '../modules/schedules/schedules.routes';
+import homeworkRoutes from '../modules/homework/homework.routes';
+import conversationsRoutes from '../modules/conversations/conversations.routes';
+import messagesRoutes from '../modules/messages/messages.routes';
+import announcementsRoutes from '../modules/announcements/announcements.routes';
+import notificationsRoutes from '../modules/notifications/notifications.routes';
+import reportsRoutes from '../modules/reports/reports.routes';
+import complaintsRoutes from '../modules/complaints/complaints.routes';
+import permissionsRoutes from '../modules/permissions/permissions.routes';
+
+const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/users', usersRoutes);
+router.use('/schools', schoolsRoutes);
+router.use('/classes', classesRoutes);
+router.use('/subjects', subjectsRoutes);
+router.use('/teachers', teachersRoutes);
+router.use('/students', studentsRoutes);
+router.use('/lessons', lessonsRoutes);
+router.use('/schedules', schedulesRoutes);
+router.use('/homework', homeworkRoutes);
+router.use('/conversations', conversationsRoutes);
+router.use('/messages', messagesRoutes);
+router.use('/announcements', announcementsRoutes);
+router.use('/notifications', notificationsRoutes);
+router.use('/reports', reportsRoutes);
+router.use('/complaints', complaintsRoutes);
+router.use('/permissions', permissionsRoutes);
+
+export default router;

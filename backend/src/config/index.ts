@@ -1,0 +1,45 @@
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+function required(key: string, fallback?: string): string {
+  const v = process.env[key] ?? fallback;
+  if (!v) throw new Error(`Missing required env var: ${key}`);
+  return v;
+}
+
+export const config = {
+  env: process.env.NODE_ENV ?? 'development',
+  port: parseInt(process.env.PORT ?? '3000', 10),
+  clientUrl: process.env.CLIENT_URL ?? 'http://localhost:5173',
+
+  database: {
+    url: required('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/school_platform'),
+  },
+
+  redis: {
+    url: process.env.REDIS_URL ?? '',
+  },
+
+  jwt: {
+    accessSecret: required('JWT_ACCESS_SECRET', 'dev_access_secret_change_me'),
+    refreshSecret: required('JWT_REFRESH_SECRET', 'dev_refresh_secret_change_me'),
+    accessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN ?? '15m',
+    refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
+    bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS ?? '12', 10),
+  },
+
+  localization: {
+    defaultLanguage: process.env.DEFAULT_LANGUAGE ?? 'en',
+    supportedLanguages: (process.env.SUPPORTED_LANGUAGES ?? 'en,ru,lv,es').split(','),
+  },
+
+  pagination: {
+    defaultLimit: parseInt(process.env.PAGINATION_DEFAULT_LIMIT ?? '20', 10),
+    maxLimit: parseInt(process.env.PAGINATION_MAX_LIMIT ?? '100', 10),
+  },
+
+  isDev: process.env.NODE_ENV !== 'production',
+  isProd: process.env.NODE_ENV === 'production',
+} as const;
