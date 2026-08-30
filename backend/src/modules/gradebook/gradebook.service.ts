@@ -1,4 +1,5 @@
 import { PrismaClient, GradeType, AttendanceStatus } from '@prisma/client';
+import { EmailService } from '../../services/email.service';
 
 const prisma = new PrismaClient();
 
@@ -38,7 +39,7 @@ export class GradebookService {
       throw { statusCode: 403, errorCode: 'TEACHER_NOT_ASSIGNED', message: 'Teacher not assigned to this subject/class' };
     }
 
-    return prisma.grade.create({
+    const grade = await prisma.grade.create({
       data: {
         studentId: data.studentId,
         subjectId: data.subjectId,
@@ -58,6 +59,13 @@ export class GradebookService {
         subject: true,
       },
     });
+
+    // Send notification (async, non-blocking)
+    this.notifyGradeCreated(grade, data).catch(err =>
+      console.error('Failed to send grade notification:', err)
+    );
+
+    return grade;
   }
 
   /**
@@ -227,7 +235,75 @@ export class GradebookService {
     };
   }
 
+  // ── NOTIFICATION HELPERS ────────────────────────────────
+
+  private static async notifyGradeCreated(grade: any, data: any) {
+    const prisma = new PrismaClient();
+    try {
+      const studentName = grade.student?.user?.profile
+        ? `${grade.student.user.profile.firstName} ${grade.student.user.profile.lastName || ''}`
+        : grade.student?.user?.username || 'Student';
+
+      // Get parent email from student record
+      const student = await prisma.student.findUnique({
+        where: { id: data.studentId },
+        select: { guardianEmail: true },
+      });
+
+      // Get teacher name
+      const teacher = await prisma.teacher.findUnique({
+        where: { id: data.teacherId },
+        include: { user: { select: { profile: true } } },
+      });
+      const teacherName = teacher?.user?.profile
+        ? `${teacher.user.profile.firstName} ${teacher.user.profile.lastName || ''}`
+        : 'Teacher';
+
+      await EmailService.notifyGradeCreated({
+        studentId: data.studentId,
+        studentName,
+        parentEmail: student?.guardianEmail || undefined,
+        subjectName: grade.subject?.name || 'Subject',
+        score: data.score,
+        maxScore: data.maxScore || 10,
+        gradeType: data.type || GradeType.WRITTEN,
+        comment: data.comment,
+        teacherName,
+      });
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
+
   // ── ATTENDANCE ──────────────────────────────────────────
+
+  private static async notifyAttendanceUpdate(record: any, data: any) {
+    const prisma = new PrismaClient();
+    try {
+      const student = await prisma.student.findUnique({
+        where: { id: data.studentId },
+        include: { user: { select: { profile: true, username: true } }, class: true },
+      });
+
+      if (!student) return;
+
+      const studentName = student.user?.profile
+        ? `${student.user.profile.firstName} ${student.user.profile.lastName || ''}`
+        : student.user?.username || 'Student';
+
+      await EmailService.notifyAttendanceUpdate({
+        studentId: data.studentId,
+        studentName,
+        parentEmail: student.guardianEmail || undefined,
+        className: student.class?.name || 'Class',
+        subjectName: undefined,
+        status: data.status,
+        note: data.note,
+      });
+    } finally {
+      await prisma.$disconnect();
+    }
+  }
 
   /**
    * Mark attendance for a single student
@@ -243,7 +319,7 @@ export class GradebookService {
     note?: string;
   }) {
     // Upsert: unique constraint on [studentId, date, classId]
-    return prisma.attendance.upsert({
+    const record = await prisma.attendance.upsert({
       where: {
         studentId_date_classId: {
           studentId: data.studentId,
@@ -266,6 +342,13 @@ export class GradebookService {
         note: data.note,
       },
     });
+
+    // Send notification
+    this.notifyAttendanceUpdate(record, data).catch(err =>
+      console.error('Failed to send attendance notification:', err)
+    );
+
+    return record;
   }
 
   /**

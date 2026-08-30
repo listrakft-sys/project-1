@@ -52,6 +52,16 @@ export const config = {
     model: process.env.NVIDIA_MODEL || 'meta/llama-3.2-90b-vision-instruct',
   },
 
+  email: {
+    from: process.env.EMAIL_FROM || 'EduPlatform <noreply@eduplatform.com>',
+    smtp: {
+      host: process.env.SMTP_HOST || '',
+      port: parseInt(process.env.SMTP_PORT || '587', 10),
+      user: process.env.SMTP_USER || '',
+      pass: process.env.SMTP_PASS || '',
+    },
+  },
+
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
 } as const;
