@@ -310,4 +310,246 @@ export class ParentChatService {
 
     return { deleted: true };
   }
+
+  // ═══════════════════════════════════════════════════════════════
+  // PARENT GROUP CHAT — parents of the same class communicating together
+  // ═══════════════════════════════════════════════════════════════
+
+  /**
+   * Get or create a PARENT_GROUP conversation for a specific class.
+   * All parents who have a child in that class are auto-added as participants.
+   */
+  static async getOrCreateClassParentGroup(parentUserId: string, classId: string) {
+    // Verify this parent has a child in this class
+    const childInClass = await prisma.parentStudent.findFirst({
+      where: {
+        parentId: parentUserId,
+        student: { classId },
+      },
+    });
+    if (!childInClass) {
+      throw new ApiError(403, 'NOT_IN_CLASS', 'You do not have a child in this class');
+    }
+
+    const classInfo = await prisma.class.findUnique({
+      where: { id: classId },
+      select: { id: true, name: true, school: { select: { name: true } } },
+    });
+    if (!classInfo) throw new ApiError(404, 'CLASS_NOT_FOUND', 'Class not found');
+
+    // Find existing PARENT_GROUP for this class — stored in conversation name as "Parents of Class X"
+    const existing = await prisma.conversation.findFirst({
+      where: {
+        type: 'PARENT_GROUP',
+        name: `Parents of Class ${classInfo.name}`,
+      },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true, username: true, role: true,
+                profile: { select: { firstName: true, lastName: true, avatar: true } },
+              },
+            },
+          },
+        },
+        messages: {
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    if (existing) {
+      // Ensure this parent is a participant (in case they linked child after group was created)
+      const isParticipant = existing.participants.some((p) => p.userId === parentUserId);
+      if (!isParticipant) {
+        await prisma.conversationParticipant.create({
+          data: { conversationId: existing.id, userId: parentUserId, role: 'MEMBER' },
+        });
+        // Re-fetch
+        const refetched = await prisma.conversation.findUnique({
+          where: { id: existing.id },
+          include: {
+            participants: {
+              include: {
+                user: {
+                  select: {
+                    id: true, username: true, role: true,
+                    profile: { select: { firstName: true, lastName: true, avatar: true } },
+                  },
+                },
+              },
+            },
+            messages: {
+              where: { deletedAt: null },
+              orderBy: { createdAt: 'desc' },
+              take: 1,
+            },
+          },
+        });
+        return { conversation: refetched, created: false };
+      }
+      return { conversation: existing, created: false };
+    }
+
+    // Create new group — find ALL parents who have children in this class
+    const studentsInClass = await prisma.parentStudent.findMany({
+      where: { student: { classId } },
+      select: { parentId: true },
+      distinct: ['parentId'],
+    });
+
+    const parentIds = studentsInClass.map(s => s.parentId);
+    // Always include the requesting parent
+    if (!parentIds.includes(parentUserId)) parentIds.push(parentUserId);
+
+    const conversation = await prisma.conversation.create({
+      data: {
+        type: 'PARENT_GROUP',
+        name: `Parents of Class ${classInfo.name}`,
+        createdBy: parentUserId,
+        participants: {
+          create: parentIds.map(pid => ({
+            userId: pid,
+            role: pid === parentUserId ? 'ADMIN' : 'MEMBER',
+          })),
+        },
+      },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true, username: true, role: true,
+                profile: { select: { firstName: true, lastName: true, avatar: true } },
+              },
+            },
+          },
+        },
+        messages: {
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    return { conversation, created: true };
+  }
+
+  /**
+   * Get all PARENT_GROUP conversations for a parent.
+   * Also returns class info so the parent knows which class group it is.
+   */
+  static async getParentGroupConversations(parentUserId: string) {
+    const conversations = await prisma.conversation.findMany({
+      where: {
+        type: 'PARENT_GROUP',
+        participants: { some: { userId: parentUserId } },
+      },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        participants: {
+          include: {
+            user: {
+              select: {
+                id: true, username: true, role: true,
+                profile: { select: { firstName: true, lastName: true, avatar: true } },
+              },
+            },
+          },
+        },
+        messages: {
+          where: { deletedAt: null },
+          orderBy: { createdAt: 'desc' },
+          take: 1,
+        },
+      },
+    });
+
+    const result = await Promise.all(
+      conversations.map(async (conv) => {
+        const participant = conv.participants.find((p) => p.userId === parentUserId);
+        const lastReadAt = participant?.lastReadAt;
+
+        const unreadCount = await prisma.message.count({
+          where: {
+            conversationId: conv.id,
+            senderId: { not: parentUserId },
+            deletedAt: null,
+            ...(lastReadAt ? { createdAt: { gt: lastReadAt } } : {}),
+          },
+        });
+
+        return {
+          ...conv,
+          lastMessage: conv.messages[0] || null,
+          unreadCount,
+          participantCount: conv.participants.length,
+        };
+      }),
+    );
+
+    return result;
+  }
+
+  /**
+   * Get available class parent groups for a parent (classes where their children are).
+   * Returns class info + whether a group already exists.
+   */
+  static async getAvailableClassGroups(parentUserId: string) {
+    const children = await prisma.parentStudent.findMany({
+      where: { parentId: parentUserId },
+      select: {
+        student: {
+          select: {
+            id: true,
+            classId: true,
+            class: { select: { id: true, name: true, school: { select: { name: true } } } },
+            user: { select: { profile: { select: { firstName: true, lastName: true } } } },
+          },
+        },
+      },
+    });
+
+    const classMap = new Map<string, { classId: string; className: string; schoolName: string; childName: string }>();
+
+    children.forEach(c => {
+      if (c.student.classId && c.student.class) {
+        if (!classMap.has(c.student.classId)) {
+          classMap.set(c.student.classId, {
+            classId: c.student.class.id,
+            className: c.student.class.name,
+            schoolName: c.student.class.school?.name || '',
+            childName: c.student.user.profile
+              ? `${c.student.user.profile.firstName} ${c.student.user.profile.lastName}`
+              : 'Child',
+          });
+        }
+      }
+    });
+
+    const classes = Array.from(classMap.values());
+
+    // Check which already have groups
+    const groupChecks = await Promise.all(
+      classes.map(async (c) => {
+        const group = await prisma.conversation.findFirst({
+          where: { type: 'PARENT_GROUP', name: `Parents of Class ${c.className}` },
+          select: { id: true, participants: { select: { userId: true } } },
+        });
+        return {
+          ...c,
+          groupExists: !!group,
+          isMember: group?.participants.some((p) => p.userId === parentUserId) || false,
+          conversationId: group?.id || null,
+        };
+      })
+    );
+
+    return groupChecks;
+  }
 }

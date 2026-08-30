@@ -78,6 +78,7 @@ enum ConversationType {
   GROUP
   CLASS
   PARENT_TEACHER
+  PARENT_GROUP
 }
 
 enum ParticipantRole {
