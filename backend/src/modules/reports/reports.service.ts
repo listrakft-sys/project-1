@@ -138,7 +138,7 @@ export class ReportService {
         type: data.type,
         studentId: data.studentId,
         classId: data.classId,
-        schoolId: data.schoolId,
+        // schoolId removed — not in Report model
         createdById: user.userId,
         forUserId: data.forUserId,
         title: data.title,
@@ -186,18 +186,17 @@ export class ReportService {
 
     const updated = await prisma.report.update({
       where: { id },
-      data: {
+      data: ({
         ...(data.type !== undefined && { type: data.type }),
-        ...(data.studentId !== undefined && { studentId: data.studentId }),
+        ...(data.studentId !== undefined && { studentId: data.studentId || undefined }),
         ...(data.classId !== undefined && { classId: data.classId }),
-        ...(data.schoolId !== undefined && { schoolId: data.schoolId }),
         ...(data.forUserId !== undefined && { forUserId: data.forUserId }),
         ...(data.title !== undefined && { title: data.title }),
         ...(data.content !== undefined && { content: data.content }),
         ...(data.data !== undefined && { data: data.data }),
         ...(data.period !== undefined && { period: data.period }),
         ...(data.status !== undefined && { status: data.status }),
-      },
+      }) as any,
       include: {
         createdBy: {
           select: { id: true, email: true, username: true, role: true, profile: true },

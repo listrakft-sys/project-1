@@ -2,10 +2,10 @@
 
 import React, { useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { useAuthStore } from '@/lib/store/auth';
+import { useThemeStore } from '@/lib/store/theme';
 
 export const ThemeToggle: React.FC = () => {
-  const { theme, setTheme } = useAuthStore();
+  const { theme, setTheme } = useThemeStore();
 
   useEffect(() => {
     const root = document.documentElement;

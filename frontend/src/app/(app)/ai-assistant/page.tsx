@@ -24,7 +24,7 @@ interface AIConversation {
 }
 
 export default function AIAssistantPage() {
-  const { t, user: authUser } = useAuthStore();
+  const { user: authUser } = useAuthStore();
   const { t: tr } = useTranslation();
   const [conversations, setConversations] = useState<AIConversation[]>([]);
   const [activeConv, setActiveConv] = useState<AIConversation | null>(null);

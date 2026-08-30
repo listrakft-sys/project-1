@@ -163,7 +163,7 @@ export default function DashboardPage() {
             <CardContent className="p-4 flex items-center justify-between">
               <div className="space-y-1">
                 <p className="text-xs text-muted-foreground font-medium">
-                  {t('messages', 'Messages')}
+                  {t('messages')}
                 </p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-foreground">
@@ -184,7 +184,7 @@ export default function DashboardPage() {
             <CardContent className="p-4 flex items-center justify-between">
               <div className="space-y-1">
                 <p className="text-xs text-muted-foreground font-medium">
-                  {t('notifications', 'Notifications')}
+                  {t('notifications')}
                 </p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-foreground">

@@ -1,4 +1,3 @@
-import { Request } from 'express';
 import { config } from '../config';
 
 export interface PaginationParams {
@@ -7,7 +6,7 @@ export interface PaginationParams {
   skip: number;
 }
 
-export function getPagination(req: Request): PaginationParams {
+export function getPagination(req: { query: Record<string, any> }): PaginationParams {
   const page = Math.max(1, parseInt(req.query.page as string) || 1);
   const limit = Math.min(
     config.pagination.maxLimit,
@@ -16,7 +15,7 @@ export function getPagination(req: Request): PaginationParams {
   return { page, limit, skip: (page - 1) * limit };
 }
 
-export function getSort(req: Request, allowedFields: string[], defaultField: string = 'createdAt', defaultDir: 'asc' | 'desc' = 'desc') {
+export function getSort(req: { query: Record<string, any> }, allowedFields: string[], defaultField: string = 'createdAt', defaultDir: 'asc' | 'desc' = 'desc') {
   const sortField = (req.query.sortBy as string) || defaultField;
   const sortDir = (req.query.sortDir as string) === 'asc' ? 'asc' : defaultDir;
 
@@ -27,7 +26,7 @@ export function getSort(req: Request, allowedFields: string[], defaultField: str
   return { [sortField]: sortDir };
 }
 
-export function getSearchFilter(req: Request, fields: string[]): Record<string, any> | undefined {
+export function getSearchFilter(req: { query: Record<string, any> }, fields: string[]): Record<string, any> | undefined {
   const search = (req.query.search as string)?.trim();
   if (!search) return undefined;
 

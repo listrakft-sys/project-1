@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import fetch from 'node-fetch';
+// Use global fetch (Node 18+)
 
 const prisma = new PrismaClient();
 
@@ -95,7 +95,7 @@ export class AIService {
         userId,
         type: chatType as never,
         title,
-        context: context || undefined,
+        context: (context || undefined) as any,
       },
       include: { messages: true },
     });

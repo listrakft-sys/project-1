@@ -38,3 +38,6 @@ apiClient.interceptors.response.use(
 );
 
 export default apiClient;
+
+// Alias for convenience
+export { apiClient as api };

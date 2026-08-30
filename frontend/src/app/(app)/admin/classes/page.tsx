@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/admin/Badge';
 import { useAdmin } from '@/lib/hooks/useAdmin';
 import { useTranslation } from '@/lib/i18n';
-import { GraduationCap, Plus, Eye, Edit2, Trash2, Users, BookOpen, Room } from 'lucide-react';
+import { GraduationCap, Plus, Eye, Edit2, Trash2, Users, BookOpen, DoorOpen } from 'lucide-react';
 
 interface ClassRecord {
   id: string;

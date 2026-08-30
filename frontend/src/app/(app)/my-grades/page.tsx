@@ -130,7 +130,7 @@ export default function MyGradesPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-5 bg-white rounded-xl border border-gray-200">
           <p className="text-xs font-medium text-gray-500 mb-1">Overall Average</p>
-          <p className={`text-3xl font-bold ${average?.overallAverage >= 70 ? 'text-green-600' : average?.overallAverage >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
+          <p className={`text-3xl font-bold ${average?.overallAverage && average.overallAverage >= 70 ? 'text-green-600' : average?.overallAverage && average.overallAverage >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
             {average?.overallAverage ? `${average.overallAverage}%` : '—'}
           </p>
           <p className="text-xs text-gray-400 mt-1">{average?.totalGrades || 0} grades total</p>

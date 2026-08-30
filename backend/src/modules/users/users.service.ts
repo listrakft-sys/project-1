@@ -471,7 +471,7 @@ export class UserService {
         where: { blockedById: userId },
         skip,
         take: limit,
-        orderBy: { blockedAt: 'desc' },
+        orderBy: { createdAt: 'desc' },
         include: {
           user: {
             select: {

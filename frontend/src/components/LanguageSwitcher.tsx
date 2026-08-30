@@ -2,8 +2,8 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Globe, ChevronDown } from 'lucide-react';
+import { useTranslation, Language } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/store/auth';
-import { Language } from '@/lib/i18n';
 import api from '@/lib/api/client';
 
 const languages: { code: Language; label: string; flag: string }[] = [
@@ -13,7 +13,8 @@ const languages: { code: Language; label: string; flag: string }[] = [
 ];
 
 export const LanguageSwitcher: React.FC = () => {
-  const { language, setLanguage, user } = useAuthStore();
+  const { language, setLanguage } = useTranslation();
+  const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +34,7 @@ export const LanguageSwitcher: React.FC = () => {
     if (user) {
       try {
         await api.put(`/users/${user.id}`, { preferredLang: code });
-      } catch (err) {
+      } catch {
         // Silently catch error if backend update fails
       }
     }

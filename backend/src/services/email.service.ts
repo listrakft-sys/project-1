@@ -22,8 +22,7 @@ function getTransporter(): nodemailer.Transporter {
   } else if (config.isDev) {
     // Dev mode: log emails to console instead of sending
     transporter = nodemailer.createTransport({
-      streamTransport: true,
-      console: true,
+      jsonTransport: true,
     });
     logger.info('📧 Email service running in DEV mode (console output)');
   } else {

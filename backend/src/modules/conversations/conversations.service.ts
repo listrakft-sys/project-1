@@ -401,7 +401,6 @@ export class ConversationService {
       data: {
         type: data.type,
         name: data.name,
-        avatar: data.avatar,
         createdBy: userId,
         participants: {
           create: allParticipantIds.map((pId) => ({

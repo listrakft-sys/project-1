@@ -55,7 +55,7 @@ export class GradebookService {
         term: data.term || '1',
       },
       include: {
-        student: { include: { user: { select: { username: true }, profile: true } } },
+        student: { include: { user: { include: { profile: true } } } },
         subject: true,
       },
     });
@@ -128,7 +128,7 @@ export class GradebookService {
       },
       include: {
         subject: true,
-        teacher: { include: { user: { select: { username: true }, profile: true } } },
+        teacher: { include: { user: { include: { profile: true } } } },
       },
       orderBy: { date: 'desc' },
     });
@@ -148,7 +148,7 @@ export class GradebookService {
         ...(filters.term && { term: filters.term }),
       },
       include: {
-        student: { include: { user: { select: { username: true }, profile: true } } },
+        student: { include: { user: { include: { profile: true } } } },
         subject: true,
       },
       orderBy: [{ date: 'desc' }, { student: { user: { username: 'asc' } } }],
@@ -176,7 +176,7 @@ export class GradebookService {
     return prisma.grade.update({
       where: { id: gradeId },
       data,
-      include: { subject: true, student: { include: { profile: true } } },
+      include: { subject: true, student: { include: { user: { include: { profile: true } } } } },
     });
   }
 
@@ -253,7 +253,7 @@ export class GradebookService {
       // Get teacher name
       const teacher = await prisma.teacher.findUnique({
         where: { id: data.teacherId },
-        include: { user: { select: { profile: true } } },
+        include: { user: { include: { profile: true } } },
       });
       const teacherName = teacher?.user?.profile
         ? `${teacher.user.profile.firstName} ${teacher.user.profile.lastName || ''}`
@@ -430,7 +430,7 @@ export class GradebookService {
       }),
       prisma.student.findMany({
         where: { classId },
-        include: { user: { select: { username: true }, profile: true } },
+        include: { user: { include: { profile: true } } },
         orderBy: { user: { username: 'asc' } },
       }),
     ]);
@@ -475,7 +475,7 @@ export class GradebookService {
     const [students, grades, attendance] = await Promise.all([
       prisma.student.findMany({
         where: { classId },
-        include: { user: { select: { username: true }, profile: true } },
+        include: { user: { include: { profile: true } } },
         orderBy: { user: { username: 'asc' } },
       }),
       prisma.grade.findMany({

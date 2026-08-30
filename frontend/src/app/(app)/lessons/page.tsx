@@ -79,7 +79,7 @@ export default function LessonsPage() {
     } catch (err: unknown) {
       console.error('Error fetching lessons:', err);
       const axiosErr = err as { response?: { data?: { error?: { message?: string }; message?: string } }; message?: string };
-      setError(axiosErr.response?.data?.error?.message || axiosErr.response?.data?.message || axiosErr.message || t("error", "An error occurred while loading lessons."));
+      setError(axiosErr.response?.data?.error?.message || axiosErr.response?.data?.message || axiosErr.message || t("error"));
     } finally {
       setLoading(false);
     }
@@ -124,7 +124,7 @@ export default function LessonsPage() {
           disabled={loading}
           leftIcon={<RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />}
         >
-          {t('refresh', 'Refresh')}
+          {t('refresh')}
         </Button>
       </div>
 
@@ -135,7 +135,7 @@ export default function LessonsPage() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder={t('search', 'Search lessons, teachers, subjects...')}
+            placeholder={t('search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
@@ -181,7 +181,7 @@ export default function LessonsPage() {
       {loading ? (
         <div className="p-12 text-center bg-card rounded-xl border border-border">
           <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-          <p className="text-sm text-muted-foreground mt-3">{t('loading', 'Loading lessons...')}</p>
+          <p className="text-sm text-muted-foreground mt-3">{t('loading')}</p>
         </div>
       ) : error ? (
         <div className="p-8 text-center bg-card rounded-xl border border-destructive/30 text-destructive">
@@ -194,7 +194,7 @@ export default function LessonsPage() {
         <div className="p-12 text-center bg-card rounded-xl border border-border space-y-3">
           <FolderOpen className="h-12 w-12 text-muted-foreground mx-auto" />
           <h3 className="text-base font-semibold text-foreground">
-            {t('noResults', 'No lessons found')}
+            {t('noResults')}
           </h3>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
             Try adjusting your search criteria or selecting a different subject or class filter.
