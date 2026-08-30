@@ -17,6 +17,7 @@ export const de: Dictionary = {
     aiAssistant: 'KI-Assistent',
     gradebook: 'Notenbuch',
     myGrades: 'Meine Noten',
+    attendance: 'Anwesenheit',
   },
   auth: {
     login: 'Anmelden',

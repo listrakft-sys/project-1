@@ -23,7 +23,8 @@ import {
   School,
   Sparkles,
   ClipboardList,
-  BarChart3
+  BarChart3,
+  CalendarCheck
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -54,6 +55,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
 
   navItems.push({ name: t('nav.gradebook'), href: '/gradebook', icon: ClipboardList });
   navItems.push({ name: t('nav.myGrades'), href: '/my-grades', icon: BarChart3 });
+  navItems.push({ name: t('nav.attendance'), href: '/attendance', icon: CalendarCheck });
   navItems.push({ name: t('nav.aiAssistant'), href: '/ai-assistant', icon: Sparkles });
 
   if (isAdmin) {

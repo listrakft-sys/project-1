@@ -15,6 +15,7 @@ export const es = {
     aiAssistant: 'Asistente de IA',
     gradebook: 'Cuaderno de Notas',
     myGrades: 'Mis Calificaciones',
+    attendance: 'Asistencia',
   },
   auth: {
     login: 'Iniciar Sesión',

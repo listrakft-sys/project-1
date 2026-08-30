@@ -17,6 +17,7 @@ export const en: Dictionary = {
     aiAssistant: 'AI Assistant',
     gradebook: 'Gradebook',
     myGrades: 'My Grades',
+    attendance: 'Attendance',
   },
   auth: {
     login: 'Log In',
