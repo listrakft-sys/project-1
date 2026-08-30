@@ -48,17 +48,17 @@ export default function RegisterPage() {
         username: formData.username,
         password: formData.password,
         role: formData.role,
-        profile: {
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-        },
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        preferredLang: language,
       });
 
-      const { user, token } = response.data.data;
-      login(user, token);
+      const { user, accessToken, refreshToken } = response.data.data;
+      login(user, accessToken, refreshToken);
       router.push('/');
-    } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Error al registrar usuario';
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: { message?: string } } }; message?: string };
+      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Error al registrar usuario';
       setError(msg);
     } finally {
       setIsLoading(false);

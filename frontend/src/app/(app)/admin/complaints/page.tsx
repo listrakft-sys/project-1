@@ -64,7 +64,7 @@ export default function AdminComplaintsPage() {
     }
   };
 
-  const getName = (user: any) => {
+  const getName = (user: { username?: string; profile?: { firstName?: string; lastName?: string } }) => {
     if (user?.profile?.firstName) return `${user.profile.firstName} ${user.profile.lastName || ''}`;
     return user?.username || 'N/A';
   };

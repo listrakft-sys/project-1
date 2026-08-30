@@ -1,4 +1,5 @@
 import { Prisma } from '@prisma/client';
+import { logger } from '../../utils/logger';
 import prisma from '../../config/prisma';
 import { ApiError } from '../../utils/apiResponse';
 import { getPagination } from '../../utils/pagination';
@@ -448,7 +449,7 @@ export class AnnouncementService {
       }
     } catch (error) {
       // Log notification error but do not fail announcement creation
-      console.error('Failed to create notifications for announcement:', error);
+      logger.error('Failed to create notifications for announcement:', { error: error instanceof Error ? error.message : String(error) });
     }
 
     return announcement;

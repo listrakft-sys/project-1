@@ -15,7 +15,13 @@ export default function SingleConversationPage() {
   const { t } = useTranslation();
   const { user } = useAuthStore();
 
-  const [conversation, setConversation] = useState<any>(null);
+  interface ConversationData {
+    id: string;
+    type?: string;
+    name?: string;
+    participants?: { userId: string; user?: { username?: string; profile?: { firstName?: string; lastName?: string } } }[];
+  }
+  const [conversation, setConversation] = useState<ConversationData | null>(null);
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [attachment, setAttachment] = useState<File | null>(null);
@@ -39,7 +45,7 @@ export default function SingleConversationPage() {
 
         setConversation(convData);
 
-        const formatted: MessageProps[] = msgData.map((m: any) => ({
+        const formatted: MessageProps[] = msgData.map((m: { id: string; senderId: string; sender?: { username?: string; profile?: { firstName?: string; lastName?: string } }; content: string; attachments?: string[]; createdAt: string; readBy?: string[] }) => ({
           id: m.id,
           senderId: m.senderId,
           senderName: m.sender?.profile
@@ -112,7 +118,7 @@ export default function SingleConversationPage() {
     }
   };
 
-  const otherParticipant = conversation?.participants?.find((p: any) => p.userId !== user?.id);
+  const otherParticipant = conversation?.participants?.find((p) => p.userId !== user?.id);
   const title = conversation?.name
     ? conversation.name
     : otherParticipant?.user?.profile

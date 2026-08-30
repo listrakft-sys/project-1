@@ -32,18 +32,17 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const isEmail = identifier.includes('@');
-      const payload = isEmail
-        ? { email: identifier, password }
-        : { username: identifier, password };
+      const response = await api.post('/auth/login', {
+        emailOrUsername: identifier,
+        password,
+      });
 
-      const response = await api.post('/auth/login', payload);
-      const { user, token } = response.data.data;
-
-      login(user, token);
+      const { user, accessToken, refreshToken } = response.data.data;
+      login(user, accessToken, refreshToken);
       router.push('/');
-    } catch (err: any) {
-      const msg = err.response?.data?.message || err.message || 'Error al iniciar sesión';
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: { message?: string } } }; message?: string };
+      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Error al iniciar sesión';
       setError(msg);
     } finally {
       setIsLoading(false);

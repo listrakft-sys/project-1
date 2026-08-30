@@ -23,6 +23,9 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 const STORAGE_KEY = 'school_platform_lang';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type DictNode = Record<string, any>;
+
 export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>('es');
 
@@ -41,7 +44,7 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const t = (key: string): string => {
     const dict = dictionaries[language] || dictionaries.es;
     const keys = key.split('.');
-    let current: any = dict;
+    let current: DictNode = dict as DictNode;
     
     for (const k of keys) {
       if (current && typeof current === 'object' && k in current) {

@@ -76,9 +76,10 @@ export default function LessonsPage() {
       const raw = res.data;
       const list = Array.isArray(raw) ? raw : raw?.data || [];
       setLessons(list);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching lessons:', err);
-      setError(err.response?.data?.message || t('error', 'An error occurred while loading lessons.'));
+      const axiosErr = err as { response?: { data?: { error?: { message?: string }; message?: string } }; message?: string };
+      setError(axiosErr.response?.data?.error?.message || axiosErr.response?.data?.message || axiosErr.message || t("error", "An error occurred while loading lessons."));
     } finally {
       setLoading(false);
     }

@@ -5,14 +5,20 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 function required(key: string, fallback?: string): string {
   const v = process.env[key] ?? fallback;
-  if (!v) throw new Error(`Missing required env var: ${key}`);
+  if (!v) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(`Missing required env var: ${key}`);
+    }
+    // In development, allow fallback
+    return fallback ?? '';
+  }
   return v;
 }
 
 export const config = {
   env: process.env.NODE_ENV ?? 'development',
   port: parseInt(process.env.PORT ?? '3000', 10),
-  clientUrl: process.env.CLIENT_URL ?? 'http://localhost:5173',
+  clientUrl: process.env.CLIENT_URL ?? 'http://localhost:3001',
 
   database: {
     url: required('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/school_platform'),
@@ -31,8 +37,8 @@ export const config = {
   },
 
   localization: {
-    defaultLanguage: process.env.DEFAULT_LANGUAGE ?? 'en',
-    supportedLanguages: (process.env.SUPPORTED_LANGUAGES ?? 'en,ru,lv,es').split(','),
+    defaultLanguage: process.env.DEFAULT_LANGUAGE ?? 'es',
+    supportedLanguages: (process.env.SUPPORTED_LANGUAGES ?? 'es,de,en').split(','),
   },
 
   pagination: {

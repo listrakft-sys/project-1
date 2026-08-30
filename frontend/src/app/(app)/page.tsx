@@ -92,7 +92,7 @@ export default function DashboardPage() {
           const convs = Array.isArray(conversationsRes.value.data)
             ? conversationsRes.value.data
             : conversationsRes.value.data?.data || [];
-          unreadMsgs = convs.reduce((acc: number, c: any) => acc + (c.unreadCount || c._count?.unread || 0), 0);
+          unreadMsgs = convs.reduce((acc: number, c: { unreadCount?: number; _count?: { unread?: number } }) => acc + (c.unreadCount || c._count?.unread || 0), 0);
         }
 
         let unreadNotifs = 0;
@@ -100,7 +100,7 @@ export default function DashboardPage() {
           const notifs = Array.isArray(notificationsRes.value.data)
             ? notificationsRes.value.data
             : notificationsRes.value.data?.data || [];
-          unreadNotifs = notifs.filter((n: any) => !n.isRead).length;
+          unreadNotifs = notifs.filter((n: { isRead?: boolean }) => !n.isRead).length;
         }
 
         const pendingHw = fetchedHomework.filter(

@@ -3,6 +3,18 @@ import api from '../api/client';
 
 export type UserRole = 'SUPER_ADMIN' | 'SCHOOL_ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
 
+export interface TeacherInfo {
+  id: string;
+  schoolId: string;
+  bio?: string;
+}
+
+export interface StudentInfo {
+  id: string;
+  schoolId: string;
+  classId?: string;
+}
+
 export interface User {
   id: string;
   email: string;
@@ -18,8 +30,8 @@ export interface User {
     phone?: string;
     bio?: string;
   };
-  teacher?: any;
-  student?: any;
+  teacher?: TeacherInfo | null;
+  student?: StudentInfo | null;
 }
 
 interface AuthState {

@@ -1,25 +1,35 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// Routes that don't require authentication
+const publicRoutes = ['/login', '/register', '/forgot-password', '/reset-password'];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Protect /admin routes
-  if (pathname.startsWith('/admin')) {
-    const token = request.cookies.get('token')?.value || request.headers.get('authorization')?.replace('Bearer ', '');
+  // Skip public routes
+  if (publicRoutes.some((route) => pathname === route || pathname.startsWith(route + '/'))) {
+    return NextResponse.next();
+  }
 
-    // Note: In client-side SPA or Next.js App router, detailed JWT decoding or client check takes place.
-    // If token cookie is explicitly missing, redirect to login
-    if (!token) {
-      const loginUrl = new URL('/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
+  // Check for auth token — either in cookie (SSR) or Authorization header
+  const token =
+    request.cookies.get('token')?.value ||
+    request.headers.get('authorization')?.replace('Bearer ', '');
+
+  // If no token and not on a public route, redirect to login
+  if (!token) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  // Match all routes except static assets and API routes
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|api).*)',
+  ],
 };

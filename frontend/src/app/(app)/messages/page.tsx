@@ -108,7 +108,7 @@ export default function MessagesPage() {
         setIsLoadingMessages(true);
         const res = await api.get(`/conversations/${selectedId}/messages`);
         const raw = res.data?.data || res.data || [];
-        const formatted: MessageProps[] = raw.map((m: any) => ({
+        const formatted: MessageProps[] = raw.map((m: { id: string; senderId: string; sender?: { username?: string; profile?: { firstName?: string; lastName?: string } }; content: string; attachments?: string[]; createdAt: string; readBy?: string[] }) => ({
           id: m.id,
           senderId: m.senderId,
           senderName: m.sender?.profile ? `${m.sender.profile.firstName} ${m.sender.profile.lastName}` : `@${m.sender?.username}`,

@@ -17,7 +17,6 @@ import {
   Settings,
   ChevronDown
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -27,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const { language, setLanguage, t } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { user, logout } = useAuthStore();
-  const router = Router = useRouter();
+  const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);

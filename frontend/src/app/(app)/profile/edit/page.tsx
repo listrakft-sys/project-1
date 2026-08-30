@@ -91,8 +91,9 @@ export default function ProfileEditPage() {
       setTimeout(() => {
         router.push(`/profile/${user.id}`);
       }, 1200);
-    } catch (err: any) {
-      setErrorMsg(err.response?.data?.message || t('error'));
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { data?: { error?: { message?: string }; message?: string } }; message?: string };
+      setErrorMsg(axiosErr.response?.data?.error?.message || axiosErr.response?.data?.message || axiosErr.message || t("error"));
     } finally {
       setSaving(false);
     }
