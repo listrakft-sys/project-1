@@ -16,6 +16,7 @@ import notificationsRoutes from '../modules/notifications/notifications.routes';
 import reportsRoutes from '../modules/reports/reports.routes';
 import complaintsRoutes from '../modules/complaints/complaints.routes';
 import permissionsRoutes from '../modules/permissions/permissions.routes';
+import aiRoutes from '../modules/ai/ai.routes';
 
 const router = Router();
 
@@ -36,5 +37,6 @@ router.use('/notifications', notificationsRoutes);
 router.use('/reports', reportsRoutes);
 router.use('/complaints', complaintsRoutes);
 router.use('/permissions', permissionsRoutes);
+router.use('/ai', aiRoutes);
 
 export default router;

@@ -147,6 +147,7 @@ model User {
   blockedUsers        BlockedUser[]       @relation("BlockingUserRef")
   userPermissions     UserPermission[]
   refreshTokens       RefreshToken[]
+  aiConversations     AIConversation[]
 
   @@index([role])
   @@index([status])
@@ -578,4 +579,44 @@ model RefreshToken {
 
   @@index([userId])
   @@index([token])
+}
+
+// ── AI Assistant ───────────────────────────────────────────────
+
+enum AIChatType {
+  STUDENT_HELP
+  TEACHER_ASSIST
+  GENERAL
+  HOMEWORK_HELP
+  LESSON_EXPLAIN
+}
+
+model AIConversation {
+  id          String      @id @default(uuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type        AIChatType  @default(GENERAL)
+  title       String      @default("New Chat")
+  context     Json?       // lesson ID, homework ID, subject, etc.
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  messages    AIMessage[]
+
+  @@index([userId])
+  @@index([type])
+}
+
+model AIMessage {
+  id              String        @id @default(uuid())
+  conversationId  String
+  conversation    AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            String        // "user" | "assistant" | "system"
+  content         String
+  tokensUsed      Int           @default(0)
+  modelUsed       String?
+  feedback        String?       // "positive" | "negative" | null
+  createdAt       DateTime      @default(now())
+
+  @@index([conversationId])
+  @@index([role])
 }

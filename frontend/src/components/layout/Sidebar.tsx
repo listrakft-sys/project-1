@@ -20,7 +20,8 @@ import {
   Settings,
   Shield,
   X,
-  School
+  School,
+  Sparkles
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -48,6 +49,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     { name: t('nav.profile'), href: '/profile', icon: User },
     { name: t('nav.settings'), href: '/settings', icon: Settings },
   ];
+
+  navItems.push({ name: 'AI Assistant', href: '/ai-assistant', icon: Sparkles });
 
   if (isAdmin) {
     navItems.push({ name: t('nav.admin'), href: '/admin', icon: Shield });

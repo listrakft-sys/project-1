@@ -46,6 +46,12 @@ export const config = {
     maxLimit: parseInt(process.env.PAGINATION_MAX_LIMIT ?? '100', 10),
   },
 
+  nvidia: {
+    apiKey: process.env.NVIDIA_API_KEY || '',
+    apiUrl: 'https://integrate.api.nvidia.com/v1/chat/completions',
+    model: process.env.NVIDIA_MODEL || 'meta/llama-3.2-90b-vision-instruct',
+  },
+
   isDev: process.env.NODE_ENV !== 'production',
   isProd: process.env.NODE_ENV === 'production',
 } as const;
