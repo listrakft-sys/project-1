@@ -10,13 +10,14 @@
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 [![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
 [![Zod](https://img.shields.io/badge/Zod-3E67B1?style=for-the-badge&logo=zod&logoColor=white)](https://zod.dev/)
 
 [![Lines of Code](https://img.shields.io/badge/Lines_of_Code-28K+-blueviolet?style=flat-square)]()
-[![Backend Modules](https://img.shields.io/badge/Backend_Modules-17-orange?style=flat-square)]()
+[![Backend Modules](https://img.shields.io/badge/Backend_Modules-18-orange?style=flat-square)]()
 [![Frontend Pages](https://img.shields.io/badge/Frontend_Pages-25-green?style=flat-square)]()
-[![DB Entities](https://img.shields.io/badge/DB_Entities-23-red?style=flat-square)]()
+[![DB Entities](https://img.shields.io/badge/DB_Entities-25-red?style=flat-square)]()
 [![Languages](https://img.shields.io/badge/Languages-3_(ES/DE/EN)-blue?style=flat-square)]()
 [![Roles](https://img.shields.io/badge/User_Roles-5-purple?style=flat-square)]()
 
@@ -215,6 +216,51 @@ The platform supports **3 languages** for the UI, independent of the content lan
 | English | `en` | 🇬🇧 |
 
 User preference is stored per-user (`preferredLang` field) and persisted in `localStorage`.
+
+---
+
+## 🐳 Docker (One-Command Deploy)
+
+The entire platform runs with a single command:
+
+```bash
+# 1. Copy env template
+cp .env.docker .env
+
+# 2. Edit .env — set JWT secrets, SMTP, NVIDIA API key
+nano .env
+
+# 3. Start everything
+docker compose up -d
+
+# 4. Check status
+docker compose ps
+
+# 5. View logs
+docker compose logs -f backend  # backend logs
+docker compose logs -f frontend  # frontend logs
+
+# 6. Stop
+docker compose down
+
+# 7. Reset database (WARNING: deletes all data)
+docker compose down -v
+```
+
+### Services:
+
+| Service | Port | Description |
+|--------|------|-------------|
+| **Frontend** | `:3001` | Next.js 14 app |
+| **Backend** | `:3000` | Express API + Prisma |
+| **PostgreSQL** | `:5432` | Database |
+| **Redis** | `:6379` | Cache + sessions |
+
+### What happens on startup:
+1. PostgreSQL starts → health check
+2. Redis starts → health check
+3. Backend starts → runs `prisma migrate deploy` → Express server
+4. Frontend starts → Next.js standalone server
 
 ---
 

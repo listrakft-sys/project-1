@@ -1,0 +1,116 @@
+# ── School Platform — Docker Compose ───────────────────────
+# One command to run the entire platform: docker compose up -d
+# ────────────────────────────────────────────────────────────
+
+services:
+  # ── PostgreSQL Database ──────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: school-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: school_platform
+      POSTGRES_USER: school
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-schoolpass123}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U school -d school_platform"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - school-net
+
+  # ── Redis (for sessions, rate limiting, caching) ────────
+  redis:
+    image: redis:7-alpine
+    container_name: school-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - school-net
+
+  # ── Backend API (Express + Prisma) ───────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+
+      # Database
+      DATABASE_URL: postgresql://school:${DB_PASSWORD:-schoolpass123}@db:5432/school_platform?schema=public
+
+      # Redis
+      REDIS_URL: redis://redis:6379
+
+      # Auth
+      JWT_SECRET: ${JWT_SECRET:-change-this-in-production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-this-too}
+      JWT_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+
+      # CORS
+      CLIENT_URL: ${CLIENT_URL:-http://localhost:3001}
+
+      # NVIDIA AI
+      NVIDIA_API_KEY: ${NVIDIA_API_KEY:-}
+
+      # Email (SMTP)
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-EduPlatform <noreply@eduplatform.com>}
+
+      # App
+      SUPPORTED_LANGUAGES: es,de,en
+    ports:
+      - "3000:3000"
+    networks:
+      - school-net
+
+  # ── Frontend (Next.js) ───────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: school-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:3000}
+    ports:
+      - "3001:3001"
+    networks:
+      - school-net
+
+volumes:
+  pgdata:
+  redisdata:
+
+networks:
+  school-net:
+    driver: bridge
