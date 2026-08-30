@@ -56,6 +56,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   navItems.push({ name: t('nav.gradebook'), href: '/gradebook', icon: ClipboardList });
   navItems.push({ name: t('nav.myGrades'), href: '/my-grades', icon: BarChart3 });
   navItems.push({ name: t('nav.attendance'), href: '/attendance', icon: CalendarCheck });
+  if (user?.role === 'PARENT' || user?.role === 'TEACHER') {
+    navItems.push({ name: t('nav.parentChat'), href: '/parent-chat', icon: MessageSquare });
+  }
   navItems.push({ name: t('nav.aiAssistant'), href: '/ai-assistant', icon: Sparkles });
 
   if (isAdmin) {

@@ -16,6 +16,7 @@ export const es = {
     gradebook: 'Cuaderno de Notas',
     myGrades: 'Mis Calificaciones',
     attendance: 'Asistencia',
+    parentChat: 'Chat de Padres',
   },
   auth: {
     login: 'Iniciar Sesión',

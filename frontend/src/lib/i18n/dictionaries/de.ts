@@ -18,6 +18,7 @@ export const de: Dictionary = {
     gradebook: 'Notenbuch',
     myGrades: 'Meine Noten',
     attendance: 'Anwesenheit',
+    parentChat: 'Elterngespräch',
   },
   auth: {
     login: 'Anmelden',

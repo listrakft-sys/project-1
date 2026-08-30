@@ -148,6 +148,7 @@ model User {
   userPermissions     UserPermission[]
   refreshTokens       RefreshToken[]
   aiConversations     AIConversation[]
+  parentStudents      ParentStudent[]   @relation("ParentLinks")
 
   @@index([role])
   @@index([status])
@@ -310,10 +311,28 @@ model Student {
   reports             Report[]
   grades              Grade[]
   attendance          Attendance[]
+  parentLinks          ParentStudent[]
 
   @@index([schoolId])
   @@index([classId])
   @@index([userId])
+}
+
+
+model ParentStudent {
+  id          String   @id @default(uuid())
+  parentId    String   // User ID of the parent (role=PARENT)
+  parent      User     @relation("ParentLinks", fields: [parentId], references: [id], onDelete: Cascade)
+  studentId   String   // Student ID
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  relationship String?  // "mother", "father", "guardian", "grandparent", etc.
+  isPrimary   Boolean  @default(false) // primary contact
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([parentId, studentId])
+  @@index([parentId])
+  @@index([studentId])
 }
 
 model Lesson {

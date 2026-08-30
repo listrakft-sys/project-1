@@ -19,6 +19,7 @@ import permissionsRoutes from '../modules/permissions/permissions.routes';
 import aiRoutes from '../modules/ai/ai.routes';
 import gradebookRoutes from '../modules/gradebook/gradebook.routes';
 import adminRoutes from '../modules/admin/admin.routes';
+import parentChatRoutes from '../modules/parent-chat/parent-chat.routes';
 
 const router = Router();
 
@@ -42,5 +43,6 @@ router.use('/permissions', permissionsRoutes);
 router.use('/ai', aiRoutes);
 router.use('/gradebook', gradebookRoutes);
 router.use('/admin', adminRoutes);
+router.use('/parent-chat', parentChatRoutes);
 
 export default router;

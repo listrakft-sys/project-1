@@ -18,6 +18,7 @@ export const en: Dictionary = {
     gradebook: 'Gradebook',
     myGrades: 'My Grades',
     attendance: 'Attendance',
+    parentChat: 'Parent Chat',
   },
   auth: {
     login: 'Log In',
