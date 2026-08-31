@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import apiClient from '@/lib/api/client';
 import { useTranslation } from '@/lib/i18n';
+import { Download, FileText } from 'lucide-react';
 
 // ── Types ──────────────────────────────────────────────────
 interface Student {
@@ -223,6 +224,51 @@ export default function GradebookPage() {
     return 'text-red-600 font-bold';
   };
 
+
+  // ── PDF Export ──────────────────────────────────────────
+  const exportGradeReport = async (studentId: string) => {
+    try {
+      const res = await apiClient.get(`/export/grades/${studentId}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `grade_report_${studentId}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed', err);
+    }
+  };
+
+  const exportAttendanceReport = async (studentId: string) => {
+    try {
+      const res = await apiClient.get(`/export/attendance/${studentId}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `attendance_report_${studentId}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed', err);
+    }
+  };
+
+  const exportClassReport = async () => {
+    if (!selectedClass) return;
+    try {
+      const res = await apiClient.get(`/export/class/${selectedClass}`, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `class_report_${selectedClass}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Export failed', err);
+    }
+  };
+
   return (
     <div className="space-y-6 p-6">
       {/* ── Header ────────────────────────────────────────── */}
@@ -231,6 +277,17 @@ export default function GradebookPage() {
           <h1 className="text-2xl font-bold text-gray-800">📓 Gradebook</h1>
           <p className="text-sm text-gray-500 mt-1">Manage grades & attendance</p>
         </div>
+        {selectedClass && (
+          <div className="flex gap-2">
+            <button
+              onClick={exportClassReport}
+              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium hover:bg-slate-50 transition-colors"
+            >
+              <FileText className="h-4 w-4" />
+              {t('export.classReport')}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Filters ───────────────────────────────────────── */}
@@ -472,6 +529,24 @@ export default function GradebookPage() {
                       ) : (
                         <span className="text-gray-300">—</span>
                       )}
+                    </td>
+                    <td className="px-2 py-3 text-center">
+                      <div className="flex justify-center gap-1">
+                        <button
+                          onClick={() => exportGradeReport(item.student.id)}
+                          className="text-slate-400 hover:text-blue-500 transition-colors p-1"
+                          title={t('export.gradeReport')}
+                        >
+                          <Download className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => exportAttendanceReport(item.student.id)}
+                          className="text-slate-400 hover:text-blue-500 transition-colors p-1"
+                          title={t('export.attendanceReport')}
+                        >
+                          <FileText className="h-4 w-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}

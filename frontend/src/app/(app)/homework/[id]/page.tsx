@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import api from '@/lib/api/client';
 import { ArrowLeft, FileText, Clock, CheckCircle } from 'lucide-react';
+import { FileUpload } from '@/components/ui/FileUpload';
 
 export default function HomeworkDetailPage() {
   const { t } = useTranslation();
@@ -120,6 +121,9 @@ export default function HomeworkDetailPage() {
                 value={submission}
                 onChange={(e) => setSubmission(e.target.value)}
               />
+              <div className="mt-3">
+                <FileUpload entityType="HOMEWORK_SUBMISSION" entityId={homework.id} />
+              </div>
             </CardContent>
             <CardFooter>
               <Button onClick={handleSubmit} disabled={submitting || !submission}>

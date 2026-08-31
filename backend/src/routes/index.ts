@@ -20,6 +20,9 @@ import aiRoutes from '../modules/ai/ai.routes';
 import gradebookRoutes from '../modules/gradebook/gradebook.routes';
 import adminRoutes from '../modules/admin/admin.routes';
 import parentChatRoutes from '../modules/parent-chat/parent-chat.routes';
+import filesRoutes from '../modules/files/files.routes';
+import calendarRoutes from '../modules/calendar/calendar.routes';
+import exportRoutes from '../modules/reports-export/export.routes';
 
 const router = Router();
 
@@ -44,5 +47,8 @@ router.use('/ai', aiRoutes);
 router.use('/gradebook', gradebookRoutes);
 router.use('/admin', adminRoutes);
 router.use('/parent-chat', parentChatRoutes);
+router.use('/files', filesRoutes);
+router.use('/calendar', calendarRoutes);
+router.use('/export', exportRoutes);
 
 export default router;
