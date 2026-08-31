@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Fhomework\u002F[id]","\u002Flessons\u002F[id]","\u002Fmessages\u002F[id]","\u002Fprofile\u002F[id]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
