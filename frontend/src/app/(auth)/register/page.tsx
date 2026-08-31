@@ -6,10 +6,11 @@ import { useRouter } from 'next/navigation';
 import { useTranslation, Language } from '@/lib/i18n';
 import { useAuthStore, UserRole } from '@/lib/store/auth';
 import api from '@/lib/api/client';
+import { isDemoMode } from '@/lib/auth/demoUsers';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { School, Lock, Mail, User, Globe, AlertCircle, UserCheck } from 'lucide-react';
+import { School, Lock, Mail, User, Globe, AlertCircle, UserCheck, Info } from 'lucide-react';
 
 export default function RegisterPage() {
   const { t, language, setLanguage } = useTranslation();
@@ -28,6 +29,8 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const demo = isDemoMode();
+
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -35,13 +38,31 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.username || !formData.password || !formData.firstName || !formData.lastName) {
-      setError('Por favor completa todos los campos requeridos');
+      setError('Please fill in all required fields');
       return;
     }
 
     setIsLoading(true);
     setError(null);
 
+    // ── Demo mode: create local user ──
+    if (demo) {
+      await new Promise((r) => setTimeout(r, 600));
+      const newUser = {
+        id: 'local-' + Date.now(),
+        email: formData.email,
+        username: formData.username,
+        role: formData.role,
+        status: 'ACTIVE' as const,
+        preferredLang: language as 'es' | 'de' | 'en',
+        profile: { firstName: formData.firstName, lastName: formData.lastName },
+      };
+      login(newUser as any, 'demo-token-' + Date.now(), 'demo-refresh');
+      router.push('/');
+      return;
+    }
+
+    // ── Normal mode: real backend ──
     try {
       const response = await api.post('/auth/register', {
         email: formData.email,
@@ -58,7 +79,7 @@ export default function RegisterPage() {
       router.push('/');
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: { message?: string } } }; message?: string };
-      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Error al registrar usuario';
+      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Registration failed';
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -88,7 +109,6 @@ export default function RegisterPage() {
             <span className="font-bold text-lg text-foreground">EduPlatform</span>
           </div>
 
-          {/* Language Selector */}
           <div className="flex items-center gap-1 bg-muted/60 p-1 rounded-lg border border-border/50">
             <Globe className="h-3.5 w-3.5 ml-1 text-muted-foreground" />
             {languages.map((lang) => (
@@ -172,7 +192,6 @@ export default function RegisterPage() {
             required
           />
 
-          {/* Role Selection */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-foreground">{t('auth.role')}</label>
             <div className="grid grid-cols-3 gap-2">
@@ -197,6 +216,13 @@ export default function RegisterPage() {
             {t('auth.registerButton')}
           </Button>
         </form>
+
+        {demo && (
+          <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/15 text-xs text-muted-foreground flex items-start gap-2">
+            <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+            <span>Demo mode: your account will be saved locally in this browser only.</span>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="flex flex-col items-center justify-center pt-2 pb-6 border-t border-border/50">

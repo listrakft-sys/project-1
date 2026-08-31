@@ -6,31 +6,50 @@ import { useRouter } from 'next/navigation';
 import { useTranslation, Language } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/store/auth';
 import api from '@/lib/api/client';
+import { findDemoUser, isDemoMode, DEMO_USERS } from '@/lib/auth/demoUsers';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { School, Lock, Mail, Globe, AlertCircle } from 'lucide-react';
+import { School, Lock, Mail, Globe, AlertCircle, User, Info } from 'lucide-react';
 
 export default function LoginPage() {
   const { t, language, setLanguage } = useTranslation();
   const router = useRouter();
   const login = useAuthStore((state) => state.login);
 
-  const [identifier, setIdentifier] = useState(''); // email or username
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const demo = isDemoMode();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!identifier || !password) {
-      setError('Por favor completa todos los campos');
+      setError('Please fill in all fields');
       return;
     }
 
     setIsLoading(true);
     setError(null);
 
+    // ── Demo mode: no backend, authenticate locally ──
+    if (demo) {
+      await new Promise((r) => setTimeout(r, 600)); // simulate delay
+      const demoUser = findDemoUser(identifier, password);
+      if (!demoUser) {
+        setError('Invalid username or password');
+        setIsLoading(false);
+        return;
+      }
+      const { demoPassword, ...userData } = demoUser;
+      login(userData as any, 'demo-token-' + Date.now(), 'demo-refresh');
+      router.push('/');
+      return;
+    }
+
+    // ── Normal mode: real backend ──
     try {
       const response = await api.post('/auth/login', {
         emailOrUsername: identifier,
@@ -42,11 +61,18 @@ export default function LoginPage() {
       router.push('/');
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: { message?: string } } }; message?: string };
-      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Error al iniciar sesión';
+      const msg = axiosErr.response?.data?.error?.message || axiosErr.message || 'Login failed';
       setError(msg);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Quick fill demo account
+  const fillDemo = (username: string, pass: string) => {
+    setIdentifier(username);
+    setPassword(pass);
+    setError(null);
   };
 
   const languages: { code: Language; label: string }[] = [
@@ -102,11 +128,11 @@ export default function LoginPage() {
 
           <Input
             label={`${t('auth.email')} / ${t('auth.username')}`}
-            placeholder="email@ejemplo.com o usuario"
+            placeholder="username or email"
             type="text"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            leftIcon={<Mail className="h-4 w-4" />}
+            leftIcon={<User className="h-4 w-4" />}
             required
           />
 
@@ -124,6 +150,35 @@ export default function LoginPage() {
             {t('auth.loginButton')}
           </Button>
         </form>
+
+        {/* Demo accounts quick-fill */}
+        {demo && (
+          <div className="mt-6 p-4 rounded-lg bg-primary/5 border border-primary/15 space-y-3">
+            <div className="flex items-center gap-2 text-primary font-medium text-sm">
+              <Info className="h-4 w-4" />
+              <span>Demo accounts — click to fill</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {Object.entries(DEMO_USERS).map(([key, user]) => (
+                <button
+                  key={key}
+                  onClick={() => fillDemo(user.username, user.demoPassword)}
+                  className="text-left p-2.5 rounded-lg bg-card hover:bg-accent border border-border/50 transition-colors group"
+                >
+                  <div className="font-semibold text-sm text-foreground capitalize">
+                    {user.role.toLowerCase().replace('_', ' ')}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5 font-mono">
+                    {user.username} / {user.demoPassword}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {user.profile?.firstName} {user.profile?.lastName}
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="flex flex-col items-center justify-center pt-2 pb-6 border-t border-border/50">
