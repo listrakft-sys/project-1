@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../api/client';
+import { isDemoMode } from '../auth/demoMode';
 
 export type UserRole = 'SUPER_ADMIN' | 'SCHOOL_ADMIN' | 'TEACHER' | 'STUDENT' | 'PARENT';
 
@@ -59,6 +60,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   login: (user, token, refreshToken) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     }
     set({ user, token, refreshToken: refreshToken ?? null, isAuthenticated: true });
@@ -67,6 +69,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   setAuth: (user, token, refreshToken) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
     }
     set({ user, token, refreshToken: refreshToken ?? null, isAuthenticated: true });
@@ -89,6 +92,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       return;
     }
 
+    // Demo mode (static hosting, no backend): restore the user from
+    // localStorage instead of calling /auth/me, which would fail and
+    // wrongly wipe the session.
+    if (isDemoMode()) {
+      let storedUser: User | null = null;
+      try {
+        const raw = localStorage.getItem('user');
+        storedUser = raw ? (JSON.parse(raw) as User) : null;
+      } catch {
+        storedUser = null;
+      }
+      set({ user: storedUser, isAuthenticated: true, isLoading: false });
+      return;
+    }
+
     set({ isLoading: true });
     try {
       const response = await api.get('/auth/me');
@@ -98,6 +116,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
       }
       set({ user: null, token: null, refreshToken: null, isAuthenticated: false, isLoading: false });
     }
@@ -107,6 +126,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
       localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
     }
     set({ user: null, token: null, refreshToken: null, isAuthenticated: false });
   },
