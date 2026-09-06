@@ -1,3 +1,0 @@
-module.exports=[30183,a=>{"use strict";a.s(["default",()=>b]);let b=(0,a.i(2497).registerClientReference)(function(){throw Error("Attempted to call the default export of [project]/frontend/src/app/(auth)/layout.tsx from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.")},"[project]/frontend/src/app/(auth)/layout.tsx","default")},69921,a=>{"use strict";var b=a.i(30183);a.n(b)},29358,function(a){a.n(a.i(69921))}];
-
-//# sourceMappingURL=frontend_src_app_%28auth%29_layout_tsx_07fuboa._.js.map

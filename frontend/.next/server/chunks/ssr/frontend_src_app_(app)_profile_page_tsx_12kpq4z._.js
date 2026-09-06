@@ -1,3 +1,0 @@
-module.exports=[56124,a=>{"use strict";var b=a.i(57850),c=a.i(45056),d=a.i(93609),e=a.i(91927),f=a.i(69355);a.s(["default",0,function(){let a=(0,d.useRouter)(),{user:g,isLoading:h}=(0,e.useAuthStore)(),[i,j]=(0,c.useState)(!1);return(0,c.useEffect)(()=>{j(!0)},[]),(0,c.useEffect)(()=>{i&&!h&&g?.id&&a.replace(`/profile/${g.id}`)},[i,h,g,a]),!i||h||!g?.id,(0,b.jsx)("div",{className:"flex items-center justify-center py-20",children:(0,b.jsx)(f.Loader2,{className:"h-8 w-8 animate-spin text-primary"})})}])}];
-
-//# sourceMappingURL=frontend_src_app_%28app%29_profile_page_tsx_12kpq4z._.js.map

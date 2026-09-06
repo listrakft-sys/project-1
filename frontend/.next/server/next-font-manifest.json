@@ -1,102 +1,102 @@
 {
   "app": {
-    "[project]/frontend/src/app/(app)/admin/announcements/page": [
+    "[project]/src/app/(app)/admin/announcements/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/classes/page": [
+    "[project]/src/app/(app)/admin/classes/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/complaints/page": [
+    "[project]/src/app/(app)/admin/complaints/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/page": [
+    "[project]/src/app/(app)/admin/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/schedule/page": [
+    "[project]/src/app/(app)/admin/schedule/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/subjects/page": [
+    "[project]/src/app/(app)/admin/subjects/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/admin/users/page": [
+    "[project]/src/app/(app)/admin/users/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/ai-assistant/page": [
+    "[project]/src/app/(app)/ai-assistant/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/announcements/page": [
+    "[project]/src/app/(app)/announcements/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/attendance/page": [
+    "[project]/src/app/(app)/attendance/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/calendar/page": [
+    "[project]/src/app/(app)/calendar/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/gradebook/page": [
+    "[project]/src/app/(app)/gradebook/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/homework/[id]/page": [
+    "[project]/src/app/(app)/homework/[id]/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/homework/page": [
+    "[project]/src/app/(app)/homework/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/lessons/[id]/page": [
+    "[project]/src/app/(app)/lessons/[id]/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/lessons/page": [
+    "[project]/src/app/(app)/lessons/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/messages/[id]/page": [
+    "[project]/src/app/(app)/messages/[id]/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/messages/page": [
+    "[project]/src/app/(app)/messages/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/my-grades/page": [
+    "[project]/src/app/(app)/my-grades/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/notifications/page": [
+    "[project]/src/app/(app)/notifications/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/notifications/settings/page": [
+    "[project]/src/app/(app)/notifications/settings/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/page": [
+    "[project]/src/app/(app)/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/parent-chat/page": [
+    "[project]/src/app/(app)/parent-chat/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/profile/[id]/page": [
+    "[project]/src/app/(app)/profile/[id]/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/profile/edit/page": [
+    "[project]/src/app/(app)/profile/edit/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/profile/page": [
+    "[project]/src/app/(app)/profile/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/schedule/page": [
+    "[project]/src/app/(app)/schedule/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/settings/page": [
+    "[project]/src/app/(app)/settings/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/students/page": [
+    "[project]/src/app/(app)/students/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(app)/teachers/page": [
+    "[project]/src/app/(app)/teachers/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(auth)/login/page": [
+    "[project]/src/app/(auth)/login/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/(auth)/register/page": [
+    "[project]/src/app/(auth)/register/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ],
-    "[project]/frontend/src/app/_not-found/page": [
+    "[project]/src/app/_not-found/page": [
       "static/media/83afe278b6a6bb3c-s.p.2bn3s6zvc0dyp.woff2"
     ]
   },

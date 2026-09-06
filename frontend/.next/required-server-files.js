@@ -106,7 +106,7 @@ self.__SERVER_FILES_MANIFEST={
         "transform": "lodash/{{member}}"
       }
     },
-    "outputFileTracingRoot": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform",
+    "outputFileTracingRoot": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform/frontend",
     "enablePrerenderSourceMaps": true,
     "cacheComponents": false,
     "cacheLife": {
@@ -321,9 +321,9 @@ self.__SERVER_FILES_MANIFEST={
     "htmlLimitedBots": "[\\w-]+-Google|Google-[\\w-]+|Chrome-Lighthouse|Slurp|DuckDuckBot|baiduspider|yandex|sogou|bitlybot|tumblr|vkShare|quora link preview|redditbot|ia_archiver|Bingbot|BingPreview|applebot|facebookexternalhit|facebookcatalog|Twitterbot|LinkedInBot|Slackbot|Discordbot|WhatsApp|SkypeUriPreview|Yeti|googleweblight",
     "bundlePagesRouterDependencies": false,
     "configFileName": "next.config.js",
-    "repoRoot": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform",
+    "repoRoot": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform/frontend",
     "turbopack": {
-      "root": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform"
+      "root": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform/frontend"
     },
     "distDirRoot": ".next",
     "_originalRewrites": {
@@ -333,7 +333,7 @@ self.__SERVER_FILES_MANIFEST={
     }
   },
   "appDir": "/app/conversations/6a9303e46e9afb50ebf413b1/school-platform/frontend",
-  "relativeAppDir": "frontend",
+  "relativeAppDir": "",
   "files": [
     ".next/package.json",
     ".next/routes-manifest.json",
