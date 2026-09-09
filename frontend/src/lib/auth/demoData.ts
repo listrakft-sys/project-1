@@ -112,6 +112,158 @@ export const DEMO_DATA = {
     ], average: 50, attendance: { present: 10, absent: 5, late: 1, total: 16 } },
   ],
 
+  // ── Admin ──
+  adminStats: {
+    totals: { users: 86, students: 62, teachers: 14, classes: 8, subjects: 11, lessons: 124, announcements: 9, schedules: 40, pendingComplaints: 2 },
+    thisWeek: { newUsers: 5, newComplaints: 2, newAnnouncements: 3 },
+    metrics: { attendanceRate: 94.2, gradeAverage: 82.5 },
+  },
+
+  adminActivity: [
+    { id: 'act1', type: 'user_created', description: 'Зарегистрирован новый ученик: Диего Морено', createdAt: new Date().toISOString() },
+    { id: 'act2', type: 'complaint', description: 'Новая жалоба: ожидает рассмотрения', createdAt: new Date().toISOString() },
+    { id: 'act3', type: 'announcement', description: 'Опубликовано объявление: Спортивный день', createdAt: new Date().toISOString() },
+    { id: 'act4', type: 'grade', description: 'Выставлены оценки по математике (7-A)', createdAt: new Date().toISOString() },
+    { id: 'act5', type: 'homework', description: 'Задана домашняя работа: Уравнения 2-й степени', createdAt: new Date().toISOString() },
+    { id: 'act6', type: 'user_created', description: 'Зарегистрирован новый учитель: Педро Санчес', createdAt: new Date().toISOString() },
+    { id: 'act7', type: 'schedule', description: 'Обновлено расписание 8-B', createdAt: new Date().toISOString() },
+    { id: 'act8', type: 'attendance', description: 'Отмечена посещаемость 7-A', createdAt: new Date().toISOString() },
+  ],
+
+  users: [
+    { id: 'u1', email: 'admin@school.edu', username: 'admin', role: 'SCHOOL_ADMIN', status: 'ACTIVE', profile: { firstName: 'Анна', lastName: 'Гарсиа' }, createdAt: new Date().toISOString() },
+    { id: 'u2', email: 'teacher@school.edu', username: 'teacher', role: 'TEACHER', status: 'ACTIVE', profile: { firstName: 'Лаура', lastName: 'Фернандес' }, createdAt: new Date().toISOString() },
+    { id: 'u3', email: 'student@school.edu', username: 'student', role: 'STUDENT', status: 'ACTIVE', profile: { firstName: 'Мария', lastName: 'Гарсиа' }, createdAt: new Date().toISOString() },
+    { id: 'u4', email: 'parent@school.edu', username: 'parent', role: 'PARENT', status: 'ACTIVE', profile: { firstName: 'Карлос', lastName: 'Руис' }, createdAt: new Date().toISOString() },
+    { id: 'u5', email: 'elena@school.edu', username: 'elena_p', role: 'STUDENT', status: 'ACTIVE', profile: { firstName: 'Елена', lastName: 'Перес' }, createdAt: new Date().toISOString() },
+    { id: 'u6', email: 'diego@school.edu', username: 'diego_m', role: 'STUDENT', status: 'PENDING', profile: { firstName: 'Диего', lastName: 'Морено' }, createdAt: new Date().toISOString() },
+    { id: 'u7', email: 'lucia@school.edu', username: 'lucia_v', role: 'STUDENT', status: 'SUSPENDED', profile: { firstName: 'Люсия', lastName: 'Варгас' }, createdAt: new Date().toISOString() },
+    { id: 'u8', email: 'pedro@school.edu', username: 'pedro_s', role: 'TEACHER', status: 'ACTIVE', profile: { firstName: 'Педро', lastName: 'Санчес' }, createdAt: new Date().toISOString() },
+  ],
+
+  complaints: [
+    { id: 'cmp1', type: 'GRADE_DISPUTE', status: 'PENDING', description: 'Оценка за контрольную кажется несправедливой', createdAt: new Date().toISOString(), filedBy: { username: 'parent', profile: { firstName: 'Карлос', lastName: 'Руис' } }, againstUser: { username: 'teacher', profile: { firstName: 'Лаура', lastName: 'Фернандес' } } },
+    { id: 'cmp2', type: 'BULLYING', status: 'REVIEWING', description: 'Конфликт между учениками на перемене', createdAt: new Date().toISOString(), filedBy: { username: 'parent', profile: { firstName: 'Елена', lastName: 'Перес' } }, againstUser: { username: 'student', profile: { firstName: 'Диего', lastName: 'Морено' } } },
+    { id: 'cmp3', type: 'TEACHER_CONDUCT', status: 'RESOLVED', resolution: 'Проведена беседа с учителем', description: 'Опоздания на уроки', createdAt: new Date().toISOString(), filedBy: { username: 'student', profile: { firstName: 'Мария', lastName: 'Гарсиа' } }, againstUser: { username: 'pedro_s', profile: { firstName: 'Педро', lastName: 'Санчес' } } },
+  ],
+
+  subjects: [
+    { id: 's1', name: 'Математика', code: 'MATH', description: 'Алгебра и геометрия', color: '#3b82f6', teachers: [{ id: 't1', userId: 'u1', profile: { firstName: 'Анна', lastName: 'Гарсиа' } }] },
+    { id: 's2', name: 'Литература', code: 'LIT', description: 'Испанская и мировая литература', color: '#ec4899', teachers: [{ id: 't2', userId: 'u2', profile: { firstName: 'Лаура', lastName: 'Фернандес' } }] },
+    { id: 's3', name: 'Физика', code: 'PHY', description: 'Механика, оптика, электричество', color: '#8b5cf6', teachers: [{ id: 't3', userId: 'u8', profile: { firstName: 'Педро', lastName: 'Санчес' } }] },
+    { id: 's4', name: 'История', code: 'HIST', description: 'История Испании и мира', color: '#f59e0b', teachers: [{ id: 't1', userId: 'u1', profile: { firstName: 'Анна', lastName: 'Гарсиа' } }] },
+  ],
+
+  // ── Student "me" record (student attendance view) ──
+  studentMe: { id: 'st1', schoolId: 'demo-school', classId: 'c1', user: { username: 'student', profile: { firstName: 'Мария', lastName: 'Гарсиа' } } },
+
+  studentAttendance: [
+    { id: 'att1', studentId: 'st1', status: 'PRESENT', date: new Date().toISOString() },
+    { id: 'att2', studentId: 'st1', status: 'PRESENT', date: new Date(Date.now() - 86400000).toISOString() },
+    { id: 'att3', studentId: 'st1', status: 'LATE', date: new Date(Date.now() - 2 * 86400000).toISOString() },
+    { id: 'att4', studentId: 'st1', status: 'ABSENT', date: new Date(Date.now() - 3 * 86400000).toISOString() },
+    { id: 'att5', studentId: 'st1', status: 'PRESENT', date: new Date(Date.now() - 4 * 86400000).toISOString() },
+    { id: 'att6', studentId: 'st1', status: 'EXCUSED', date: new Date(Date.now() - 5 * 86400000).toISOString() },
+  ],
+
+  attendanceSummary: { total: 16, present: 13, absent: 1, late: 1, excused: 1, earlyLeave: 0, rate: 87.5 },
+
+  // Class attendance for today (teacher marking view)
+  classAttendance: [
+    { id: 'ca1', studentId: 'st1', status: 'PRESENT', date: new Date().toISOString() },
+    { id: 'ca2', studentId: 'st2', status: 'PRESENT', date: new Date().toISOString() },
+    { id: 'ca3', studentId: 'st3', status: 'ABSENT', date: new Date().toISOString() },
+  ],
+
+  // ── Lessons (full list) ──
+  lessons: [
+    { id: 'l1', title: 'Алгебра', subject: { id: 's1', name: 'Математика', color: '#3b82f6' }, startDate: todayAt(9, 0), endDate: todayAt(9, 50), startTime: '09:00', endTime: '09:50', room: '201', className: '7-A' },
+    { id: 'l2', title: 'Сервантес', subject: { id: 's2', name: 'Литература', color: '#ec4899' }, startDate: todayAt(10, 0), endDate: todayAt(10, 50), startTime: '10:00', endTime: '10:50', room: '105', className: '7-A' },
+    { id: 'l3', title: 'Законы Ньютона', subject: { id: 's3', name: 'Физика', color: '#8b5cf6' }, startDate: todayAt(11, 0), endDate: todayAt(11, 50), startTime: '11:00', endTime: '11:50', room: '301', className: '8-B' },
+    { id: 'l4', title: 'Реконкиста', subject: { id: 's4', name: 'История', color: '#f59e0b' }, startDate: todayAt(12, 0), endDate: todayAt(12, 50), startTime: '12:00', endTime: '12:50', room: '202', className: '7-A' },
+    { id: 'l5', title: 'Квадратные уравнения', subject: { id: 's1', name: 'Математика', color: '#3b82f6' }, startDate: todayAt(9, 0), endDate: todayAt(9, 50), startTime: '09:00', endTime: '09:50', room: '203', className: '8-A' },
+  ],
+
+  lessonDetail: {
+    id: 'l1', title: 'Алгебра',
+    subject: { id: 's1', name: 'Математика', color: '#3b82f6' },
+    teacher: { user: { username: 'anna_g', profile: { firstName: 'Анна', lastName: 'Гарсиа' } } },
+    className: '7-A', room: '201',
+    startDate: todayAt(9, 0), endDate: todayAt(9, 50), startTime: '09:00', endTime: '09:50',
+    description: 'Решение квадратных уравнений. Теорема Виета. Разбор задач из домашней работы.',
+    materials: [
+      { id: 'm1', name: 'Презентация: Квадратные уравнения.pdf', type: 'pdf', url: '#' },
+      { id: 'm2', name: 'Рабочая тетрадь, стр. 84', type: 'doc', url: '#' },
+    ],
+  },
+
+  homeworkDetail: {
+    id: 'h1', title: 'Уравнения 2-й степени',
+    subject: { id: 's1', name: 'Математика', color: '#3b82f6' },
+    teacher: { user: { username: 'anna_g', profile: { firstName: 'Анна', lastName: 'Гарсиа' } } },
+    className: '7-A', dueDate: '2026-09-12', status: 'assigned',
+    description: 'Решить задачи 1-15 на стр. 84. Особое внимание — задачам со звёздочкой.',
+    attachments: [{ id: 'hw-a1', name: 'Задачи.pdf', type: 'pdf', url: '#' }],
+    submissions: [],
+  },
+
+  // ── Conversations detail (thread view) ──
+  conversationMessages: [
+    { id: 'msg1', senderId: 'u4', senderName: 'Карлос Руис', content: 'Добрый день! Когда будет родительское собрание?', createdAt: new Date(Date.now() - 3600000).toISOString(), isOwn: false },
+    { id: 'msg2', senderId: 'me', senderName: 'Вы', content: 'Добрый день! В эту пятницу в 18:00.', createdAt: new Date(Date.now() - 3400000).toISOString(), isOwn: true },
+    { id: 'msg3', senderId: 'u4', senderName: 'Карлос Руис', content: 'Спасибо за информацию!', createdAt: new Date(Date.now() - 3000000).toISOString(), isOwn: false },
+    { id: 'msg4', senderId: 'me', senderName: 'Вы', content: 'Если будут вопросы — пишите.', createdAt: new Date(Date.now() - 1200000).toISOString(), isOwn: true },
+  ],
+
+  conversationDetail: {
+    id: 'c2', name: 'Карлос Руис', type: 'DIRECT',
+    otherParticipant: { id: 'u4', name: 'Карлос Руис', role: 'PARENT', avatar: null },
+    participantCount: 2,
+  },
+
+  // ── Parent chat ──
+  parentChatChildren: [
+    { linkId: 'pl1', studentId: 'st1', studentName: 'Мария Гарсиа', relationship: 'MOTHER', isPrimary: true, classId: 'c1', className: '7-A', homeroomTeacherId: 't1' },
+  ],
+
+  parentChatTeachers: [
+    { teacherId: 't1', userId: 'u1', name: 'Анна Гарсиа', subjects: ['Математика'], isHomeroom: true },
+    { teacherId: 't2', userId: 'u2', name: 'Лаура Фернандес', subjects: ['Литература'], isHomeroom: false },
+    { teacherId: 't3', userId: 'u8', name: 'Педро Санчес', subjects: ['Физика'], isHomeroom: false },
+  ],
+
+  parentChatConversations: [
+    { id: 'c2', name: 'Анна Гарсиа', type: 'DIRECT', lastMessage: { content: 'Спасибо за информацию!', createdAt: new Date().toISOString() }, unreadCount: 0, updatedAt: new Date().toISOString(), participantCount: 2, otherParticipant: { id: 'u1', name: 'Анна Гарсиа', role: 'TEACHER', avatar: null } },
+    { id: 'c1', name: '7-A Родительский чат', type: 'GROUP', lastMessage: { content: 'Когда родительское собрание?', createdAt: new Date(Date.now() - 7200000).toISOString() }, unreadCount: 2, updatedAt: new Date(Date.now() - 7200000).toISOString(), participantCount: 12 },
+  ],
+
+  parentChatGroups: [
+    { classId: 'c1', className: '7-A', schoolName: 'Школа №1', childName: 'Мария Гарсиа', groupExists: true, isMember: true, conversationId: 'c1' },
+  ],
+
+  parentChatAvailableGroups: [
+    { classId: 'c1', className: '7-A', schoolName: 'Школа №1', childName: 'Мария Гарсиа', groupExists: true, isMember: false, conversationId: null },
+  ],
+
+  // ── User profile ──
+  userProfile: {
+    id: 'u3', email: 'student@school.edu', username: 'student', role: 'STUDENT', status: 'ACTIVE',
+    profile: { firstName: 'Мария', lastName: 'Гарсиа', avatar: null, phone: '+34 600 000 000', bio: 'Ученица 7-А класса. Люблю математику и литературу.' },
+    student: { id: 'st1', schoolId: 'demo-school', classId: 'c1' },
+  },
+
+  // ── Class details ──
+  classDetails: {
+    id: 'c1', name: '7-A', grade: 7, section: 'A',
+    homeroomTeacher: { id: 't1', user: { username: 'anna_g', profile: { firstName: 'Анна', lastName: 'Гарсиа' } } },
+    students: [
+      { id: 'st1', user: { username: 'maria_g', profile: { firstName: 'Мария', lastName: 'Гарсиа' } } },
+      { id: 'st2', user: { username: 'carlos_r', profile: { firstName: 'Карлос', lastName: 'Руис' } } },
+      { id: 'st3', user: { username: 'elena_p', profile: { firstName: 'Елена', lastName: 'Перес' } } },
+    ],
+    studentsCount: 28,
+  },
+
   // ── My Grades (student view) ──
   myGrades: [
     { id: 'g1', subject: { name: 'Математика', color: '#3b82f6' }, score: 9, maxScore: 10, type: 'тест', comment: 'Хорошо', date: new Date().toISOString() },
@@ -121,19 +273,63 @@ export const DEMO_DATA = {
   ],
 };
 
-// Helper: get demo data by API path
-export function getDemoData(path: string): any[] | null {
-  if (path.includes('/lessons/today')) return DEMO_DATA.lessonsToday;
-  if (path.includes('/homework')) return DEMO_DATA.homework;
-  if (path.includes('/announcements')) return DEMO_DATA.announcements;
-  if (path.includes('/conversations')) return DEMO_DATA.conversations;
-  if (path.includes('/notifications') && !path.includes('/settings')) return DEMO_DATA.notifications;
-  if (path.includes('/calendar')) return DEMO_DATA.calendarEvents;
-  if (path.includes('/classes') && !path.includes('gradebook')) return DEMO_DATA.classes;
+// Helper: get demo data by API path.
+// NOTE: order matters — more specific paths must be checked first.
+export function getDemoData(path: string): any {
+  // ── Admin ──
+  if (path.includes('/admin/stats')) return DEMO_DATA.adminStats;
+  if (path.includes('/admin/activity')) return DEMO_DATA.adminActivity;
+
+  // ── Users (admin list vs. public profile) ──
+  if (/\/users\/[^/]+$/.test(path)) return DEMO_DATA.userProfile;
+  if (path === '/users') return DEMO_DATA.users;
+
+  // ── Complaints / subjects ──
+  if (path.includes('/complaints')) return DEMO_DATA.complaints;
+  if (path.includes('/subjects')) return DEMO_DATA.subjects;
+
+  // ── Students: /students/me before generic /students ──
+  if (path.includes('/students/me')) return DEMO_DATA.studentMe;
   if (path.includes('/students')) return DEMO_DATA.students;
   if (path.includes('/teachers')) return DEMO_DATA.teachers;
-  if (path.includes('/schedule')) return DEMO_DATA.schedule;
+
+  // ── Attendance (gradebook) ──
+  if (/\/gradebook\/students\/[^/]+\/attendance\/summary/.test(path)) return DEMO_DATA.attendanceSummary;
+  if (/\/gradebook\/students\/[^/]+\/attendance/.test(path)) return DEMO_DATA.studentAttendance;
+  if (/\/gradebook\/classes\/[^/]+\/attendance/.test(path)) return DEMO_DATA.classAttendance;
   if (path.includes('/gradebook')) return DEMO_DATA.gradebook;
+
+  // ── Lessons: today → detail → list ──
+  if (path.includes('/lessons/today')) return DEMO_DATA.lessonsToday;
+  if (/\/lessons\/[^/]+$/.test(path)) return DEMO_DATA.lessonDetail;
+  if (path.includes('/lessons')) return DEMO_DATA.lessons;
+
+  // ── Homework: detail → list ──
+  if (/\/homework\/[^/]+$/.test(path)) return DEMO_DATA.homeworkDetail;
+  if (path.includes('/homework')) return DEMO_DATA.homework;
+
+  // ── Conversations: thread → detail → list ──
+  if (/\/conversations\/[^/]+\/messages/.test(path)) return DEMO_DATA.conversationMessages;
+  if (/\/conversations\/[^/]+$/.test(path)) return DEMO_DATA.conversationDetail;
+  if (path.includes('/conversations')) return DEMO_DATA.conversations;
+
+  // ── Parent chat ──
+  if (path.includes('/parent-chat/teachers')) return DEMO_DATA.parentChatTeachers;
+  if (path.includes('/parent-chat/children')) return DEMO_DATA.parentChatChildren;
+  if (path.includes('/parent-chat/groups')) return DEMO_DATA.parentChatGroups;
+  if (path.includes('/parent-chat/available-groups')) return DEMO_DATA.parentChatAvailableGroups;
+  if (path.includes('/parent-chat/conversations')) return DEMO_DATA.parentChatConversations;
+
+  // ── Schedule / classes ──
+  if (path.includes('/schedules')) return DEMO_DATA.schedule;
+  if (/\/classes\/[^/]+$/.test(path)) return DEMO_DATA.classDetails;
+  if (path.includes('/classes')) return DEMO_DATA.classes;
+
+  // ── Misc ──
+  if (path.includes('/announcements')) return DEMO_DATA.announcements;
+  if (path.includes('/notifications') && !path.includes('/settings')) return DEMO_DATA.notifications;
+  if (path.includes('/calendar')) return DEMO_DATA.calendarEvents;
   if (path.includes('/my-grades')) return DEMO_DATA.myGrades;
+
   return null;
 }
