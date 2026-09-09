@@ -1,5 +1,10 @@
 export const es = {
   nav: {
+    linkChild: 'Vincular hijo',
+    myChildren: 'Mis hijos',
+    noChildren: 'Sin hijos vinculados',
+    noTeachers: 'No se encontraron profesores',
+    startChat: 'Iniciar chat',
     home: 'Inicio',
     lessons: 'Lecciones',
     schedule: 'Horario',
@@ -78,6 +83,7 @@ export const es = {
     parentRole: 'Padre/Madre',
   },
   common: {
+    close: 'Cerrar',
     save: 'Guardar',
     cancel: 'Cancelar',
     delete: 'Eliminar',
@@ -110,6 +116,11 @@ export const es = {
     materials: 'Materiales',
   },
   schedule: {
+    subtitle: 'Gestión del horario semanal',
+    addSlot: 'Añadir clase',
+    editSlot: 'Editar clase',
+    startTime: 'Hora de inicio',
+    endTime: 'Hora de fin',
     title: 'Horario Escolar',
     'monday-friday': 'Lunes - Viernes',
     noSchedule: 'No hay clases programadas',
@@ -184,6 +195,23 @@ export const es = {
     schedule: 'Horarios',
     complaints: 'Quejas y Reclamaciones',
     announcements: 'Anuncios Globales',
+  },
+
+  classes: {
+    subtitle: 'Gestión de clases, aulas y tutores',
+    capacity: 'Capacidad',
+    section: 'Sección',
+    studentsList: 'Lista de estudiantes',
+  },
+
+  subjects: {
+    subtitle: 'Gestión de asignaturas, colores y profesores',
+    code: 'Código',
+    color: 'Color',
+  },
+
+  users: {
+    subtitle: 'Gestión de cuentas, roles y accesos',
   },
 
   calendario: {

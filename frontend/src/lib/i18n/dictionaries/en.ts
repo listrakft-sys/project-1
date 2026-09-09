@@ -2,6 +2,11 @@ import { Dictionary } from './es';
 
 export const en: Dictionary = {
   nav: {
+    linkChild: 'Link child',
+    myChildren: 'My Children',
+    noChildren: 'No children linked',
+    noTeachers: 'No teachers found',
+    startChat: 'Start chat',
     home: 'Home',
     lessons: 'Lessons',
     schedule: 'Schedule',
@@ -80,6 +85,7 @@ export const en: Dictionary = {
     parentRole: 'Parent',
   },
   common: {
+    close: 'Close',
     save: 'Save',
     cancel: 'Cancel',
     delete: 'Delete',
@@ -112,6 +118,11 @@ export const en: Dictionary = {
     materials: 'Materials',
   },
   schedule: {
+    subtitle: 'Manage the weekly lesson timetable',
+    addSlot: 'Add lesson',
+    editSlot: 'Edit lesson',
+    startTime: 'Start time',
+    endTime: 'End time',
     title: 'School Schedule',
     'monday-friday': 'Monday - Friday',
     noSchedule: 'No scheduled classes',
@@ -186,6 +197,23 @@ export const en: Dictionary = {
     schedule: 'Schedules',
     complaints: 'Complaints',
     announcements: 'Global Announcements',
+  },
+
+  classes: {
+    subtitle: 'Manage classes, rooms, and homeroom tutors',
+    capacity: 'Capacity',
+    section: 'Section',
+    studentsList: 'Students list',
+  },
+
+  subjects: {
+    subtitle: 'Manage subjects, colors, and teaching staff',
+    code: 'Code',
+    color: 'Color',
+  },
+
+  users: {
+    subtitle: 'Manage accounts, roles, and access',
   },
 
   calendario: {

@@ -2,6 +2,11 @@ import { Dictionary } from './es';
 
 export const ru: Dictionary = {
   nav: {
+    linkChild: 'Привязать ребёнка',
+    myChildren: 'Мои дети',
+    noChildren: 'Нет привязанных детей',
+    noTeachers: 'Учителя не найдены',
+    startChat: 'Начать чат',
     home: 'Главная',
     lessons: 'Уроки',
     schedule: 'Расписание',
@@ -80,6 +85,7 @@ export const ru: Dictionary = {
     parentRole: 'Родитель',
   },
   common: {
+    close: 'Закрыть',
     save: 'Сохранить',
     cancel: 'Отмена',
     delete: 'Удалить',
@@ -112,6 +118,11 @@ export const ru: Dictionary = {
     materials: 'Материалы',
   },
   schedule: {
+    subtitle: 'Управление недельным расписанием уроков',
+    addSlot: 'Добавить урок',
+    editSlot: 'Изменить урок',
+    startTime: 'Начало',
+    endTime: 'Конец',
     title: 'Расписание',
     'monday-friday': 'Понедельник - Пятница',
     noSchedule: 'Нет запланированных уроков',
@@ -186,6 +197,23 @@ export const ru: Dictionary = {
     schedule: 'Расписания',
     complaints: 'Жалобы',
     announcements: 'Глобальные объявления',
+  },
+
+  classes: {
+    subtitle: 'Управление классами, кабинетами и классными руководителями',
+    capacity: 'Вместимость',
+    section: 'Литера',
+    studentsList: 'Список учеников',
+  },
+
+  subjects: {
+    subtitle: 'Управление предметами, цветами и учителями',
+    code: 'Код',
+    color: 'Цвет',
+  },
+
+  users: {
+    subtitle: 'Управление аккаунтами, ролями и доступами',
   },
 
   calendario: {

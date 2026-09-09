@@ -2,6 +2,11 @@ import { Dictionary } from './es';
 
 export const de: Dictionary = {
   nav: {
+    linkChild: 'Kind hinzufügen',
+    myChildren: 'Meine Kinder',
+    noChildren: 'Keine Kinder verknüpft',
+    noTeachers: 'Keine Lehrer gefunden',
+    startChat: 'Chat starten',
     home: 'Startseite',
     lessons: 'Lektionen',
     schedule: 'Stundenplan',
@@ -80,6 +85,7 @@ export const de: Dictionary = {
     parentRole: 'Elternteil',
   },
   common: {
+    close: 'Schließen',
     save: 'Speichern',
     cancel: 'Abbrechen',
     delete: 'Löschen',
@@ -112,6 +118,11 @@ export const de: Dictionary = {
     materials: 'Materialien',
   },
   schedule: {
+    subtitle: 'Wochenstundenplan verwalten',
+    addSlot: 'Stunde hinzufügen',
+    editSlot: 'Stunde bearbeiten',
+    startTime: 'Beginn',
+    endTime: 'Ende',
     title: 'Stundenplan',
     'monday-friday': 'Montag - Freitag',
     noSchedule: 'Keine Kurse geplant',
@@ -186,6 +197,23 @@ export const de: Dictionary = {
     schedule: 'Stundenpläne',
     complaints: 'Beschwerden',
     announcements: 'Globale Ankündigungen',
+  },
+
+  classes: {
+    subtitle: 'Klassen, Räume und Klassenlehrer verwalten',
+    capacity: 'Kapazität',
+    section: 'Parallelgruppe',
+    studentsList: 'Schülerliste',
+  },
+
+  subjects: {
+    subtitle: 'Fächer, Farben und Lehrkräfte verwalten',
+    code: 'Kürzel',
+    color: 'Farbe',
+  },
+
+  users: {
+    subtitle: 'Konten, Rollen und Zugriffe verwalten',
   },
 
   calendario: {
