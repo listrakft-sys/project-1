@@ -179,6 +179,7 @@ export const de: Dictionary = {
     summary: 'Zusammenfassung',
   },
   admin: {
+    title: 'Admin-Übersicht',
     users: 'Benutzerverwaltung',
     classes: 'Klassen',
     subjects: 'Fächer',

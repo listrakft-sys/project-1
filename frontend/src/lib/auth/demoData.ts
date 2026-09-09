@@ -120,14 +120,14 @@ export const DEMO_DATA = {
   },
 
   adminActivity: [
-    { id: 'act1', type: 'user_created', description: 'Зарегистрирован новый ученик: Диего Морено', createdAt: new Date().toISOString() },
-    { id: 'act2', type: 'complaint', description: 'Новая жалоба: ожидает рассмотрения', createdAt: new Date().toISOString() },
-    { id: 'act3', type: 'announcement', description: 'Опубликовано объявление: Спортивный день', createdAt: new Date().toISOString() },
-    { id: 'act4', type: 'grade', description: 'Выставлены оценки по математике (7-A)', createdAt: new Date().toISOString() },
-    { id: 'act5', type: 'homework', description: 'Задана домашняя работа: Уравнения 2-й степени', createdAt: new Date().toISOString() },
-    { id: 'act6', type: 'user_created', description: 'Зарегистрирован новый учитель: Педро Санчес', createdAt: new Date().toISOString() },
-    { id: 'act7', type: 'schedule', description: 'Обновлено расписание 8-B', createdAt: new Date().toISOString() },
-    { id: 'act8', type: 'attendance', description: 'Отмечена посещаемость 7-A', createdAt: new Date().toISOString() },
+    { id: 'act1', type: 'user_created', label: 'Зарегистрирован новый ученик: Диего Морено', detail: 'Зарегистрирован новый ученик: Диего Морено', time: new Date().toISOString() },
+    { id: 'act2', type: 'complaint', label: 'Новая жалоба: ожидает рассмотрения', detail: 'Новая жалоба: ожидает рассмотрения', time: new Date().toISOString() },
+    { id: 'act3', type: 'announcement', label: 'Опубликовано объявление: Спортивный день', detail: 'Опубликовано объявление: Спортивный день', time: new Date().toISOString() },
+    { id: 'act4', type: 'grade', label: 'Выставлены оценки по математике (7-A)', detail: 'Выставлены оценки по математике (7-A)', time: new Date().toISOString() },
+    { id: 'act5', type: 'homework', label: 'Задана домашняя работа: Уравнения 2-й степени', detail: 'Задана домашняя работа: Уравнения 2-й степени', time: new Date().toISOString() },
+    { id: 'act6', type: 'user_created', label: 'Зарегистрирован новый учитель: Педро Санчес', detail: 'Зарегистрирован новый учитель: Педро Санчес', time: new Date().toISOString() },
+    { id: 'act7', type: 'schedule', label: 'Обновлено расписание 8-B', detail: 'Обновлено расписание 8-B', time: new Date().toISOString() },
+    { id: 'act8', type: 'attendance', label: 'Отмечена посещаемость 7-A', detail: 'Отмечена посещаемость 7-A', time: new Date().toISOString() },
   ],
 
   users: [

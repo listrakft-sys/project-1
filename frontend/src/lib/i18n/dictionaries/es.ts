@@ -177,6 +177,7 @@ export const es = {
     summary: 'Resumen',
   },
   admin: {
+    title: 'Panel de administración',
     users: 'Gestión de Usuarios',
     classes: 'Clases',
     subjects: 'Asignaturas',

@@ -179,6 +179,7 @@ export const ru: Dictionary = {
     summary: 'Краткое изложение',
   },
   admin: {
+    title: 'Панель администратора',
     users: 'Управление пользователями',
     classes: 'Классы',
     subjects: 'Предметы',

@@ -179,6 +179,7 @@ export const en: Dictionary = {
     summary: 'Summary',
   },
   admin: {
+    title: 'Admin Dashboard',
     users: 'User Management',
     classes: 'Classes',
     subjects: 'Subjects',
