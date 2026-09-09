@@ -118,6 +118,7 @@ export const de: Dictionary = {
     materials: 'Materialien',
   },
   schedule: {
+    day: 'Tag',
     subtitle: 'Wochenstundenplan verwalten',
     addSlot: 'Stunde hinzufügen',
     editSlot: 'Stunde bearbeiten',
@@ -200,6 +201,12 @@ export const de: Dictionary = {
   },
 
   classes: {
+    create: 'Klasse erstellen',
+    edit: 'Klasse bearbeiten',
+    grade: 'Jahrgangsstufe',
+    room: 'Raum',
+    title: 'Klassen',
+    name: 'Klassenname',
     subtitle: 'Klassen, Räume und Klassenlehrer verwalten',
     capacity: 'Kapazität',
     section: 'Parallelgruppe',
@@ -207,12 +214,17 @@ export const de: Dictionary = {
   },
 
   subjects: {
+    create: 'Fach erstellen',
+    edit: 'Fach bearbeiten',
+    language: 'Sprache',
+    title: 'Fächer',
     subtitle: 'Fächer, Farben und Lehrkräfte verwalten',
     code: 'Kürzel',
     color: 'Farbe',
   },
 
   users: {
+    title: 'Benutzer',
     subtitle: 'Konten, Rollen und Zugriffe verwalten',
   },
 

@@ -116,6 +116,7 @@ export const es = {
     materials: 'Materiales',
   },
   schedule: {
+    day: 'Día',
     subtitle: 'Gestión del horario semanal',
     addSlot: 'Añadir clase',
     editSlot: 'Editar clase',
@@ -198,6 +199,12 @@ export const es = {
   },
 
   classes: {
+    create: 'Crear clase',
+    edit: 'Editar clase',
+    grade: 'Nivel',
+    room: 'Aula',
+    title: 'Clases',
+    name: 'Nombre de la clase',
     subtitle: 'Gestión de clases, aulas y tutores',
     capacity: 'Capacidad',
     section: 'Sección',
@@ -205,12 +212,17 @@ export const es = {
   },
 
   subjects: {
+    create: 'Crear asignatura',
+    edit: 'Editar asignatura',
+    language: 'Idioma',
+    title: 'Asignaturas',
     subtitle: 'Gestión de asignaturas, colores y profesores',
     code: 'Código',
     color: 'Color',
   },
 
   users: {
+    title: 'Usuarios',
     subtitle: 'Gestión de cuentas, roles y accesos',
   },
 

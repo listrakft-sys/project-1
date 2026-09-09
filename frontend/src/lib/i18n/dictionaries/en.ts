@@ -118,6 +118,7 @@ export const en: Dictionary = {
     materials: 'Materials',
   },
   schedule: {
+    day: 'Day',
     subtitle: 'Manage the weekly lesson timetable',
     addSlot: 'Add lesson',
     editSlot: 'Edit lesson',
@@ -200,6 +201,12 @@ export const en: Dictionary = {
   },
 
   classes: {
+    create: 'Create class',
+    edit: 'Edit class',
+    grade: 'Grade',
+    room: 'Room',
+    title: 'Classes',
+    name: 'Class name',
     subtitle: 'Manage classes, rooms, and homeroom tutors',
     capacity: 'Capacity',
     section: 'Section',
@@ -207,12 +214,17 @@ export const en: Dictionary = {
   },
 
   subjects: {
+    create: 'Create subject',
+    edit: 'Edit subject',
+    language: 'Language',
+    title: 'Subjects',
     subtitle: 'Manage subjects, colors, and teaching staff',
     code: 'Code',
     color: 'Color',
   },
 
   users: {
+    title: 'Users',
     subtitle: 'Manage accounts, roles, and access',
   },
 

@@ -118,6 +118,7 @@ export const ru: Dictionary = {
     materials: 'Материалы',
   },
   schedule: {
+    day: 'День',
     subtitle: 'Управление недельным расписанием уроков',
     addSlot: 'Добавить урок',
     editSlot: 'Изменить урок',
@@ -200,6 +201,12 @@ export const ru: Dictionary = {
   },
 
   classes: {
+    create: 'Создать класс',
+    edit: 'Изменить класс',
+    grade: 'Параллель',
+    room: 'Кабинет',
+    title: 'Классы',
+    name: 'Название класса',
     subtitle: 'Управление классами, кабинетами и классными руководителями',
     capacity: 'Вместимость',
     section: 'Литера',
@@ -207,12 +214,17 @@ export const ru: Dictionary = {
   },
 
   subjects: {
+    create: 'Создать предмет',
+    edit: 'Изменить предмет',
+    language: 'Язык преподавания',
+    title: 'Предметы',
     subtitle: 'Управление предметами, цветами и учителями',
     code: 'Код',
     color: 'Цвет',
   },
 
   users: {
+    title: 'Пользователи',
     subtitle: 'Управление аккаунтами, ролями и доступами',
   },
 
