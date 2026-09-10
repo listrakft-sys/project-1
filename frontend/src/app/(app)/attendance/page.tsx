@@ -63,11 +63,11 @@ interface AttendanceSummary {
 
 // ── Status config ─────────────────────────────────────────
 const statusConfig: Record<AttendanceStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  PRESENT:     { label: 'Present',     icon: Check,        color: 'text-emerald-600',  bg: 'bg-emerald-100' },
-  ABSENT:      { label: 'Absent',      icon: X,            color: 'text-red-600',      bg: 'bg-red-100' },
-  LATE:        { label: 'Late',        icon: Clock,        color: 'text-amber-600',    bg: 'bg-amber-100' },
-  EXCUSED:     { label: 'Excused',     icon: AlertCircle,  color: 'text-blue-600',     bg: 'bg-blue-100' },
-  EARLY_LEAVE: { label: 'Early Leave', icon: LogOut,        color: 'text-purple-600',   bg: 'bg-purple-100' },
+  PRESENT:     { label: 'attendance.stPresent',     icon: Check,        color: 'text-emerald-600',  bg: 'bg-emerald-100' },
+  ABSENT:      { label: 'attendance.stAbsent',      icon: X,            color: 'text-red-600',      bg: 'bg-red-100' },
+  LATE:        { label: 'attendance.stLate',        icon: Clock,        color: 'text-amber-600',    bg: 'bg-amber-100' },
+  EXCUSED:     { label: 'attendance.stExcused',     icon: AlertCircle,  color: 'text-blue-600',     bg: 'bg-blue-100' },
+  EARLY_LEAVE: { label: 'attendance.stEarlyLeave', icon: LogOut,        color: 'text-purple-600',   bg: 'bg-purple-100' },
 };
 
 // ── Main Page ─────────────────────────────────────────────
@@ -109,7 +109,7 @@ function TeacherAttendance() {
         const res = await api.get('/classes', { params: { teacherId: user?.id } });
         setClasses(res.data.data || []);
       } catch {
-        setError('Failed to load classes');
+        setError(t('attendance.errLoadClasses'));
       }
     })();
   }, [user?.id]);
@@ -137,7 +137,7 @@ function TeacherAttendance() {
       });
       setRecords(statusMap);
     } catch {
-      setError('Failed to load class data');
+      setError(t('attendance.errLoadData'));
     } finally {
       setLoading(false);
     }
@@ -187,7 +187,7 @@ function TeacherAttendance() {
       setSuccess(`Attendance saved for ${attendanceRecords.length} students`);
       setTimeout(() => setSuccess(''), 3000);
     } catch {
-      setError('Failed to save attendance');
+      setError(t('attendance.errSave'));
     } finally {
       setSaving(false);
     }
@@ -224,7 +224,7 @@ function TeacherAttendance() {
             onChange={(e) => setSelectedClass(e.target.value)}
             className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary"
           >
-            <option value="">Select class…</option>
+            <option value="">{t('attendance.selectClass')}</option>
             {classes.map(c => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -257,7 +257,7 @@ function TeacherAttendance() {
               className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 flex items-center gap-2"
             >
               <Save className="h-4 w-4" />
-              {saving ? 'Saving…' : 'Save'}
+              {saving ? t('common.saving') : t('common.save')}
             </button>
           </div>
         )}
@@ -281,7 +281,7 @@ function TeacherAttendance() {
               <div key={status} className={`p-3 rounded-lg ${cfg.bg} flex items-center gap-2`}>
                 <cfg.icon className={`h-4 w-4 ${cfg.color}`} />
                 <div>
-                  <p className="text-xs text-muted-foreground">{cfg.label}</p>
+                  <p className="text-xs text-muted-foreground">{t(cfg.label)}</p>
                   <p className={`text-lg font-bold ${cfg.color}`}>{count}</p>
                 </div>
               </div>
@@ -336,7 +336,7 @@ function TeacherAttendance() {
                             <button
                               key={status}
                               onClick={() => setStatus(student.user.id, status)}
-                              title={sc.label}
+                              title={t(sc.label)}
                               className={`p-1.5 rounded-md transition-colors ${
                                 isActive ? `${sc.bg} ${sc.color} ring-2 ring-offset-1 ring-primary/30` : 'text-muted-foreground hover:bg-muted'
                               }`}
@@ -352,7 +352,7 @@ function TeacherAttendance() {
                         type="text"
                         value={notes.get(student.user.id) || ''}
                         onChange={(e) => setNote(student.user.id, e.target.value)}
-                        placeholder="Optional note…"
+                        placeholder={t('attendance.noteOptional')}
                         className="w-full px-2 py-1 text-xs rounded border border-input bg-background text-foreground focus:ring-1 focus:ring-primary"
                       />
                     </td>
@@ -420,20 +420,20 @@ function StudentAttendance() {
           <div className="p-4 bg-card rounded-xl border border-border">
             <div className="flex items-center gap-2 mb-1">
               <TrendingUp className="h-4 w-4 text-primary" />
-              <p className="text-xs text-muted-foreground">Attendance Rate</p>
+              <p className="text-xs text-muted-foreground">{t('nav.attendance')}</p>
             </div>
             <p className="text-2xl font-bold text-foreground">{summary.rate}%</p>
           </div>
           <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-            <p className="text-xs text-muted-foreground">Present</p>
+            <p className="text-xs text-muted-foreground">{t('attendance.stPresent')}</p>
             <p className="text-2xl font-bold text-emerald-600">{summary.present}</p>
           </div>
           <div className="p-4 bg-red-50 rounded-xl border border-red-200">
-            <p className="text-xs text-muted-foreground">Absent</p>
+            <p className="text-xs text-muted-foreground">{t('attendance.stAbsent')}</p>
             <p className="text-2xl font-bold text-red-600">{summary.absent}</p>
           </div>
           <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
-            <p className="text-xs text-muted-foreground">Late</p>
+            <p className="text-xs text-muted-foreground">{t('attendance.stLate')}</p>
             <p className="text-2xl font-bold text-amber-600">{summary.late}</p>
           </div>
         </div>
@@ -441,9 +441,9 @@ function StudentAttendance() {
 
       {/* Records */}
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground">Loading…</div>
+        <div className="text-center py-12 text-muted-foreground">{t('common.loading')}</div>
       ) : records.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">No attendance records yet</div>
+        <div className="text-center py-12 text-muted-foreground">{t('attendance.noRecords')}</div>
       ) : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <table className="w-full">
@@ -465,7 +465,7 @@ function StudentAttendance() {
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium ${cfg.bg} ${cfg.color}`}>
                         <cfg.icon className="h-3 w-3" />
-                        {cfg.label}
+                        {t(cfg.label)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-muted-foreground">{record.note || '—'}</td>
@@ -533,7 +533,7 @@ function AdminAttendance() {
             onChange={(e) => loadClassSummary(e.target.value)}
             className="px-3 py-2 rounded-lg border border-input bg-background text-foreground text-sm focus:ring-2 focus:ring-primary"
           >
-            <option value="">All classes…</option>
+            <option value="">{t('attendance.allClasses')}</option>
             {classes.map(c => (
               <option key={c.id} value={c.id}>{c.name}</option>
             ))}
@@ -562,7 +562,7 @@ function AdminAttendance() {
         </div>
       )}
 
-      {loading && <div className="text-center py-12 text-muted-foreground">Loading…</div>}
+      {loading && <div className="text-center py-12 text-muted-foreground">{t('common.loading')}</div>}
 
       {selectedClass && !loading && classSummary && (
         <div className="bg-card rounded-xl border border-border p-5">
@@ -576,7 +576,7 @@ function AdminAttendance() {
                     <span className="text-sm text-foreground">{r.studentId}</span>
                     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs ${cfg.bg} ${cfg.color}`}>
                       <cfg.icon className="h-3 w-3" />
-                      {cfg.label}
+                      {t(cfg.label)}
                     </span>
                   </div>
                 );

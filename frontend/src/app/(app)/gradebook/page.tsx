@@ -44,14 +44,14 @@ interface SubjectInfo {
 }
 
 const GRADE_TYPES = [
-  { value: 'WRITTEN', label: '✍️ Written', color: 'bg-blue-100 text-blue-700' },
-  { value: 'ORAL', label: '🗣️ Oral', color: 'bg-purple-100 text-purple-700' },
-  { value: 'TEST', label: '📋 Test', color: 'bg-red-100 text-red-700' },
-  { value: 'QUIZ', label: '❓ Quiz', color: 'bg-yellow-100 text-yellow-700' },
-  { value: 'HOMEWORK', label: '📝 Homework', color: 'bg-green-100 text-green-700' },
-  { value: 'PROJECT', label: '🔬 Project', color: 'bg-indigo-100 text-indigo-700' },
-  { value: 'PARTICIPATION', label: '✋ Participation', color: 'bg-orange-100 text-orange-700' },
-  { value: 'FINAL', label: '🏆 Final', color: 'bg-pink-100 text-pink-700' },
+  { value: 'WRITTEN', label: 'gradebook.typeWritten', color: 'bg-blue-100 text-blue-700' },
+  { value: 'ORAL', label: 'gradebook.typeOral', color: 'bg-purple-100 text-purple-700' },
+  { value: 'TEST', label: 'gradebook.typeTest', color: 'bg-red-100 text-red-700' },
+  { value: 'QUIZ', label: 'gradebook.typeQuiz', color: 'bg-yellow-100 text-yellow-700' },
+  { value: 'HOMEWORK', label: 'gradebook.typeHomework', color: 'bg-green-100 text-green-700' },
+  { value: 'PROJECT', label: 'gradebook.typeProject', color: 'bg-indigo-100 text-indigo-700' },
+  { value: 'PARTICIPATION', label: 'gradebook.typeParticipation', color: 'bg-orange-100 text-orange-700' },
+  { value: 'FINAL', label: 'gradebook.typeFinal', color: 'bg-pink-100 text-pink-700' },
 ];
 
 const ATTENDANCE_STATUSES = [
@@ -133,7 +133,7 @@ export default function GradebookPage() {
       });
       setOverview(res.data.data || []);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error loading gradebook');
+      setError(err.response?.data?.error?.message || t('gradebook.errLoad'));
       setOverview([]);
     } finally {
       setLoading(false);
@@ -171,9 +171,9 @@ export default function GradebookPage() {
         date: new Date(attendanceDate),
       }));
       const res = await apiClient.post('/gradebook/attendance/bulk', { records });
-      setError(`✅ ${res.data.data.marked}/${res.data.data.total} marked`);
+      setError(`✅ ${res.data.data.marked}/${res.data.data.total} ${t('gradebook.marked')}`);
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error saving attendance');
+      setError(err.response?.data?.error?.message || t('gradebook.errSaveAttendance'));
     } finally {
       setSavingAttendance(false);
     }
@@ -181,7 +181,7 @@ export default function GradebookPage() {
 
   const saveGrade = async () => {
     if (!newGrade.studentId) {
-      setError('Select a student');
+      setError(t('gradebook.errSelectStudent'));
       return;
     }
     setSavingGrade(true);
@@ -199,9 +199,9 @@ export default function GradebookPage() {
       setShowAddGrade(false);
       setNewGrade({ studentId: '', type: 'WRITTEN', score: 0, maxScore: 10, weight: 1.0, comment: '' });
       loadOverview();
-      setError('✅ Grade saved');
+      setError(t('gradebook.gradeSaved'));
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error saving grade');
+      setError(err.response?.data?.error?.message || t('gradebook.errSaveGrade'));
     } finally {
       setSavingGrade(false);
     }
@@ -212,7 +212,7 @@ export default function GradebookPage() {
       await apiClient.delete(`/gradebook/grades/${gradeId}`);
       loadOverview();
     } catch (err: any) {
-      setError(err.response?.data?.error?.message || 'Error deleting grade');
+      setError(err.response?.data?.error?.message || t('gradebook.errDeleteGrade'));
     }
   };
 
@@ -299,9 +299,9 @@ export default function GradebookPage() {
             onChange={(e) => setSelectedClass(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
           >
-            <option value="">Select class</option>
+            <option value="">{t('gradebook.selectClass')}</option>
             {classes.map((c) => (
-              <option key={c.id} value={c.id}>{c.name} (Grade {c.grade})</option>
+              <option key={c.id} value={c.id}>{c.name} ({t('gradebook.gradeOf').replace('{n}', String(c.grade))})</option>
             ))}
           </select>
         </div>
@@ -314,7 +314,7 @@ export default function GradebookPage() {
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
             disabled={!selectedClass}
           >
-            <option value="">Select subject</option>
+            <option value="">{t('gradebook.selectSubject')}</option>
             {subjects.map((s) => (
               <option key={s.id} value={s.id}>{s.name} ({s.code})</option>
             ))}
@@ -328,10 +328,10 @@ export default function GradebookPage() {
             onChange={(e) => setSelectedTerm(e.target.value)}
             className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
           >
-            <option value="1">Term 1</option>
-            <option value="2">Term 2</option>
-            <option value="3">Term 3</option>
-            <option value="4">Term 4</option>
+            <option value="1">{t('gradebook.termLabel').replace('{n}', '1')}</option>
+            <option value="2">{t('gradebook.termLabel').replace('{n}', '2')}</option>
+            <option value="3">{t('gradebook.termLabel').replace('{n}', '3')}</option>
+            <option value="4">{t('gradebook.termLabel').replace('{n}', '4')}</option>
           </select>
         </div>
       </div>
@@ -399,7 +399,7 @@ export default function GradebookPage() {
                   onChange={(e) => setNewGrade({ ...newGrade, studentId: e.target.value })}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 >
-                  <option value="">Student...</option>
+                  <option value="">{t('gradebook.selectStudent')}</option>
                   {overview.map((o) => (
                     <option key={o.student.id} value={o.student.id}>
                       {o.student.user.profile?.firstName || o.student.user.username}
@@ -412,21 +412,21 @@ export default function GradebookPage() {
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
                 >
                   {GRADE_TYPES.map((gt) => (
-                    <option key={gt.value} value={gt.value}>{gt.label}</option>
+                    <option key={gt.value} value={gt.value}>{t(gt.label)}</option>
                   ))}
                 </select>
                 <div className="flex gap-2">
                   <input
                     type="number"
                     step="0.5"
-                    placeholder="Score"
+                    placeholder={t('gradebook.score')}
                     value={newGrade.score}
                     onChange={(e) => setNewGrade({ ...newGrade, score: parseFloat(e.target.value) || 0 })}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
                   />
                   <input
                     type="number"
-                    placeholder="Max"
+                    placeholder={t('gradebook.max')}
                     value={newGrade.maxScore}
                     onChange={(e) => setNewGrade({ ...newGrade, maxScore: parseFloat(e.target.value) || 10 })}
                     className="w-20 px-3 py-2 border border-gray-300 rounded-lg text-sm"
@@ -435,7 +435,7 @@ export default function GradebookPage() {
                 <input
                   type="number"
                   step="0.1"
-                  placeholder="Weight"
+                  placeholder={t('gradebook.weight')}
                   value={newGrade.weight}
                   onChange={(e) => setNewGrade({ ...newGrade, weight: parseFloat(e.target.value) || 1 })}
                   className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
@@ -443,7 +443,7 @@ export default function GradebookPage() {
               </div>
               <input
                 type="text"
-                placeholder="Comment (optional)"
+                placeholder={t('gradebook.commentOptional')}
                 value={newGrade.comment}
                 onChange={(e) => setNewGrade({ ...newGrade, comment: e.target.value })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
@@ -501,7 +501,7 @@ export default function GradebookPage() {
                               <button
                                 onClick={() => deleteGrade(g.id)}
                                 className="ml-1 text-gray-300 hover:text-red-500"
-                                title="Delete"
+                                title={t('common.delete')}
                               >
                                 ×
                               </button>

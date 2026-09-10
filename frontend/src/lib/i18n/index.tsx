@@ -44,7 +44,11 @@ export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const t = (key: string): string => {
-    const dict = dictionaries[language] || dictionaries.ru;
+    const dict: any = dictionaries[language] || dictionaries.ru;
+    // Legacy flat keys: single-segment keys resolve from the flat `legacy` map
+    if (!key.includes('.') && dict.legacy && typeof dict.legacy === 'object' && key in dict.legacy) {
+      return dict.legacy[key];
+    }
     const keys = key.split('.');
     let current: DictNode = dict as DictNode;
     

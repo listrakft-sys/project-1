@@ -79,6 +79,7 @@ export default function SettingsPage() {
                 { code: 'es', label: 'Español', flag: '🇪🇸' },
                 { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
                 { code: 'en', label: 'English', flag: '🇬🇧' },
+                { code: 'ru', label: 'Русский', flag: '🇷🇺' },
               ] as const).map((lang) => (
                 <button
                   key={lang.code}
@@ -134,8 +135,8 @@ export default function SettingsPage() {
                   onChange={(e) => setPrivacy({ ...privacy, profileVisibility: e.target.value })}
                 >
                   <option value="public">Público</option>
-                  <option value="school">Solo mi escuela</option>
-                  <option value="private">Privado</option>
+                  <option value="school">{t('settings.onlyMySchool')}</option>
+                  <option value="private">{t('settings.privateOption')}</option>
                 </select>
               </div>
               <div>
@@ -145,9 +146,9 @@ export default function SettingsPage() {
                   value={privacy.whoCanMessage}
                   onChange={(e) => setPrivacy({ ...privacy, whoCanMessage: e.target.value })}
                 >
-                  <option value="everyone">Todos</option>
-                  <option value="school">Solo mi escuela</option>
-                  <option value="nobody">Nadie</option>
+                  <option value="everyone">{t('settings.everyoneOption')}</option>
+                  <option value="school">{t('settings.onlyMySchool')}</option>
+                  <option value="nobody">{t('settings.nobodyOption')}</option>
                 </select>
               </div>
               {[

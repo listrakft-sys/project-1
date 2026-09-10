@@ -138,17 +138,15 @@ export default function DashboardPage() {
         <div className="relative z-10 space-y-2 max-w-2xl">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-xs font-semibold">
             <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-            <span>Welcome back</span>
+            <span>{t('dashboard.welcomeBack')}</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Hello, {userName}!
+            {t('dashboard.hello')} {userName}!
           </h1>
           <p className="text-xs sm:text-sm text-primary-foreground/80 leading-relaxed">
-            Here is your daily school activity overview. You have{' '}
-            <span className="font-bold underline">{stats.todayLessonsCount}</span> lesson
-            {stats.todayLessonsCount === 1 ? '' : 's'} scheduled today and{' '}
-            <span className="font-bold underline">{stats.pendingHomeworkCount}</span> pending homework assignment
-            {stats.pendingHomeworkCount === 1 ? '' : 's'}.
+            {t('dashboard.overviewPrefix')}{' '}
+            <span className="font-bold underline">{stats.todayLessonsCount}</span> {t('dashboard.lessonsWord')}{' '}
+            <span className="font-bold underline">{stats.pendingHomeworkCount}</span> {t('dashboard.pendingWord')}
           </p>
         </div>
         <div className="absolute right-4 bottom-0 opacity-10 pointer-events-none hidden sm:block">
@@ -169,7 +167,7 @@ export default function DashboardPage() {
                   <span className="text-2xl font-bold text-foreground">
                     {loading ? '...' : stats.unreadMessages}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">unread</span>
+                  <span className="text-xs text-muted-foreground font-medium">{t('dashboard.unread')}</span>
                 </div>
               </div>
               <div className="p-3 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
@@ -190,7 +188,7 @@ export default function DashboardPage() {
                   <span className="text-2xl font-bold text-foreground">
                     {loading ? '...' : stats.unreadNotifications}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">unread</span>
+                  <span className="text-xs text-muted-foreground font-medium">{t('dashboard.unread')}</span>
                 </div>
               </div>
               <div className="p-3 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform">
@@ -204,12 +202,12 @@ export default function DashboardPage() {
           <Card className="hover:border-primary/50 transition-all duration-200">
             <CardContent className="p-4 flex items-center justify-between">
               <div className="space-y-1">
-                <p className="text-xs text-muted-foreground font-medium">Today's Classes</p>
+                <p className="text-xs text-muted-foreground font-medium">{t('dashboard.todayClasses')}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-foreground">
                     {loading ? '...' : stats.todayLessonsCount}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">lessons</span>
+                  <span className="text-xs text-muted-foreground font-medium">{t('dashboard.lessonsShort')}</span>
                 </div>
               </div>
               <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
@@ -223,12 +221,12 @@ export default function DashboardPage() {
           <Card className="hover:border-primary/50 transition-all duration-200">
             <CardContent className="p-4 flex items-center justify-between">
               <div className="space-y-1">
-                <p className="text-xs text-muted-foreground font-medium">Pending Tasks</p>
+                <p className="text-xs text-muted-foreground font-medium">{t('dashboard.pendingTasks')}</p>
                 <div className="flex items-baseline gap-2">
                   <span className="text-2xl font-bold text-foreground">
                     {loading ? '...' : stats.pendingHomeworkCount}
                   </span>
-                  <span className="text-xs text-muted-foreground font-medium">homework</span>
+                  <span className="text-xs text-muted-foreground font-medium">{t('dashboard.homeworkShort')}</span>
                 </div>
               </div>
               <div className="p-3 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
@@ -248,11 +246,11 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-bold text-foreground">Today's Schedule</h2>
+                <h2 className="text-lg font-bold text-foreground">{t('dashboard.todaySchedule')}</h2>
               </div>
               <Link href="/schedule">
                 <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                  Full Timetable
+                  {t('dashboard.fullTimetable')}
                 </Button>
               </Link>
             </div>
@@ -265,9 +263,9 @@ export default function DashboardPage() {
             ) : lessons.length === 0 ? (
               <Card className="border border-border p-6 text-center">
                 <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto mb-2" />
-                <h4 className="font-semibold text-foreground text-sm">No lessons scheduled today</h4>
+                <h4 className="font-semibold text-foreground text-sm">{t('dashboard.noLessons')}</h4>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Enjoy your free time or review upcoming homework tasks.
+                  {t('dashboard.noLessonsDesc')}
                 </p>
               </Card>
             ) : (
@@ -284,11 +282,11 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <FileText className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-bold text-foreground">Upcoming Homework</h2>
+                <h2 className="text-lg font-bold text-foreground">{t('dashboard.upcomingHomework')}</h2>
               </div>
               <Link href="/homework">
                 <Button variant="ghost" size="sm" rightIcon={<ArrowRight className="h-4 w-4" />}>
-                  View All Homework
+                  {t('dashboard.viewAllHomework')}
                 </Button>
               </Link>
             </div>
@@ -301,8 +299,8 @@ export default function DashboardPage() {
             ) : homework.length === 0 ? (
               <Card className="border border-border p-6 text-center">
                 <CheckCircle2 className="h-10 w-10 text-emerald-500 mx-auto mb-2" />
-                <h4 className="font-semibold text-foreground text-sm">No homework assignments due</h4>
-                <p className="text-xs text-muted-foreground mt-1">You are all caught up!</p>
+                <h4 className="font-semibold text-foreground text-sm">{t('dashboard.noHomework')}</h4>
+                <p className="text-xs text-muted-foreground mt-1">{t('dashboard.allCaughtUp')}</p>
               </Card>
             ) : (
               <div className="space-y-3">
@@ -321,7 +319,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Megaphone className="h-5 w-5 text-primary" />
-                <h2 className="text-lg font-bold text-foreground">Announcements</h2>
+                <h2 className="text-lg font-bold text-foreground">{t('nav.announcements')}</h2>
               </div>
             </div>
 
@@ -332,7 +330,7 @@ export default function DashboardPage() {
               </div>
             ) : announcements.length === 0 ? (
               <Card className="border border-border p-6 text-center">
-                <p className="text-xs text-muted-foreground">No recent announcements</p>
+                <p className="text-xs text-muted-foreground">{t('dashboard.noAnnouncements')}</p>
               </Card>
             ) : (
               <div className="space-y-3">
@@ -346,25 +344,25 @@ export default function DashboardPage() {
           {/* Quick Access Card */}
           <Card className="border border-border bg-card">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base font-bold">Quick Navigation</CardTitle>
+              <CardTitle className="text-base font-bold">{t('dashboard.quickNav')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <Link href="/schedule" className="block">
                 <Button variant="outline" className="w-full justify-start gap-2" size="sm">
                   <Calendar className="h-4 w-4 text-primary" />
-                  <span>View Weekly Timetable</span>
+                  <span>{t('dashboard.viewTimetable')}</span>
                 </Button>
               </Link>
               <Link href="/lessons" className="block">
                 <Button variant="outline" className="w-full justify-start gap-2" size="sm">
                   <BookOpen className="h-4 w-4 text-primary" />
-                  <span>Browse All Lessons</span>
+                  <span>{t('dashboard.browseLessons')}</span>
                 </Button>
               </Link>
               <Link href="/homework" className="block">
                 <Button variant="outline" className="w-full justify-start gap-2" size="sm">
                   <FileText className="h-4 w-4 text-primary" />
-                  <span>Homework Tracker</span>
+                  <span>{t('dashboard.homeworkTracker')}</span>
                 </Button>
               </Link>
             </CardContent>

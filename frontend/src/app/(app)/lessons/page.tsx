@@ -111,10 +111,10 @@ export default function LessonsPage() {
         <div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-foreground flex items-center gap-2">
             <BookOpen className="h-7 w-7 text-primary" />
-            <span>Lessons</span>
+            <span>{t('lessons.title')}</span>
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Explore and review course lessons, teaching materials, and class schedules.
+            {t('lessons.subtitle')}
           </p>
         </div>
         <Button
@@ -150,7 +150,7 @@ export default function LessonsPage() {
             onChange={(e) => setSelectedSubject(e.target.value)}
             className="w-full py-2 px-3 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
           >
-            <option value="all">All Subjects</option>
+            <option value="all">{t('lessons.allSubjects')}</option>
             {subjects.map((sub) => (
               <option key={sub.id} value={sub.id}>
                 {sub.name}
@@ -167,7 +167,7 @@ export default function LessonsPage() {
             onChange={(e) => setSelectedClass(e.target.value)}
             className="w-full py-2 px-3 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
           >
-            <option value="all">All Classes</option>
+            <option value="all">{t('lessons.allClasses')}</option>
             {classes.map((cls) => (
               <option key={cls.id} value={cls.id}>
                 {cls.name}
