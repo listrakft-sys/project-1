@@ -28,11 +28,12 @@ touch out/.nojekyll
 
 echo "── [3/4] Pushing build to gh-pages ──"
 cd out
-git init -q 2>/dev/null || true
 if [ ! -d .git ]; then
   git init -q
-  git checkout -q -b gh-pages
 fi
+git config user.email "deploy@school-platform"
+git config user.name "Deploy Bot"
+git symbolic-ref -q HEAD refs/heads/gh-pages || git checkout -q -b gh-pages
 git add -A
 git commit -qm "deploy: $(date +%Y-%m-%d\ %H:%M) — $(cd .. && git log --oneline -1 | cut -d' ' -f2-)" || true
 git push -qf "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO}.git" gh-pages
