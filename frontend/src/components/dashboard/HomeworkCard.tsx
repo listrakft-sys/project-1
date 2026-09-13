@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Calendar, AlertCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import StatusBadge, { HomeworkStatus } from '@/components/StatusBadge';
+import { useTranslation } from '@/lib/i18n';
 
 export interface DashboardHomeworkProps {
   id: string;
@@ -18,6 +19,7 @@ export interface DashboardHomeworkProps {
 }
 
 export const HomeworkCard: React.FC<{ homework: DashboardHomeworkProps }> = ({ homework }) => {
+  const { t, language } = useTranslation();
   const isOverdue = React.useMemo(() => {
     if (homework.status === 'submitted' || homework.status === 'graded') return false;
     const due = new Date(homework.dueDate);
@@ -27,7 +29,8 @@ export const HomeworkCard: React.FC<{ homework: DashboardHomeworkProps }> = ({ h
   const formattedDueDate = React.useMemo(() => {
     try {
       const due = new Date(homework.dueDate);
-      return due.toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+      const locale = { ru: 'ru-RU', de: 'de-DE', es: 'es-ES', en: 'en-US' }[language] || 'en-US';
+      return due.toLocaleDateString(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch {
       return homework.dueDate;
     }
@@ -57,7 +60,7 @@ export const HomeworkCard: React.FC<{ homework: DashboardHomeworkProps }> = ({ h
 
           <div className={`flex items-center gap-1.5 text-xs font-medium ${isOverdue ? 'text-destructive font-bold' : 'text-muted-foreground'}`}>
             {isOverdue ? <AlertCircle className="h-3.5 w-3.5" /> : <Calendar className="h-3.5 w-3.5" />}
-            <span>Due {formattedDueDate}</span>
+            <span>{t('homework.duePrefix')} {formattedDueDate}</span>
           </div>
         </div>
 
@@ -65,7 +68,7 @@ export const HomeworkCard: React.FC<{ homework: DashboardHomeworkProps }> = ({ h
           href={`/homework/${homework.id}`}
           className="shrink-0 text-xs font-medium px-3 py-1.5 rounded-lg border border-border bg-background hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
         >
-          View
+          {t('homework.viewTask')}
         </Link>
       </CardContent>
     </Card>

@@ -154,6 +154,8 @@ export const ru: Dictionary = {
     noSchedule: 'Нет запланированных уроков',
   },
   homework: {
+    duePrefix: 'До',
+    viewTask: 'Открыть',
     title: 'Домашние задания',
     subject: 'Предмет',
     dueDate: 'Срок сдачи',
@@ -297,6 +299,17 @@ export const ru: Dictionary = {
     errLoadClasses: 'Не удалось загрузить классы',
     errLoadData: 'Не удалось загрузить данные класса',
     errSave: 'Не удалось сохранить посещаемость',
+  },
+
+  status: {
+    'assigned': 'Задано',
+    'in_progress': 'В работе',
+    'submitted': 'Сдано',
+    'graded': 'Оценено',
+    'late': 'С опозданием',
+    'overdue': 'Просрочено',
+    'completed': 'Завершено',
+    'scheduled': 'Запланировано',
   },
 
   legacy: {

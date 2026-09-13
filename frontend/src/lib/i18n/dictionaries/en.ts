@@ -154,6 +154,8 @@ export const en: Dictionary = {
     noSchedule: 'No scheduled classes',
   },
   homework: {
+    duePrefix: 'Due',
+    viewTask: 'View',
     title: 'Homework',
     subject: 'Subject',
     dueDate: 'Due Date',
@@ -297,6 +299,17 @@ export const en: Dictionary = {
     errLoadClasses: 'Failed to load classes',
     errLoadData: 'Failed to load class data',
     errSave: 'Failed to save attendance',
+  },
+
+  status: {
+    'assigned': 'Assigned',
+    'in_progress': 'In progress',
+    'submitted': 'Submitted',
+    'graded': 'Graded',
+    'late': 'Late',
+    'overdue': 'Overdue',
+    'completed': 'Completed',
+    'scheduled': 'Scheduled',
   },
 
   legacy: {

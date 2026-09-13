@@ -154,6 +154,8 @@ export const de: Dictionary = {
     noSchedule: 'Keine Kurse geplant',
   },
   homework: {
+    duePrefix: 'Bis',
+    viewTask: 'Ansehen',
     title: 'Hausaufgaben',
     subject: 'Fach',
     dueDate: 'Fälligkeitsdatum',
@@ -297,6 +299,17 @@ export const de: Dictionary = {
     errLoadClasses: 'Klassen konnten nicht geladen werden',
     errLoadData: 'Klassendaten konnten nicht geladen werden',
     errSave: 'Anwesenheit konnte nicht gespeichert werden',
+  },
+
+  status: {
+    'assigned': 'Aufgegeben',
+    'in_progress': 'In Arbeit',
+    'submitted': 'Abgegeben',
+    'graded': 'Benotet',
+    'late': 'Verspätet',
+    'overdue': 'Überfällig',
+    'completed': 'Abgeschlossen',
+    'scheduled': 'Geplant',
   },
 
   legacy: {

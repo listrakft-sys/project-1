@@ -152,6 +152,8 @@ export const es = {
     noSchedule: 'No hay clases programadas',
   },
   homework: {
+    duePrefix: 'Vence',
+    viewTask: 'Ver',
     title: 'Tareas',
     subject: 'Asignatura',
     dueDate: 'Fecha de Entrega',
@@ -295,6 +297,17 @@ export const es = {
     errLoadClasses: 'No se pudieron cargar las clases',
     errLoadData: 'No se pudieron cargar los datos de la clase',
     errSave: 'No se pudo guardar la asistencia',
+  },
+
+  status: {
+    'assigned': 'Asignado',
+    'in_progress': 'En progreso',
+    'submitted': 'Entregado',
+    'graded': 'Calificado',
+    'late': 'Tarde',
+    'overdue': 'Atrasado',
+    'completed': 'Completado',
+    'scheduled': 'Programado',
   },
 
   legacy: {
