@@ -3,6 +3,7 @@
 import React from 'react';
 import { Pin, Calendar, User } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 
 export interface DashboardAnnouncementProps {
   id: string;
@@ -21,14 +22,15 @@ export interface DashboardAnnouncementProps {
 export const AnnouncementCard: React.FC<{ announcement: DashboardAnnouncementProps }> = ({
   announcement,
 }) => {
+  const { language } = useTranslation();
   const formattedDate = React.useMemo(() => {
     try {
       const d = new Date(announcement.createdAt);
-      return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+      return d.toLocaleDateString(localeFromLanguage(language), { month: 'short', day: 'numeric', year: 'numeric' });
     } catch {
       return announcement.createdAt;
     }
-  }, [announcement.createdAt]);
+  }, [announcement.createdAt, language]);
 
   const authorName = announcement.author?.user
     ? `${announcement.author.user.firstName || ''} ${announcement.author.user.lastName || ''}`.trim()

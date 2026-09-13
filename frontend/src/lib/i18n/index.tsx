@@ -77,3 +77,8 @@ export const useTranslation = () => {
   }
   return context;
 };
+
+// Map UI language → BCP-47 locale for Intl date formatting
+export function localeFromLanguage(lang?: string): string {
+  return ({ ru: 'ru-RU', de: 'de-DE', es: 'es-ES', en: 'en-US' } as Record<string, string>)[lang || 'en'] || 'en-US';
+}

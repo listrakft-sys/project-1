@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Clock, MapPin, User, FileText, ArrowRight, Calendar, Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 import { Button } from '@/components/ui/Button';
 
 export interface FullLessonProps {
@@ -32,11 +33,12 @@ export interface FullLessonProps {
 }
 
 export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) => {
+  const { language } = useTranslation();
   const formatDateTime = (startStr: string, endStr: string) => {
     try {
       const start = new Date(startStr);
       const end = new Date(endStr);
-      const dateFormatted = start.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+      const dateFormatted = start.toLocaleDateString(localeFromLanguage(language), { weekday: 'short', month: 'short', day: 'numeric' });
       const startTime = start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
       const endTime = end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
       return { dateFormatted, timeRange: `${startTime} - ${endTime}` };

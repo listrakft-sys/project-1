@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/store/auth';
 import api from '@/lib/api/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -25,7 +25,7 @@ interface Announcement {
 }
 
 export default function AnnouncementsPage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { user } = useAuthStore();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -52,7 +52,7 @@ export default function AnnouncementsPage() {
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(undefined, {
+    return date.toLocaleDateString(localeFromLanguage(language), {
       day: 'numeric',
       month: 'short',
       year: 'numeric',

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { isDemoMode } from '@/lib/auth/demoUsers';
 import { getDemoData } from '@/lib/auth/demoData';
+import { getDemoDataOverride, applyDemoMutation } from '@/lib/auth/demoStore';
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL || '/api/v1';
 
@@ -15,6 +16,41 @@ export const apiClient = axios.create({
 // On GitHub Pages (no backend), intercept API calls and return demo data
 apiClient.interceptors.request.use(async (config) => {
   if (isDemoMode() && config.url) {
+    const method = (config.method || 'get').toLowerCase();
+
+    // Mutations → persistent demo store (CRUD actually works)
+    if (method !== 'get') {
+      const result = applyDemoMutation(method, config.url, config.data ? JSON.parse(config.data) : undefined);
+      if (result !== null) {
+        const mockResponse = {
+          data: { success: true, data: result },
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        };
+        const cancel = new axios.Cancel('demo-mode');
+        (cancel as any).demoResponse = mockResponse;
+        throw cancel;
+      }
+      // Unhandled mutation in demo mode → let it fall through and fail quietly
+    }
+
+    // Reads: store-backed override first (reflects CRUD), then static demo data
+    const override = getDemoDataOverride(config.url, config.params);
+    if (override !== null) {
+      const mockResponse = {
+        data: { success: true, ...override },
+        status: 200,
+        statusText: 'OK',
+        headers: {},
+        config,
+      };
+      const cancel = new axios.Cancel('demo-mode');
+      (cancel as any).demoResponse = mockResponse;
+      throw cancel;
+    }
+
     const demoData = getDemoData(config.url);
     if (demoData !== null) {
       const mockResponse = {

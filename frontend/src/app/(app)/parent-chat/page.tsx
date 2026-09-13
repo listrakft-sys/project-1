@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/store/auth';
 import api from '@/lib/api/client';
 import {
@@ -292,7 +292,7 @@ function TeacherView() {
 
 // ── Chat List ─────────────────────────────────────────────
 function ChatList({ conversations, onSelect }: { conversations: ConversationInfo[]; onSelect: (id: string) => void }) {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   if (conversations.length === 0) {
     return (
       <div className="text-center py-16 text-muted-foreground">
@@ -314,7 +314,7 @@ function ChatList({ conversations, onSelect }: { conversations: ConversationInfo
               <p className="text-sm font-medium text-foreground truncate">{conv.otherParticipant?.name || conv.name || t('nav.parentChat')}</p>
               {conv.lastMessage && (
                 <span className="text-xs text-muted-foreground shrink-0 ml-2">
-                  {new Date(conv.lastMessage.createdAt).toLocaleDateString(undefined, { day: '2-digit', month: 'short' })}
+                  {new Date(conv.lastMessage.createdAt).toLocaleDateString(localeFromLanguage(language), { day: '2-digit', month: 'short' })}
                 </span>
               )}
             </div>

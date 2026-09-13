@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Calendar, AlertCircle } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import StatusBadge, { HomeworkStatus } from '@/components/StatusBadge';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 
 export interface DashboardHomeworkProps {
   id: string;
@@ -29,12 +29,12 @@ export const HomeworkCard: React.FC<{ homework: DashboardHomeworkProps }> = ({ h
   const formattedDueDate = React.useMemo(() => {
     try {
       const due = new Date(homework.dueDate);
-      const locale = { ru: 'ru-RU', de: 'de-DE', es: 'es-ES', en: 'en-US' }[language] || 'en-US';
+      const locale = localeFromLanguage(language);
       return due.toLocaleDateString(locale, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     } catch {
       return homework.dueDate;
     }
-  }, [homework.dueDate]);
+  }, [homework.dueDate, language]);
 
   const subjectColor = homework.subject?.color || '#3b82f6';
 
