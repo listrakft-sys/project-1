@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { Clock, MapPin, User, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
+import { useTranslation } from '@/lib/i18n';
 
 export interface DashboardLessonProps {
   id: string;
@@ -26,6 +27,7 @@ export interface DashboardLessonProps {
 }
 
 export const LessonCard: React.FC<{ lesson: DashboardLessonProps }> = ({ lesson }) => {
+  const { t } = useTranslation();
   const formatTime = (dateStr?: string, fallback?: string): string => {
     if (dateStr) {
       try {
@@ -44,7 +46,7 @@ export const LessonCard: React.FC<{ lesson: DashboardLessonProps }> = ({ lesson 
   const endTime = formatTime(lesson.endDate, lesson.endTime);
   const teacherName = lesson.teacher?.user
     ? `${lesson.teacher.user.firstName || ''} ${lesson.teacher.user.lastName || ''}`.trim()
-    : 'Учитель';
+    : t('lessons.teacher');
 
   const subjectColor = lesson.subject?.color || '#3b82f6';
 
@@ -57,7 +59,7 @@ export const LessonCard: React.FC<{ lesson: DashboardLessonProps }> = ({ lesson 
             className="px-2.5 py-0.5 rounded-full text-xs font-semibold text-white shadow-sm"
             style={{ backgroundColor: subjectColor }}
           >
-            {lesson.subject?.name || 'Предмет'}
+            {lesson.subject?.name || t('lessons.subject')}
           </span>
           <div className="flex items-center text-xs font-medium text-muted-foreground gap-1 bg-muted px-2 py-1 rounded-md">
             <Clock className="h-3.5 w-3.5" />
@@ -89,7 +91,7 @@ export const LessonCard: React.FC<{ lesson: DashboardLessonProps }> = ({ lesson 
           <Link
             href={`/lessons/${lesson.id}`}
             className="p-1 rounded hover:bg-primary hover:text-primary-foreground transition-colors ml-1"
-            title="Подробнее"
+            title={t('common.view')}
           >
             <ArrowRight className="h-4 w-4" />
           </Link>

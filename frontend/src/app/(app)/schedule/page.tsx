@@ -17,11 +17,16 @@ interface ScheduleEntry {
   teacher: { user: { profile: { firstName: string; lastName: string } | null; username: string } } | null;
 }
 
-const DAYS_RU = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+const LOCALES: Record<string, string> = { en: 'en-US', ru: 'ru-RU', de: 'de-DE', es: 'es-ES' };
+// day: 0 (Sun) … 6 (Sat) — 2024-01-07 is a Sunday
+function dayName(day: number, locale: string): string {
+  return new Date(2024, 0, 7 + day).toLocaleDateString(locale, { weekday: 'short' });
+}
 const SCHOOL_DAYS = [1, 2, 3, 4, 5];
 
 export default function SchedulePage() {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const locale = LOCALES[language] || 'en-US';
   const [schedule, setSchedule] = useState<Record<number, ScheduleEntry[]>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState(1);
@@ -70,7 +75,7 @@ export default function SchedulePage() {
           {SCHOOL_DAYS.map((day) => (
             <div key={day} className="space-y-2">
               <h3 className="font-semibold text-center text-sm text-muted-foreground pb-2 border-b border-border">
-                {DAYS_RU[day]}
+                {dayName(day, locale)}
               </h3>
               {(schedule[day] || []).length === 0 ? (
                 <p className="text-xs text-muted-foreground/50 text-center py-4">—</p>
@@ -81,7 +86,7 @@ export default function SchedulePage() {
                     className="rounded-lg border border-border bg-card p-3 text-xs space-y-1"
                     style={{ borderLeft: `3px solid ${entry.subject?.color || 'var(--primary)'}` }}
                   >
-                    <p className="font-medium text-foreground">{entry.subject?.name || 'Н/Д'}</p>
+                    <p className="font-medium text-foreground">{entry.subject?.name || 'N/A'}</p>
                     <p className="text-muted-foreground flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {entry.startTime} - {entry.endTime}
@@ -117,7 +122,7 @@ export default function SchedulePage() {
                     : 'bg-muted text-muted-foreground'
                 }`}
               >
-                {DAYS_RU[day]}
+                {dayName(day, locale)}
               </button>
             ))}
           </div>
@@ -126,7 +131,7 @@ export default function SchedulePage() {
               <Card key={entry.id}>
                 <CardContent className="p-4 space-y-1">
                   <p className="font-medium" style={{ color: entry.subject?.color || 'var(--primary)' }}>
-                    {entry.subject?.name || 'Н/Д'}
+                    {entry.subject?.name || 'N/A'}
                   </p>
                   <p className="text-sm text-muted-foreground flex items-center gap-1">
                     <Clock className="h-4 w-4" />

@@ -29,7 +29,7 @@ const STORAGE_KEY = 'school_platform_lang';
 type DictNode = Record<string, any>;
 
 export const I18nProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>('ru');
+  const [language, setLanguageState] = useState<Language>('en');
 
   useEffect(() => {
     const savedLang = localStorage.getItem(STORAGE_KEY) as Language | null;
