@@ -20,7 +20,11 @@ apiClient.interceptors.request.use(async (config) => {
 
     // Mutations → persistent demo store (CRUD actually works)
     if (method !== 'get') {
-      const result = applyDemoMutation(method, config.url, config.data ? JSON.parse(config.data) : undefined);
+      let body = config.data;
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch { body = undefined; }
+      }
+      const result = applyDemoMutation(method, config.url, body);
       if (result !== null) {
         const mockResponse = {
           data: { success: true, data: result },
