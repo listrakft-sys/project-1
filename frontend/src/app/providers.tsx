@@ -6,7 +6,7 @@ import { I18nProvider } from '@/lib/i18n';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+    <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" disableTransitionOnChange>
       <I18nProvider>
         {children}
       </I18nProvider>

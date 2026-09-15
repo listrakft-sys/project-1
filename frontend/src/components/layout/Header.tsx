@@ -2,15 +2,12 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation, Language } from '@/lib/i18n';
-import { useTheme } from 'next-themes';
 import { useAuthStore } from '@/lib/store/auth';
 import { useRouter } from 'next/navigation';
 import {
   Menu,
   Search,
   Bell,
-  Sun,
-  Moon,
   Globe,
   User,
   LogOut,
@@ -24,20 +21,14 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
   const { language, setLanguage, t } = useTranslation();
-  const { theme, setTheme } = useTheme();
   const { user, logout } = useAuthStore();
   const router = useRouter();
 
-  const [mounted, setMounted] = useState(false);
   const [isLangOpen, setIsLangOpen] = useState(false);
   const [isUserOpen, setIsUserOpen] = useState(false);
 
   const langRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -129,17 +120,6 @@ export const Header: React.FC<HeaderProps> = ({ onMenuToggle }) => {
             </div>
           )}
         </div>
-
-        {/* Theme Toggle */}
-        {mounted && (
-          <button
-            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            aria-label="Toggle theme"
-          >
-            {theme === 'dark' ? <Sun className="h-5 w-5 text-amber-400" /> : <Moon className="h-5 w-5" />}
-          </button>
-        )}
 
         {/* User Menu */}
         <div className="relative ml-1" ref={userRef}>
