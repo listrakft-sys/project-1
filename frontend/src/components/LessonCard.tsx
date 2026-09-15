@@ -27,6 +27,10 @@ export interface FullLessonProps {
     user?: {
       firstName?: string;
       lastName?: string;
+      profile?: {
+        firstName?: string;
+        lastName?: string;
+      };
     };
   };
   materials?: Array<unknown>;
@@ -56,9 +60,10 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps; manage?: LessonMana
   };
 
   const { dateFormatted, timeRange } = formatDateTime(lesson.startDate, lesson.endDate);
-  const teacherName = lesson.teacher?.user
-    ? `${lesson.teacher.user.firstName || ''} ${lesson.teacher.user.lastName || ''}`.trim()
-    : t('lessons.teacher');
+  const tu = lesson.teacher?.user;
+  const tuFirst = tu?.firstName ?? tu?.profile?.firstName ?? '';
+  const tuLast = tu?.lastName ?? tu?.profile?.lastName ?? '';
+  const teacherName = `${tuFirst} ${tuLast}`.trim() || t('lessons.teacher');
   const materialsCount = lesson.materials?.length || 0;
   const subjectColor = lesson.subject?.color || '#3b82f6';
 
