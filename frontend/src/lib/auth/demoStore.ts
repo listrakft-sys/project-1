@@ -12,10 +12,22 @@ interface DemoDB {
 
 let cache: DemoDB | null = null;
 
+// Classes seed data lacks admin-page fields (capacity/room/_count) — normalize
+function normalizeClass(c: any): any {
+  return {
+    capacity: 30,
+    room: '',
+    homeroomTeacherId: null,
+    homeroomTeacher: null,
+    ...c,
+    _count: { students: c._count?.students ?? c.studentsCount ?? 0 },
+  };
+}
+
 function seedDB(): DemoDB {
   return {
     users: JSON.parse(JSON.stringify(DEMO_DATA.users)),
-    classes: JSON.parse(JSON.stringify(DEMO_DATA.classes)),
+    classes: JSON.parse(JSON.stringify(DEMO_DATA.classes)).map(normalizeClass),
   };
 }
 
@@ -83,17 +95,18 @@ export function getDemoDataOverride(path: string, params?: any): any {
     return { data: list, total, page, limit };
   }
 
-  // GET /classes/:id (details view)
+  // GET /classes/:id (details view) — only for store-created classes;
+  // seed classes fall through to the richer static classDetails
   const m = path.match(/\/classes\/([^/?]+)/);
   if (m) {
+    const isSeed = DEMO_DATA.classes.some((c) => c.id === m[1]);
     const cls = db.classes.find((c) => c.id === m[1]);
-    // known seed class c1 has richer static details; store-created → return as-is
-    if (cls) return cls;
+    if (!isSeed && cls) return { data: cls };
     return null;
   }
 
   // GET /classes (list)
-  if (/\/classes/.test(path)) return db.classes;
+  if (/\/classes/.test(path)) return { data: db.classes };
 
   return null;
 }
@@ -147,9 +160,10 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
       studentsCount: 0,
       createdAt: new Date().toISOString(),
     };
-    db.classes.push(cls);
+    const created = normalizeClass(cls);
+    db.classes.push(created);
     persistDB();
-    return cls;
+    return created;
   }
 
   // PUT /classes/:id
