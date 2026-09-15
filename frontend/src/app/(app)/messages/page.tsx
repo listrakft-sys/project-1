@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MessageCircle, Send, Paperclip, ArrowLeft, Search, User, Users } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
@@ -99,12 +99,11 @@ export default function MessagesPage() {
     fetchConversations();
   }, [user, searchParams]);
 
-  // Fetch messages when conversation changes
-  useEffect(() => {
+  // Fetch messages for the selected conversation. Also polled every 3s so the
+  // sent (single tick) / read (double tick) indicators update live.
+  const fetchMessages = useCallback(async () => {
     if (!selectedId) return;
-
-    const fetchMessages = async () => {
-      try {
+    try {
         setIsLoadingMessages(true);
         const res = await api.get(`/conversations/${selectedId}/messages`);
         const raw = res.data?.data || res.data || [];
@@ -141,15 +140,25 @@ export default function MessagesPage() {
             isOwn: true,
           },
         ]);
-      } finally {
-        setIsLoadingMessages(false);
-      }
-    };
+    } finally {
+      setIsLoadingMessages(false);
+    }
+  }, [selectedId, user]);
 
+  // Fetch messages when conversation changes (+ mark as read)
+  useEffect(() => {
+    if (!selectedId) return;
     fetchMessages();
     // Mark as read
     api.post(`/conversations/${selectedId}/read`).catch(() => {});
-  }, [selectedId, user]);
+  }, [selectedId, fetchMessages]);
+
+  // Poll the thread so message status ticks update live
+  useEffect(() => {
+    if (!selectedId) return;
+    const timer = setInterval(fetchMessages, 3000);
+    return () => clearInterval(timer);
+  }, [selectedId, fetchMessages]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

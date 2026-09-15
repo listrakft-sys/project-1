@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef , useCallback} from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ArrowLeft, Send, Paperclip, User, Users } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
@@ -29,11 +29,10 @@ export default function SingleConversationPage() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Fetch thread; also polled every 3s so sent (✓) / read (✓✓) ticks update live
+  const fetchChatDetails = useCallback(async () => {
     if (!id) return;
-
-    const fetchChatDetails = async () => {
-      try {
+    try {
         setIsLoading(true);
         const [convRes, msgRes] = await Promise.all([
           api.get(`/conversations/${id}`),
@@ -77,14 +76,24 @@ export default function SingleConversationPage() {
             isOwn: false,
           },
         ]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    } finally {
+      setIsLoading(false);
+    }
+  }, [id, user]);
 
+  // Initial load + mark as read
+  useEffect(() => {
+    if (!id) return;
     fetchChatDetails();
     api.post(`/conversations/${id}/read`).catch(() => {});
-  }, [id, user]);
+  }, [id, fetchChatDetails]);
+
+  // Poll the thread so message status ticks update live
+  useEffect(() => {
+    if (!id) return;
+    const timer = setInterval(fetchChatDetails, 3000);
+    return () => clearInterval(timer);
+  }, [id, fetchChatDetails]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

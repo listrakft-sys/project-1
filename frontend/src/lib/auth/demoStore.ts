@@ -187,7 +187,21 @@ export function getDemoDataOverride(path: string, params?: any): any {
   let m = path.match(/\/conversations\/([^/]+)\/messages/);
   if (m) {
     const me = getCurrentUser();
-    return { data: (db.messages[m[1]] || []).map((msg) => remapMessage(msg, me)) };
+    return {
+      data: (db.messages[m[1]] || []).map((msg) => {
+        const out = remapMessage(msg, me);
+        // Simulate the other party reading own messages after ~4s →
+        // the double-tick "read" indicator flips on the next poll.
+        if (
+          out.senderId === me.id &&
+          (!out.readBy || out.readBy.length === 0) &&
+          Date.now() - new Date(out.createdAt).getTime() > 4000
+        ) {
+          out.readBy = [OTHER_PARTY.userId];
+        }
+        return out;
+      }),
+    };
   }
 
   // GET /conversations/:id (detail)
