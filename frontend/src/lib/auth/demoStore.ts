@@ -10,6 +10,7 @@ interface DemoDB {
   users: any[];
   classes: any[];
   schedules: any[];
+  lessons: any[];
   conversations: any[];
   messages: Record<string, any[]>;
 }
@@ -99,6 +100,21 @@ function resolveSubject(subjectId?: string): { subject: any; teacher: any } {
   return { subject: { id: s.id, name: s.name, code: s.code, color: s.color }, teacher: teacherUser };
 }
 
+// Seed lessons → full card shape (class object, teacher, classId for filters)
+function seedLessons(): any[] {
+  return JSON.parse(JSON.stringify(DEMO_DATA.lessons)).map((l: any) => {
+    const cls = (DEMO_DATA.classes as any[]).find((c) => c.name === l.className);
+    const { teacher } = resolveSubject(l.subject?.id);
+    return {
+      ...l,
+      classId: cls?.id || null,
+      class: cls ? { id: cls.id, name: cls.name } : undefined,
+      teacher,
+      description: l.description || '',
+    };
+  });
+}
+
 function seedDB(): DemoDB {
   return {
     users: JSON.parse(JSON.stringify(DEMO_DATA.users)),
@@ -106,6 +122,7 @@ function seedDB(): DemoDB {
     // Seed timetable belongs to class 7-A; other classes start empty until
     // an admin adds lessons — that exercises the schedule CRUD.
     schedules: JSON.parse(JSON.stringify(DEMO_DATA.schedule)).map((s: any) => ({ ...s, classId: 'c1' })),
+    lessons: seedLessons(),
     conversations: seedConversations(),
     messages: seedMessages(),
   };
@@ -125,6 +142,7 @@ export function loadDB(): DemoDB {
           users: db.users,
           classes: (db.classes || []).map(normalizeClass),
           schedules: Array.isArray(db.schedules) ? db.schedules : seed.schedules,
+          lessons: Array.isArray(db.lessons) ? db.lessons : seed.lessons,
           conversations: Array.isArray(db.conversations) ? db.conversations : seed.conversations,
           messages: { ...seed.messages, ...(db.messages || {}) },
         };
@@ -222,6 +240,28 @@ export function getDemoDataOverride(path: string, params?: any): any {
   // GET /schedules (student/teacher weekly timetable)
   if (/\/schedules/.test(path)) return { data: db.schedules };
 
+  // GET /lessons/today (dashboard) — keep the static demo data
+  if (/^\/?lessons\/today/.test(path)) return null;
+
+  // GET /lessons/:id (detail) — store-created lessons; seed lessons fall
+  // through to the richer static lessonDetail (materials, description…)
+  m = path.match(/^\/?lessons\/([^/]+)$/);
+  if (m) {
+    const isSeed = (DEMO_DATA.lessons as any[]).some((x) => x.id === m![1]);
+    const found = db.lessons.find((l) => l.id === m![1]);
+    return !isSeed && found ? { data: found } : null;
+  }
+
+  // GET /lessons (list, subject/class filters, chronological order)
+  if (/^\/?lessons/.test(path)) {
+    let list = db.lessons;
+    if (params?.subjectId) list = list.filter((l) => l.subject?.id === params.subjectId);
+    if (params?.classId) list = list.filter((l) => l.classId === params.classId);
+    return {
+      data: [...list].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()),
+    };
+  }
+
   // GET /classes/:id (details view) — only for store-created classes;
   // seed classes fall through to the richer static classDetails
   m = path.match(/\/classes\/([^/?]+)/);
@@ -305,6 +345,80 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
       conv.unreadCount = 0;
       persistDB();
     }
+    return { success: true };
+  }
+
+  // POST /lessons (create a lesson)
+  if (/^\/?lessons/.test(path) && method === 'post') {
+    const { subject, teacher } = resolveSubject(body?.subjectId);
+    const cls = db.classes.find((c) => c.id === body?.classId);
+    const date = body?.date || new Date().toISOString().slice(0, 10);
+    const startTime = body?.startTime || '09:00';
+    const endTime = body?.endTime || '09:50';
+    const lesson = {
+      id: `l${Date.now()}`,
+      title: body?.title || 'Lesson',
+      description: body?.description || '',
+      subject,
+      teacher,
+      classId: cls?.id || null,
+      className: cls?.name || '',
+      class: cls ? { id: cls.id, name: cls.name } : undefined,
+      startDate: new Date(`${date}T${startTime}`).toISOString(),
+      endDate: new Date(`${date}T${endTime}`).toISOString(),
+      startTime,
+      endTime,
+      room: body?.room || '',
+      materials: [],
+    };
+    db.lessons.push(lesson);
+    persistDB();
+    return lesson;
+  }
+
+  // PUT /lessons/:id
+  m = path.match(/^\/?lessons\/([^/]+)$/);
+  if (m && method === 'put') {
+    const lesson = db.lessons.find((l) => l.id === m![1]);
+    if (!lesson) return { error: 'Lesson not found' };
+    Object.assign(lesson, {
+      title: body?.title ?? lesson.title,
+      description: body?.description ?? lesson.description,
+      room: body?.room ?? lesson.room,
+      startTime: body?.startTime ?? lesson.startTime,
+      endTime: body?.endTime ?? lesson.endTime,
+    });
+    if (body?.classId) {
+      const cls = db.classes.find((c) => c.id === body.classId);
+      if (cls) {
+        lesson.classId = cls.id;
+        lesson.className = cls.name;
+        lesson.class = { id: cls.id, name: cls.name };
+      }
+    }
+    if (body?.date || body?.startTime || body?.endTime) {
+      const date = body?.date || lesson.startDate.slice(0, 10);
+      const startTime = body?.startTime || lesson.startTime;
+      const endTime = body?.endTime || lesson.endTime;
+      lesson.startDate = new Date(`${date}T${startTime}`).toISOString();
+      lesson.endDate = new Date(`${date}T${endTime}`).toISOString();
+    }
+    if (body?.subjectId) {
+      const { subject, teacher } = resolveSubject(body.subjectId);
+      if (subject) lesson.subject = subject;
+      lesson.teacher = teacher;
+    }
+    persistDB();
+    return lesson;
+  }
+
+  // DELETE /lessons/:id
+  m = path.match(/^\/?lessons\/([^/]+)$/);
+  if (m && method === 'delete') {
+    const idx = db.lessons.findIndex((l) => l.id === m![1]);
+    if (idx === -1) return { error: 'Lesson not found' };
+    db.lessons.splice(idx, 1);
+    persistDB();
     return { success: true };
   }
 

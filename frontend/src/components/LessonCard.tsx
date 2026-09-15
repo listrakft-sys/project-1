@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { Clock, MapPin, User, FileText, ArrowRight, Calendar, Users } from 'lucide-react';
+import { Clock, MapPin, User, FileText, ArrowRight, Calendar, Users, Pencil, Trash2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { useTranslation, localeFromLanguage } from '@/lib/i18n';
 import { Button } from '@/components/ui/Button';
@@ -32,8 +32,16 @@ export interface FullLessonProps {
   materials?: Array<unknown>;
 }
 
-export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) => {
-  const { language } = useTranslation();
+export interface LessonManageActions {
+  onEdit: (lesson: FullLessonProps) => void;
+  onDelete: (lesson: FullLessonProps) => void;
+}
+
+export const LessonCard: React.FC<{ lesson: FullLessonProps; manage?: LessonManageActions }> = ({
+  lesson,
+  manage,
+}) => {
+  const { t, language } = useTranslation();
   const formatDateTime = (startStr: string, endStr: string) => {
     try {
       const start = new Date(startStr);
@@ -50,7 +58,7 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) =>
   const { dateFormatted, timeRange } = formatDateTime(lesson.startDate, lesson.endDate);
   const teacherName = lesson.teacher?.user
     ? `${lesson.teacher.user.firstName || ''} ${lesson.teacher.user.lastName || ''}`.trim()
-    : 'Teacher';
+    : t('lessons.teacher');
   const materialsCount = lesson.materials?.length || 0;
   const subjectColor = lesson.subject?.color || '#3b82f6';
 
@@ -65,7 +73,7 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) =>
                 className="px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm"
                 style={{ backgroundColor: subjectColor }}
               >
-                {lesson.subject?.name || 'Subject'}
+                {lesson.subject?.name || t('lessons.subject')}
               </span>
               {lesson.class && (
                 <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground border border-border flex items-center gap-1">
@@ -78,7 +86,7 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) =>
             {materialsCount > 0 && (
               <span className="text-xs text-muted-foreground flex items-center gap-1 bg-muted px-2 py-0.5 rounded font-medium">
                 <FileText className="h-3.5 w-3.5 text-primary" />
-                {materialsCount} materials
+                {materialsCount} {t('lessons.materialsUnit')}
               </span>
             )}
           </div>
@@ -106,7 +114,7 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) =>
             {lesson.room && (
               <div className="flex items-center gap-1 bg-accent/60 px-2 py-0.5 rounded text-foreground font-semibold">
                 <MapPin className="h-3.5 w-3.5 text-primary" />
-                <span>Room {lesson.room}</span>
+                <span>{t('lessons.room')} {lesson.room}</span>
               </div>
             )}
           </div>
@@ -123,14 +131,34 @@ export const LessonCard: React.FC<{ lesson: FullLessonProps }> = ({ lesson }) =>
           </div>
         </div>
 
-        {/* View Button */}
-        <div className="pt-2">
-          <Link href={`/lessons/${lesson.id}`} className="w-full block">
+        {/* Actions: view + (optional) edit/delete */}
+        <div className="pt-2 flex items-center gap-2">
+          <Link href={`/lessons/${lesson.id}`} className="flex-1 block">
             <Button variant="outline" className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all">
-              <span>View Details</span>
+              <span>{t('lessons.viewDetails')}</span>
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
           </Link>
+          {manage && (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => manage.onEdit(lesson)}
+                aria-label={t('common.edit')}
+                className="shrink-0 px-2.5"
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => manage.onDelete(lesson)}
+                aria-label={t('common.delete')}
+                className="shrink-0 px-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive hover:border-destructive/50"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </>
+          )}
         </div>
       </CardContent>
     </Card>
