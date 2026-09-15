@@ -264,6 +264,21 @@ export const de: Dictionary = {
     announcements: 'Globale Ankündigungen',
   },
 
+  announcements: {
+    empty: 'Keine Ankündigungen',
+    add: 'Ankündigung hinzufügen',
+    edit: 'Ankündigung bearbeiten',
+    delete: 'Ankündigung löschen',
+    deleteConfirm: 'Möchtest du diese Ankündigung wirklich löschen?',
+    validationRequired: 'Titel und Text eingeben',
+    totalCount: 'Gesamt',
+    titleLabel: 'Titel',
+    contentLabel: 'Text',
+    audienceLabel: 'Zielgruppe',
+    pinnedLabel: 'Oben anheften',
+    audience: { ALL: 'Alle', TEACHERS: 'Lehrer', PARENTS: 'Eltern', STUDENTS: 'Schüler', CLASS: 'Klasse' },
+  },
+
   classes: {
     create: 'Klasse erstellen',
     edit: 'Klasse bearbeiten',

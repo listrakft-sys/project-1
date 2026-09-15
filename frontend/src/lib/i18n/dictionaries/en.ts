@@ -264,6 +264,21 @@ export const en: Dictionary = {
     announcements: 'Global Announcements',
   },
 
+  announcements: {
+    empty: 'No announcements',
+    add: 'Add Announcement',
+    edit: 'Edit Announcement',
+    delete: 'Delete Announcement',
+    deleteConfirm: 'Are you sure you want to delete this announcement?',
+    validationRequired: 'Enter a title and content',
+    totalCount: 'Total',
+    titleLabel: 'Title',
+    contentLabel: 'Content',
+    audienceLabel: 'Audience',
+    pinnedLabel: 'Pin to top',
+    audience: { ALL: 'Everyone', TEACHERS: 'Teachers', PARENTS: 'Parents', STUDENTS: 'Students', CLASS: 'Class' },
+  },
+
   classes: {
     create: 'Create class',
     edit: 'Edit class',

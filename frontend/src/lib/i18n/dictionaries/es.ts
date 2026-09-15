@@ -262,6 +262,21 @@ export const es = {
     announcements: 'Anuncios Globales',
   },
 
+  announcements: {
+    empty: 'No hay anuncios',
+    add: 'Añadir anuncio',
+    edit: 'Editar anuncio',
+    delete: 'Eliminar anuncio',
+    deleteConfirm: '¿Seguro de que quieres eliminar este anuncio?',
+    validationRequired: 'Escribe un título y el contenido',
+    totalCount: 'Total',
+    titleLabel: 'Título',
+    contentLabel: 'Contenido',
+    audienceLabel: 'Audiencia',
+    pinnedLabel: 'Fijar arriba',
+    audience: { ALL: 'Todos', TEACHERS: 'Profesores', PARENTS: 'Padres', STUDENTS: 'Alumnos', CLASS: 'Clase' },
+  },
+
   classes: {
     create: 'Crear clase',
     edit: 'Editar clase',

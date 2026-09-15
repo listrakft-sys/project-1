@@ -14,6 +14,7 @@ interface DemoDB {
   conversations: any[];
   messages: Record<string, any[]>;
   homework: any[];
+  announcements: any[];
 }
 
 let cache: DemoDB | null = null;
@@ -127,6 +128,12 @@ function seedDB(): DemoDB {
     conversations: seedConversations(),
     messages: seedMessages(),
     homework: JSON.parse(JSON.stringify(DEMO_DATA.homework)),
+    // Seed uses `priority` (high = pinned); normalize to the page shape
+    announcements: JSON.parse(JSON.stringify(DEMO_DATA.announcements)).map((a: any) => ({
+      ...a,
+      isPinned: a.isPinned ?? a.priority === 'high',
+      targetAudience: a.targetAudience || 'ALL',
+    })),
   };
 }
 
@@ -148,6 +155,7 @@ export function loadDB(): DemoDB {
           conversations: Array.isArray(db.conversations) ? db.conversations : seed.conversations,
           messages: { ...seed.messages, ...(db.messages || {}) },
           homework: Array.isArray(db.homework) ? db.homework : seed.homework,
+          announcements: Array.isArray(db.announcements) ? db.announcements : seed.announcements,
         };
         return cache;
       }
@@ -235,6 +243,9 @@ export function getDemoDataOverride(path: string, params?: any): any {
 
   // GET /conversations (list)
   if (/\/conversations/.test(path)) return { data: db.conversations };
+
+  // GET /announcements (list)
+  if (/^\/?announcements/.test(path)) return { data: db.announcements };
 
   // GET /homework/:id (detail) — store-backed; static homeworkDetail is the
   // fallback for unknown ids. Seed h1 keeps its rich detail (attachments…).
@@ -532,6 +543,51 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
     const idx = db.schedules.findIndex((s) => s.id === m![1]);
     if (idx === -1) return { error: 'Schedule not found' };
     db.schedules.splice(idx, 1);
+    persistDB();
+    return { success: true };
+  }
+
+  // ── Announcements CRUD ──
+  // POST /announcements
+  if (/^\/?announcements$/.test(path) && method === 'post') {
+    const cu = getCurrentUser();
+    const item = {
+      id: `a${Date.now()}`,
+      title: body?.title || 'Untitled',
+      content: body?.content || '',
+      targetAudience: body?.targetAudience || 'ALL',
+      isPinned: !!body?.isPinned,
+      priority: body?.isPinned ? 'high' : 'medium',
+      author: { id: cu.id, username: cu.username, profile: cu.profile },
+      createdAt: new Date().toISOString(),
+    };
+    db.announcements.push(item);
+    persistDB();
+    return item;
+  }
+
+  // PUT /announcements/:id
+  m = path.match(/^\/?announcements\/([^/]+)$/);
+  if (m && method === 'put') {
+    const item = db.announcements.find((a) => a.id === m![1]);
+    if (!item) return { error: 'Announcement not found' };
+    Object.assign(item, {
+      title: body?.title ?? item.title,
+      content: body?.content ?? item.content,
+      targetAudience: body?.targetAudience ?? item.targetAudience,
+      isPinned: body?.isPinned !== undefined ? !!body.isPinned : item.isPinned,
+      priority: body?.isPinned !== undefined ? (body.isPinned ? 'high' : 'medium') : item.priority,
+    });
+    persistDB();
+    return item;
+  }
+
+  // DELETE /announcements/:id
+  m = path.match(/^\/?announcements\/([^/]+)$/);
+  if (m && method === 'delete') {
+    const idx = db.announcements.findIndex((a) => a.id === m![1]);
+    if (idx === -1) return { error: 'Announcement not found' };
+    db.announcements.splice(idx, 1);
     persistDB();
     return { success: true };
   }

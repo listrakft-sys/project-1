@@ -264,6 +264,21 @@ export const ru: Dictionary = {
     announcements: 'Глобальные объявления',
   },
 
+  announcements: {
+    empty: 'Нет объявлений',
+    add: 'Добавить объявление',
+    edit: 'Изменить объявление',
+    delete: 'Удалить объявление',
+    deleteConfirm: 'Вы уверены, что хотите удалить это объявление?',
+    validationRequired: 'Заполните заголовок и текст',
+    totalCount: 'Всего',
+    titleLabel: 'Заголовок',
+    contentLabel: 'Текст',
+    audienceLabel: 'Аудитория',
+    pinnedLabel: 'Закрепить сверху',
+    audience: { ALL: 'Все', TEACHERS: 'Учителя', PARENTS: 'Родители', STUDENTS: 'Ученики', CLASS: 'Класс' },
+  },
+
   classes: {
     create: 'Создать класс',
     edit: 'Изменить класс',

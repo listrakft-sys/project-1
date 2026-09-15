@@ -183,7 +183,7 @@ export default function SchedulePage() {
       fetchSchedule(selectedClassId);
     } catch (err) {
       console.error('Failed to save slot', err);
-      setFormError(t('error'));
+      setFormError(t('common.error'));
     } finally {
       setSaving(false);
     }

@@ -195,7 +195,7 @@ export default function LessonsPage() {
       fetchLessons();
     } catch (err) {
       console.error('Failed to save lesson:', err);
-      setFormError(t('error'));
+      setFormError(t('common.error'));
     } finally {
       setSaving(false);
     }

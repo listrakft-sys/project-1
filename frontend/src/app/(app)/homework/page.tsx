@@ -151,7 +151,7 @@ export default function HomeworkPage() {
       fetchHomework();
     } catch (err) {
       console.error('Failed to save homework', err);
-      setFormError(t('error'));
+      setFormError(t('common.error'));
     } finally {
       setSaving(false);
     }
