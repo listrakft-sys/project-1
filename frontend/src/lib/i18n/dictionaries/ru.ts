@@ -176,6 +176,17 @@ export const ru: Dictionary = {
     noSchedule: 'Нет запланированных уроков',
   },
   homework: {
+    searchPlaceholder: 'Поиск заданий...',
+    all: 'Все',
+    addTask: 'Добавить задание',
+    editTask: 'Изменить задание',
+    deleteTask: 'Удалить задание',
+    deleteConfirm: 'Вы уверены, что хотите удалить это задание?',
+    description: 'Описание',
+    validationRequired: 'Заполните название и выберите предмет',
+    empty: 'Нет заданий',
+    statusLabel: 'Статус',
+
     duePrefix: 'До',
     viewTask: 'Открыть',
     title: 'Домашние задания',

@@ -176,6 +176,17 @@ export const de: Dictionary = {
     noSchedule: 'Keine Kurse geplant',
   },
   homework: {
+    searchPlaceholder: 'Hausaufgaben suchen...',
+    all: 'Alle',
+    addTask: 'Hausaufgabe hinzufügen',
+    editTask: 'Hausaufgabe bearbeiten',
+    deleteTask: 'Hausaufgabe löschen',
+    deleteConfirm: 'Möchtest du diese Hausaufgabe wirklich löschen?',
+    description: 'Beschreibung',
+    validationRequired: 'Titel eingeben und Fach auswählen',
+    empty: 'Keine Hausaufgaben',
+    statusLabel: 'Status',
+
     duePrefix: 'Bis',
     viewTask: 'Ansehen',
     title: 'Hausaufgaben',

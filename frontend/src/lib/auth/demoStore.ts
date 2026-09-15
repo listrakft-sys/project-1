@@ -13,6 +13,7 @@ interface DemoDB {
   lessons: any[];
   conversations: any[];
   messages: Record<string, any[]>;
+  homework: any[];
 }
 
 let cache: DemoDB | null = null;
@@ -125,6 +126,7 @@ function seedDB(): DemoDB {
     lessons: seedLessons(),
     conversations: seedConversations(),
     messages: seedMessages(),
+    homework: JSON.parse(JSON.stringify(DEMO_DATA.homework)),
   };
 }
 
@@ -145,6 +147,7 @@ export function loadDB(): DemoDB {
           lessons: Array.isArray(db.lessons) ? db.lessons : seed.lessons,
           conversations: Array.isArray(db.conversations) ? db.conversations : seed.conversations,
           messages: { ...seed.messages, ...(db.messages || {}) },
+          homework: Array.isArray(db.homework) ? db.homework : seed.homework,
         };
         return cache;
       }
@@ -232,6 +235,21 @@ export function getDemoDataOverride(path: string, params?: any): any {
 
   // GET /conversations (list)
   if (/\/conversations/.test(path)) return { data: db.conversations };
+
+  // GET /homework/:id (detail) — store-backed; static homeworkDetail is the
+  // fallback for unknown ids. Seed h1 keeps its rich detail (attachments…).
+  m = path.match(/^\/?homework\/([^/]+)$/);
+  if (m) {
+    const item = db.homework.find((h) => h.id === m![1]);
+    if (item) {
+      const base: any = (DEMO_DATA.homeworkDetail as any).id === item.id ? DEMO_DATA.homeworkDetail : {};
+      return { data: { attachments: [], ...base, ...item } };
+    }
+    return null;
+  }
+
+  // GET /homework (list)
+  if (/^\/?homework/.test(path)) return { data: db.homework };
 
   // GET /schedules/class/:id (admin per-class timetable)
   m = path.match(/\/schedules\/class\/([^/?]+)/);
@@ -514,6 +532,66 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
     const idx = db.schedules.findIndex((s) => s.id === m![1]);
     if (idx === -1) return { error: 'Schedule not found' };
     db.schedules.splice(idx, 1);
+    persistDB();
+    return { success: true };
+  }
+
+  // ── Homework CRUD ──
+  // POST /homework
+  if (/^\/?homework$/.test(path) && method === 'post') {
+    const { subject } = resolveSubject(body?.subjectId);
+    const item = {
+      id: `h${Date.now()}`,
+      title: body?.title || 'Untitled',
+      description: body?.description || '',
+      dueDate: body?.dueDate || new Date().toISOString().slice(0, 10),
+      status: body?.status || 'assigned',
+      subject,
+    };
+    db.homework.push(item);
+    persistDB();
+    return item;
+  }
+
+  // POST /homework/:id/submit (student submission)
+  m = path.match(/^\/?homework\/([^/]+)\/submit$/);
+  if (m && method === 'post') {
+    const item = db.homework.find((h) => h.id === m![1]);
+    if (!item) return { error: 'Homework not found' };
+    item.status = 'submitted';
+    item.submissions = [
+      ...(item.submissions || []),
+      { content: body?.content || '', submittedAt: new Date().toISOString() },
+    ];
+    persistDB();
+    return item;
+  }
+
+  // PUT /homework/:id
+  m = path.match(/^\/?homework\/([^/]+)$/);
+  if (m && method === 'put') {
+    const item = db.homework.find((h) => h.id === m![1]);
+    if (!item) return { error: 'Homework not found' };
+    Object.assign(item, {
+      title: body?.title ?? item.title,
+      description: body?.description ?? item.description,
+      dueDate: body?.dueDate ?? item.dueDate,
+      status: body?.status ?? item.status,
+    });
+    if (body?.subjectId) {
+      const { subject } = resolveSubject(body.subjectId);
+      item.subject = subject;
+    }
+    persistDB();
+    return item;
+  }
+
+  // DELETE /homework/:id
+  m = path.match(/^\/?homework\/([^/]+)$/);
+  if (m && method === 'delete') {
+    const idx = db.homework.findIndex((h) => h.id === m![1]);
+    if (idx === -1) return { error: 'Homework not found' };
+    db.homework.splice(idx, 1);
     persistDB();
     return { success: true };
   }

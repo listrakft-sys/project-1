@@ -174,6 +174,17 @@ export const es = {
     noSchedule: 'No hay clases programadas',
   },
   homework: {
+    searchPlaceholder: 'Buscar tareas...',
+    all: 'Todas',
+    addTask: 'Añadir tarea',
+    editTask: 'Editar tarea',
+    deleteTask: 'Eliminar tarea',
+    deleteConfirm: '¿Seguro de que quieres eliminar esta tarea?',
+    description: 'Descripción',
+    validationRequired: 'Escribe un título y elige una asignatura',
+    empty: 'No hay tareas',
+    statusLabel: 'Estado',
+
     duePrefix: 'Vence',
     viewTask: 'Ver',
     title: 'Tareas',

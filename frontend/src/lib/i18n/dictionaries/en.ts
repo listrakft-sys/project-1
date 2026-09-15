@@ -176,6 +176,17 @@ export const en: Dictionary = {
     noSchedule: 'No scheduled classes',
   },
   homework: {
+    searchPlaceholder: 'Search homework...',
+    all: 'All',
+    addTask: 'Add Homework',
+    editTask: 'Edit Homework',
+    deleteTask: 'Delete Homework',
+    deleteConfirm: 'Are you sure you want to delete this homework?',
+    description: 'Description',
+    validationRequired: 'Enter a title and select a subject',
+    empty: 'No homework',
+    statusLabel: 'Status',
+
     duePrefix: 'Due',
     viewTask: 'View',
     title: 'Homework',
