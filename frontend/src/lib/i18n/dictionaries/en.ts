@@ -157,6 +157,14 @@ export const en: Dictionary = {
     materials: 'Materials',
   },
   schedule: {
+    classLabel: 'Class',
+    subjectLabel: 'Subject',
+    selectSubject: 'Select subject',
+    deleteSlot: 'Delete Lesson',
+    deleteConfirm: 'Are you sure you want to remove this lesson from the schedule?',
+    room: 'Room',
+    validationRequired: 'Please select a subject',
+
     day: 'Day',
     subtitle: 'Manage the weekly lesson timetable',
     addSlot: 'Add lesson',

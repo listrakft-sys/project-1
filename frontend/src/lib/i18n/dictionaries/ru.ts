@@ -157,6 +157,14 @@ export const ru: Dictionary = {
     materials: 'Материалы',
   },
   schedule: {
+    classLabel: 'Класс',
+    subjectLabel: 'Предмет',
+    selectSubject: 'Выберите предмет',
+    deleteSlot: 'Удалить урок',
+    deleteConfirm: 'Вы уверены, что хотите удалить этот урок из расписания?',
+    room: 'Кабинет',
+    validationRequired: 'Выберите предмет',
+
     day: 'День',
     subtitle: 'Управление недельным расписанием уроков',
     addSlot: 'Добавить урок',

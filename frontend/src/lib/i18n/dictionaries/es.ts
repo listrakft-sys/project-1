@@ -155,6 +155,14 @@ export const es = {
     materials: 'Materiales',
   },
   schedule: {
+    classLabel: 'Clase',
+    subjectLabel: 'Asignatura',
+    selectSubject: 'Selecciona una asignatura',
+    deleteSlot: 'Eliminar lección',
+    deleteConfirm: '¿Seguro de que quieres quitar esta lección del horario?',
+    room: 'Aula',
+    validationRequired: 'Selecciona una asignatura',
+
     day: 'Día',
     subtitle: 'Gestión del horario semanal',
     addSlot: 'Añadir clase',

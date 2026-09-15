@@ -157,6 +157,14 @@ export const de: Dictionary = {
     materials: 'Materialien',
   },
   schedule: {
+    classLabel: 'Klasse',
+    subjectLabel: 'Fach',
+    selectSubject: 'Fach auswählen',
+    deleteSlot: 'Stunde löschen',
+    deleteConfirm: 'Möchtest du diese Stunde wirklich aus dem Stundenplan entfernen?',
+    room: 'Raum',
+    validationRequired: 'Bitte wähle ein Fach',
+
     day: 'Tag',
     subtitle: 'Wochenstundenplan verwalten',
     addSlot: 'Stunde hinzufügen',
