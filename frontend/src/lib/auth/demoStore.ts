@@ -343,6 +343,59 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
     return { success: true };
   }
 
+  // POST /conversations (create a new direct or group chat)
+  if (/^\/?conversations$/.test(path.split('?')[0]) && method === 'post') {
+    const me = getCurrentUser();
+    const ids = Array.isArray(body?.participantIds) ? body.participantIds : [];
+    const others = ids.filter((id: string) => id !== me.id);
+    if (others.length === 0) return { error: 'At least one participant required' };
+    const isGroup = others.length > 1 || !!body?.name;
+    if (isGroup) {
+      const conv = {
+        id: `conv${Date.now()}`,
+        type: 'GROUP',
+        name: body?.name || 'Group',
+        participants: [
+          { userId: me.id, user: { id: me.id, username: me.username, profile: me.profile } },
+          ...others.map((id: string) => {
+            const u = db.users.find((x) => x.id === id);
+            return { userId: id, user: { id, username: u?.username || id, profile: u?.profile } };
+          }),
+        ],
+        lastMessage: undefined,
+        unreadCount: 0,
+        updatedAt: new Date().toISOString(),
+      };
+      db.conversations.unshift(conv);
+      persistDB();
+      return conv;
+    }
+    // Direct chat: reuse an existing one with the same pair
+    const existing = db.conversations.find(
+      (c) =>
+        c.type === 'DIRECT' &&
+        c.participants.length === 2 &&
+        c.participants.some((p: any) => p.userId === me.id) &&
+        c.participants.some((p: any) => p.userId === others[0])
+    );
+    if (existing) return existing;
+    const u = db.users.find((x) => x.id === others[0]);
+    const conv = {
+      id: `conv${Date.now()}`,
+      type: 'DIRECT',
+      participants: [
+        { userId: me.id, user: { id: me.id, username: me.username, profile: me.profile } },
+        { userId: others[0], user: { id: others[0], username: u?.username || others[0], profile: u?.profile } },
+      ],
+      lastMessage: undefined,
+      unreadCount: 0,
+      updatedAt: new Date().toISOString(),
+    };
+    db.conversations.unshift(conv);
+    persistDB();
+    return conv;
+  }
+
   // POST /conversations/:id/messages (send chat message)
   m = path.match(/\/conversations\/([^/]+)\/messages/);
   if (m && method === 'post') {

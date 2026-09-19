@@ -207,6 +207,11 @@ export const ru: Dictionary = {
     noConversations: 'Нет диалогов',
     typeMessage: 'Введите сообщение...',
     send: 'Отправить',
+    newChat: 'Новый чат',
+    selectParticipants: 'Выберите участников',
+    groupNameLabel: 'Название группы',
+    needParticipants: 'Выберите хотя бы одного участника',
+    selectConvPrompt: 'Выберите диалог, чтобы начать общение',
   },
   profile: {
     edit: 'Редактировать профиль',

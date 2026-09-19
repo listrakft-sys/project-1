@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MessageCircle, Send, Paperclip, ArrowLeft, Search, User, Users } from 'lucide-react';
+import Modal from '@/components/admin/Modal';
 import { useTranslation } from '@/lib/i18n';
 import { useAuthStore } from '@/lib/store/auth';
 import api from '@/lib/api/client';
@@ -24,6 +25,14 @@ export default function MessagesPage() {
   const [isLoadingConvs, setIsLoadingConvs] = useState(true);
   const [isLoadingMsgs, setIsLoadingMessages] = useState(false);
   const [attachment, setAttachment] = useState<File | null>(null);
+
+  // New chat modal
+  const [newChatOpen, setNewChatOpen] = useState(false);
+  const [pickedUsers, setPickedUsers] = useState<string[]>([]);
+  const [groupName, setGroupName] = useState('');
+  const [userOptions, setUserOptions] = useState<{ id: string; label: string }[]>([]);
+  const [creatingChat, setCreatingChat] = useState(false);
+  const [newChatError, setNewChatError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -203,6 +212,57 @@ export default function MessagesPage() {
     }
   };
 
+  const openNewChatModal = () => {
+    setPickedUsers([]);
+    setGroupName('');
+    setNewChatError(null);
+    setNewChatOpen(true);
+    api.get('/users?limit=100')
+      .then((res) => {
+        const list = res.data?.data || res.data || [];
+        setUserOptions(
+          (list as any[])
+            .filter((u) => u.id !== user?.id && u.status !== 'SUSPENDED' && u.status !== 'PENDING')
+            .map((u) => ({
+              id: u.id,
+              label: u.profile ? `${u.profile.firstName} ${u.profile.lastName}` : u.username,
+            }))
+        );
+      })
+      .catch(() => setUserOptions([]));
+  };
+
+  const togglePick = (id: string) => {
+    setPickedUsers((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+
+  const handleCreateChat = async () => {
+    if (pickedUsers.length === 0) {
+      setNewChatError(t('messages.needParticipants'));
+      return;
+    }
+    setCreatingChat(true);
+    setNewChatError(null);
+    try {
+      const res = await api.post('/conversations', {
+        participantIds: pickedUsers,
+        name: pickedUsers.length > 1 && groupName.trim() ? groupName.trim() : undefined,
+      });
+      const conv = res.data?.data || res.data;
+      setNewChatOpen(false);
+      if (conv?.id) {
+        const res2 = await api.get('/conversations');
+        const list = res2.data?.data || res2.data || [];
+        setConversations(list);
+        setSelectedId(conv.id);
+      }
+    } catch (err) {
+      setNewChatError(t('common.error'));
+    } finally {
+      setCreatingChat(false);
+    }
+  };
+
   const selectedConv = conversations.find((c) => c.id === selectedId);
   const otherParticipant = selectedConv?.participants?.find((p) => p.userId !== user?.id);
   const chatTitle = selectedConv?.name
@@ -225,6 +285,7 @@ export default function MessagesPage() {
           onSearchChange={setSearchQuery}
           currentUserId={user?.id}
           isLoading={isLoadingConvs}
+          onNewChat={openNewChatModal}
         />
       </div>
 
@@ -291,10 +352,64 @@ export default function MessagesPage() {
           <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-8">
             <MessageCircle size={48} className="mb-4 text-muted-foreground/40" />
             <p className="text-base font-medium">{t('noConversations')}</p>
-            <p className="text-xs text-muted-foreground mt-1">Selecciona una conversación para empezar a chatear.</p>
+            <p className="text-xs text-muted-foreground mt-1">{t('messages.selectConvPrompt')}</p>
           </div>
         )}
       </div>
+          {/* New Chat Modal */}
+      <Modal
+        isOpen={newChatOpen}
+        onClose={() => setNewChatOpen(false)}
+        title={t('messages.newChat')}
+        footer={
+          <div className="flex items-center justify-end gap-2 w-full">
+            {newChatError && <p className="text-xs text-destructive mr-auto">{newChatError}</p>}
+            <Button variant="outline" size="sm" onClick={() => setNewChatOpen(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button size="sm" onClick={handleCreateChat} isLoading={creatingChat}>
+              {t('common.create')}
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div>
+            <label className="text-xs font-medium text-muted-foreground">{t('messages.selectParticipants')}</label>
+            <div className="mt-2 max-h-52 overflow-y-auto rounded-md border border-input divide-y divide-border">
+              {userOptions.length === 0 ? (
+                <p className="p-3 text-sm text-muted-foreground">…</p>
+              ) : (
+                userOptions.map((u) => (
+                  <label
+                    key={u.id}
+                    className="flex items-center gap-3 px-3 py-2 cursor-pointer hover:bg-accent/50 transition-colors"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={pickedUsers.includes(u.id)}
+                      onChange={() => togglePick(u.id)}
+                      className="h-4 w-4 rounded border-input accent-[hsl(var(--primary))]"
+                    />
+                    <span className="text-sm text-foreground">{u.label}</span>
+                  </label>
+                ))
+              )}
+            </div>
+          </div>
+          {pickedUsers.length > 1 && (
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">{t('messages.groupNameLabel')}</label>
+              <input
+                type="text"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+                className="mt-1 w-full py-2 px-3 text-sm bg-background border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-primary text-foreground"
+              />
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }

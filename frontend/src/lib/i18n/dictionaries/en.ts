@@ -207,6 +207,11 @@ export const en: Dictionary = {
     noConversations: 'No conversations',
     typeMessage: 'Type a message...',
     send: 'Send',
+    newChat: 'New chat',
+    selectParticipants: 'Select participants',
+    groupNameLabel: 'Group name',
+    needParticipants: 'Select at least one participant',
+    selectConvPrompt: 'Select a conversation to start chatting',
   },
   profile: {
     edit: 'Edit Profile',

@@ -205,6 +205,11 @@ export const es = {
     noConversations: 'No hay conversaciones',
     typeMessage: 'Escribe un mensaje...',
     send: 'Enviar',
+    newChat: 'Nuevo chat',
+    selectParticipants: 'Selecciona participantes',
+    groupNameLabel: 'Nombre del grupo',
+    needParticipants: 'Selecciona al menos un participante',
+    selectConvPrompt: 'Selecciona una conversación para empezar a chatear.',
   },
   profile: {
     edit: 'Editar Perfil',

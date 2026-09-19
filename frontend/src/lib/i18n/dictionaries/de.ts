@@ -207,6 +207,11 @@ export const de: Dictionary = {
     noConversations: 'Keine Unterhaltungen',
     typeMessage: 'Nachricht schreiben...',
     send: 'Senden',
+    newChat: 'Neuer Chat',
+    selectParticipants: 'Teilnehmer wählen',
+    groupNameLabel: 'Gruppenname',
+    needParticipants: 'Wähle mindestens einen Teilnehmer',
+    selectConvPrompt: 'Wähle eine Konversation aus, um zu chatten',
   },
   profile: {
     edit: 'Profil Bearbeiten',

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { User, Users, Search } from 'lucide-react';
+import { User, Users, Search, SquarePen } from 'lucide-react';
 import { useTranslation } from '@/lib/i18n';
 
 export interface Participant {
@@ -39,6 +39,7 @@ interface ConversationListProps {
   onSearchChange: (query: string) => void;
   currentUserId?: string;
   isLoading?: boolean;
+  onNewChat?: () => void;
 }
 
 export const ConversationList: React.FC<ConversationListProps> = ({
@@ -49,6 +50,7 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   onSearchChange,
   currentUserId,
   isLoading = false,
+  onNewChat,
 }) => {
   const { t } = useTranslation();
 
@@ -82,8 +84,8 @@ export const ConversationList: React.FC<ConversationListProps> = ({
   return (
     <div className="flex flex-col h-full bg-card border-r border-border">
       {/* Search Header */}
-      <div className="p-3 border-b border-border">
-        <div className="relative">
+      <div className="p-3 border-b border-border flex items-center gap-2">
+        <div className="relative flex-1">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
@@ -93,6 +95,16 @@ export const ConversationList: React.FC<ConversationListProps> = ({
             className="w-full rounded-lg border border-input bg-background pl-9 pr-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
           />
         </div>
+        {onNewChat && (
+          <button
+            onClick={onNewChat}
+            aria-label={t('messages.newChat')}
+            title={t('messages.newChat')}
+            className="p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-accent transition-colors shrink-0"
+          >
+            <SquarePen className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Conversations List */}
