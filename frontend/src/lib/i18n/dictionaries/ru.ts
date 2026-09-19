@@ -406,6 +406,8 @@ export const ru: Dictionary = {
     'noConversations': 'Нет диалогов',
     'noMessages': 'Нет сообщений',
     'noNotifications': 'Нет уведомлений',
+    'notifsSubtitle': 'Будьте в курсе системных сообщений, объявлений и домашних заданий',
+    'notifsEmptyHint': 'Вы всё прочитали! Уведомлений по выбранному фильтру нет.',
     'noResults': 'Ничего не найдено',
     'noStudentsFound': 'Ученики не найдены',
     'noTeachersFound': 'Учителя не найдены',

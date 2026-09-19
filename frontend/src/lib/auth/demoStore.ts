@@ -8,6 +8,7 @@ const STORAGE_KEY = 'demo_db_v1';
 
 interface DemoDB {
   users: any[];
+  notifications: any[];
   classes: any[];
   schedules: any[];
   lessons: any[];
@@ -134,6 +135,16 @@ function seedDB(): DemoDB {
       isPinned: a.isPinned ?? a.priority === 'high',
       targetAudience: a.targetAudience || 'ALL',
     })),
+    // Normalize static notification seeds to the page shape
+    notifications: (JSON.parse(JSON.stringify(DEMO_DATA.notifications)) as any[]).map((n: any) => ({
+      id: n.id,
+      type: String(n.type || 'GENERAL').toUpperCase(),
+      title: n.title,
+      content: n.message,
+      link: null,
+      isRead: !!n.read,
+      createdAt: n.createdAt,
+    })),
   };
 }
 
@@ -156,6 +167,7 @@ export function loadDB(): DemoDB {
           messages: { ...seed.messages, ...(db.messages || {}) },
           homework: Array.isArray(db.homework) ? db.homework : seed.homework,
           announcements: Array.isArray(db.announcements) ? db.announcements : seed.announcements,
+          notifications: Array.isArray(db.notifications) ? db.notifications : seed.notifications,
         };
         return cache;
       }
@@ -198,6 +210,7 @@ function matchUser(u: any, search: string): boolean {
 // Returns data or null (null → fall through to static demo data).
 export function getDemoDataOverride(path: string, params?: any): any {
   const db = loadDB();
+
 
   // GET /users (admin list, with search/role/status/page/limit)
   if (/^\/?users$/.test(path.split('?')[0])) {
@@ -243,6 +256,11 @@ export function getDemoDataOverride(path: string, params?: any): any {
 
   // GET /conversations (list)
   if (/\/conversations/.test(path)) return { data: db.conversations };
+
+  // GET /notifications (list, newest first)
+  if (/^\/?notifications/.test(path)) {
+    return { data: [...db.notifications].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) };
+  }
 
   // GET /announcements (list)
   if (/^\/?announcements/.test(path)) return { data: db.announcements };
@@ -309,8 +327,39 @@ export function getDemoDataOverride(path: string, params?: any): any {
 
 // ── Mutations ──
 // Returns response data, or null when the path is not handled.
+// Create an in-app notification for a platform event
+function pushNotification(db: DemoDB, type: string, title: string, content: string) {
+  db.notifications.unshift({
+    id: `n${Date.now()}${Math.floor(Math.random() * 100)}`,
+    type,
+    title,
+    content,
+    link: null,
+    isRead: false,
+    createdAt: new Date().toISOString(),
+  });
+}
+
 export function applyDemoMutation(method: string, path: string, body?: any): any {
   const db = loadDB();
+  const cleanPath = path.split('?')[0];
+
+  // PUT /notifications/read-all (mark all as read)
+  if (method === 'put' && /^\/?notifications\/read-all$/.test(cleanPath)) {
+    db.notifications.forEach((n: any) => { n.isRead = true; });
+    persistDB();
+    return { success: true };
+  }
+
+  // PUT /notifications/:id/read (mark one as read)
+  let nm = cleanPath.match(/^\/?notifications\/([^/]+)\/read$/);
+  if (method === 'put' && nm) {
+    const n = db.notifications.find((x: any) => x.id === nm![1]);
+    if (n) n.isRead = true;
+    persistDB();
+    return { success: true };
+  }
+
   let m: RegExpMatchArray | null;
 
   // PUT /admin/users/:id/role
@@ -415,6 +464,7 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
     db.messages[m[1]].push(msg);
     conv.lastMessage = { content: msg.content, createdAt: msg.createdAt };
     conv.updatedAt = msg.createdAt;
+    pushNotification(db, 'MESSAGE', conv.name || 'New message', msg.content);
     persistDB();
     return msg;
   }
@@ -454,6 +504,7 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
       materials: [],
     };
     db.lessons.push(lesson);
+    pushNotification(db, 'LESSON', lesson.title, `${lesson.className || ''} · ${lesson.startTime}`.trim());
     persistDB();
     return lesson;
   }
@@ -615,6 +666,7 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
       createdAt: new Date().toISOString(),
     };
     db.announcements.push(item);
+    pushNotification(db, 'ANNOUNCEMENT', item.title, item.content);
     persistDB();
     return item;
   }
@@ -658,6 +710,7 @@ export function applyDemoMutation(method: string, path: string, body?: any): any
       subject,
     };
     db.homework.push(item);
+    pushNotification(db, 'HOMEWORK', item.title, item.description || '');
     persistDB();
     return item;
   }

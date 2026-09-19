@@ -159,7 +159,7 @@ export default function NotificationsPage() {
               )}
             </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Stay updated with system messages, class announcements, and homework assignments.
+              {t('notifsSubtitle')}
             </p>
           </div>
 
@@ -220,7 +220,7 @@ export default function NotificationsPage() {
             </div>
             <h3 className="font-semibold text-lg text-foreground">{t('noNotifications')}</h3>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              You are all caught up! No notifications matching your filter.
+              {t('notifsEmptyHint')}
             </p>
           </Card>
         ) : (

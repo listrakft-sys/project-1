@@ -406,6 +406,8 @@ export const de: Dictionary = {
     'noConversations': 'Keine Unterhaltungen',
     'noMessages': 'Keine Nachrichten',
     'noNotifications': 'Keine Benachrichtigungen',
+    'notifsSubtitle': 'Bleib über Systemmeldungen, Ankündigungen und Hausaufgaben informiert',
+    'notifsEmptyHint': 'Alles gelesen! Keine Benachrichtigungen passend zum Filter.',
     'noResults': 'Keine Ergebnisse',
     'noStudentsFound': 'Keine Schüler gefunden',
     'noTeachersFound': 'Keine Lehrer gefunden',

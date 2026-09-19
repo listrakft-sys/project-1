@@ -404,6 +404,8 @@ export const es = {
     'noConversations': 'Sin conversaciones',
     'noMessages': 'Sin mensajes',
     'noNotifications': 'Sin notificaciones',
+    'notifsSubtitle': 'Mantente al día con mensajes del sistema, anuncios y tareas',
+    'notifsEmptyHint': '¡Todo al día! No hay notificaciones que coincidan con el filtro.',
     'noResults': 'Sin resultados',
     'noStudentsFound': 'No se encontraron estudiantes',
     'noTeachersFound': 'No se encontraron profesores',
