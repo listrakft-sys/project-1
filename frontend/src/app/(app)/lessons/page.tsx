@@ -308,7 +308,7 @@ export default function LessonsPage() {
         <div className="p-8 text-center bg-card rounded-xl border border-destructive/30 text-destructive">
           <p className="font-semibold text-sm">{error}</p>
           <Button variant="outline" size="sm" onClick={fetchLessons} className="mt-4">
-            Try Again
+            {t('common.tryAgain')}
           </Button>
         </div>
       ) : filteredLessons.length === 0 ? (
@@ -318,7 +318,7 @@ export default function LessonsPage() {
             {t('noResults')}
           </h3>
           <p className="text-xs text-muted-foreground max-w-sm mx-auto">
-            Try adjusting your search criteria or selecting a different subject or class filter.
+            {t('lessons.adjustFilters')}
           </p>
           {(selectedSubject !== 'all' || selectedClass !== 'all' || searchQuery) && (
             <Button
@@ -330,7 +330,7 @@ export default function LessonsPage() {
                 setSearchQuery('');
               }}
             >
-              Reset Filters
+              {t('lessons.resetFilters')}
             </Button>
           )}
         </div>

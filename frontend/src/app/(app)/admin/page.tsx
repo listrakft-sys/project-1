@@ -106,7 +106,7 @@ export default function AdminDashboardPage() {
             {t('admin.title')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            System overview, quick management shortcuts, and administrative metrics.
+            {t('admin.subtitle')}
           </p>
         </div>
       </div>
@@ -115,44 +115,44 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <StatCard
           icon={Users}
-          label="Total Users"
+          label={t('admin.totalUsers')}
           value={loading ? '...' : stats.totals.users}
-          trend={{ value: `+${stats.thisWeek.newUsers}`, isPositive: stats.thisWeek.newUsers > 0, label: 'this week' }}
+          trend={{ value: `+${stats.thisWeek.newUsers}`, isPositive: stats.thisWeek.newUsers > 0, label: t('admin.thisWeek') }}
         />
         <StatCard
           icon={GraduationCap}
-          label="Students"
+          label={t('admin.students')}
           value={loading ? '...' : stats.totals.students}
         />
         <StatCard
           icon={School}
-          label="Teachers"
+          label={t('admin.teachers')}
           value={loading ? '...' : stats.totals.teachers}
         />
         <StatCard
           icon={Activity}
-          label="Classes"
+          label={t('admin.classes')}
           value={loading ? '...' : stats.totals.classes}
         />
         <StatCard
           icon={BookOpen}
-          label="Subjects"
+          label={t('admin.subjects')}
           value={loading ? '...' : stats.totals.subjects}
         />
         <StatCard
           icon={AlertCircle}
-          label="Pending Complaints"
+          label={t('admin.pendingComplaints')}
           value={loading ? '...' : stats.totals.pendingComplaints}
           trend={{ value: stats.totals.pendingComplaints > 0 ? 'Action needed' : 'All clear', isPositive: stats.totals.pendingComplaints === 0 }}
         />
         <StatCard
           icon={TrendingUp}
-          label="Attendance Rate"
+          label={t('admin.attendanceRate')}
           value={loading ? '...' : `${stats.metrics.attendanceRate}%`}
         />
         <StatCard
           icon={ClipboardList}
-          label="Grade Average"
+          label={t('admin.gradeAverage')}
           value={loading ? '...' : `${stats.metrics.gradeAverage}%`}
         />
       </div>
@@ -162,8 +162,8 @@ export default function AdminDashboardPage() {
         {/* Quick Links — 2 cols */}
         <div className="lg:col-span-2 space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Quick Links</h2>
-            <p className="text-xs text-muted-foreground">Jump directly to administration modules.</p>
+            <h2 className="text-xl font-bold text-foreground">{t('admin.quickLinks')}</h2>
+            <p className="text-xs text-muted-foreground">{t('admin.quickLinksHint')}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {quickLinks.map((link) => {
@@ -193,14 +193,14 @@ export default function AdminDashboardPage() {
         {/* Activity Feed — 1 col */}
         <div className="space-y-4">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Recent Activity</h2>
-            <p className="text-xs text-muted-foreground">Latest events across the platform.</p>
+            <h2 className="text-xl font-bold text-foreground">{t('admin.recentActivity')}</h2>
+            <p className="text-xs text-muted-foreground">{t('admin.recentHint')}</p>
           </div>
           <Card className="p-4 space-y-2 max-h-[500px] overflow-y-auto">
             {activity.length === 0 && !loading ? (
-              <p className="text-sm text-muted-foreground text-center py-6">No recent activity</p>
+              <p className="text-sm text-muted-foreground text-center py-6">{t('admin.noActivity')}</p>
             ) : loading ? (
-              <p className="text-sm text-muted-foreground text-center py-6">Loading…</p>
+              <p className="text-sm text-muted-foreground text-center py-6">{t('common.loading')}</p>
             ) : (
               activity.map((item, i) => (
                 <div key={i} className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">

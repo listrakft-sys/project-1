@@ -210,7 +210,7 @@ function TeacherAttendance() {
             <CalendarCheck className="h-6 w-6 text-primary" />
             {t('nav.attendance')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">Mark and track student attendance</p>
+          <p className="text-sm text-muted-foreground mt-1">{t('attendance.subtitle')}</p>
         </div>
       </div>
 
@@ -218,7 +218,7 @@ function TeacherAttendance() {
       <div className="flex flex-wrap items-end gap-4 p-4 bg-card rounded-xl border border-border">
         {/* Class selector */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-muted-foreground">Class</label>
+          <label className="text-xs font-medium text-muted-foreground">{t('attendance.classLabel')}</label>
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
@@ -233,7 +233,7 @@ function TeacherAttendance() {
 
         {/* Date picker */}
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-muted-foreground">Date</label>
+          <label className="text-xs font-medium text-muted-foreground">{t('attendance.dateLabel')}</label>
           <input
             type="date"
             value={selectedDate}
@@ -249,7 +249,7 @@ function TeacherAttendance() {
               onClick={() => markAll('PRESENT')}
               className="px-3 py-2 rounded-lg bg-emerald-100 text-emerald-700 text-xs font-medium hover:bg-emerald-200 transition-colors"
             >
-              All Present
+              {t('attendance.allPresent')}
             </button>
             <button
               onClick={saveAttendance}
@@ -292,20 +292,20 @@ function TeacherAttendance() {
 
       {/* Student list */}
       {loading ? (
-        <div className="text-center py-12 text-muted-foreground">Loading students…</div>
+        <div className="text-center py-12 text-muted-foreground">{t('attendance.loadingStudents')}</div>
       ) : !selectedClass ? (
-        <div className="text-center py-12 text-muted-foreground">Select a class to mark attendance</div>
+        <div className="text-center py-12 text-muted-foreground">{t('attendance.selectClassFirst')}</div>
       ) : students.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground">No students in this class</div>
+        <div className="text-center py-12 text-muted-foreground">{t('attendance.noStudentsInClass')}</div>
       ) : (
         <div className="bg-card rounded-xl border border-border overflow-hidden">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/50">
                 <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">#</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Student</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Status</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Note</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.studentLabel')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.statusLabel')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.noteLabel')}</th>
               </tr>
             </thead>
             <tbody>
@@ -411,7 +411,7 @@ function StudentAttendance() {
           <CalendarCheck className="h-6 w-6 text-primary" />
           {t('nav.attendance')}
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">Your attendance overview</p>
+        <p className="text-sm text-muted-foreground mt-1">{t('attendance.studentOverview')}</p>
       </div>
 
       {/* Summary cards */}
@@ -449,9 +449,9 @@ function StudentAttendance() {
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-muted/50">
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Date</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Status</th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">Note</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.dateLabel')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.statusLabel')}</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-muted-foreground">{t('attendance.noteLabel')}</th>
               </tr>
             </thead>
             <tbody>
@@ -522,12 +522,12 @@ function AdminAttendance() {
           <CalendarCheck className="h-6 w-6 text-primary" />
           {t('nav.attendance')}
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">School-wide attendance overview</p>
+        <p className="text-sm text-muted-foreground mt-1">{t('attendance.adminOverview')}</p>
       </div>
 
       <div className="flex flex-wrap items-end gap-4 p-4 bg-card rounded-xl border border-border">
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-muted-foreground">Class</label>
+          <label className="text-xs font-medium text-muted-foreground">{t('attendance.classLabel')}</label>
           <select
             value={selectedClass}
             onChange={(e) => loadClassSummary(e.target.value)}
@@ -555,7 +555,7 @@ function AdminAttendance() {
                 onClick={() => loadClassSummary(c.id)}
                 className="mt-3 text-xs text-primary hover:underline"
               >
-                View attendance →
+                {t('attendance.viewAttendance')}
               </button>
             </div>
           ))}
@@ -566,7 +566,7 @@ function AdminAttendance() {
 
       {selectedClass && !loading && classSummary && (
         <div className="bg-card rounded-xl border border-border p-5">
-          <h3 className="text-sm font-semibold text-foreground mb-4">Today's Attendance</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-4">{t('attendance.todaysAttendance')}</h3>
           {Array.isArray(classSummary) && classSummary.length > 0 ? (
             <div className="space-y-2">
               {classSummary.map((r: AttendanceRecord) => {
@@ -583,7 +583,7 @@ function AdminAttendance() {
               })}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">No records for today</p>
+            <p className="text-sm text-muted-foreground">{t('attendance.noRecordsToday')}</p>
           )}
         </div>
       )}

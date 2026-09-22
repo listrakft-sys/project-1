@@ -134,7 +134,7 @@ export default function SettingsPage() {
                   value={privacy.profileVisibility}
                   onChange={(e) => setPrivacy({ ...privacy, profileVisibility: e.target.value })}
                 >
-                  <option value="public">Público</option>
+                  <option value="public">{t('settings.publicOption')}</option>
                   <option value="school">{t('settings.onlyMySchool')}</option>
                   <option value="private">{t('settings.privateOption')}</option>
                 </select>

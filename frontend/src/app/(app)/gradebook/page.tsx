@@ -274,8 +274,8 @@ export default function GradebookPage() {
       {/* ── Header ────────────────────────────────────────── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">📓 Gradebook</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage grades & attendance</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('gradebook.title')}</h1>
+          <p className="text-sm text-gray-500 mt-1">{t('gradebook.subtitle')}</p>
         </div>
         {selectedClass && (
           <div className="flex gap-2">
@@ -293,7 +293,7 @@ export default function GradebookPage() {
       {/* ── Filters ───────────────────────────────────────── */}
       <div className="flex flex-wrap gap-3 items-end">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Class</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1">{t('attendance.classLabel')}</label>
           <select
             value={selectedClass}
             onChange={(e) => setSelectedClass(e.target.value)}
@@ -307,7 +307,7 @@ export default function GradebookPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Subject</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1">{t('gradebook.subjectLabel')}</label>
           <select
             value={selectedSubject}
             onChange={(e) => setSelectedSubject(e.target.value)}
@@ -322,7 +322,7 @@ export default function GradebookPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1">Term</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1">{t('gradebook.termLabel2')}</label>
           <select
             value={selectedTerm}
             onChange={(e) => setSelectedTerm(e.target.value)}
@@ -346,7 +346,7 @@ export default function GradebookPage() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          📊 Grades
+          {t('gradebook.gradesTab')}
         </button>
         <button
           onClick={() => setActiveTab('attendance')}
@@ -356,7 +356,7 @@ export default function GradebookPage() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          📅 Attendance
+          {t('gradebook.attendanceTab')}
         </button>
       </div>
 
@@ -368,7 +368,7 @@ export default function GradebookPage() {
 
       {!selectedClass || !selectedSubject ? (
         <div className="text-center py-20 text-gray-400">
-          <p className="text-lg">Select a class and subject to view the gradebook</p>
+          <p className="text-lg">{t('gradebook.selectClassSubject')}</p>
         </div>
       ) : loading ? (
         <div className="text-center py-20">
@@ -385,14 +385,14 @@ export default function GradebookPage() {
               onClick={() => setShowAddGrade(!showAddGrade)}
               className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 transition"
             >
-              + Add Grade
+              + {t('gradebook.addGrade')}
             </button>
           </div>
 
           {/* Add grade form */}
           {showAddGrade && (
             <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 space-y-3">
-              <h3 className="font-semibold text-sm text-gray-700">New Grade</h3>
+              <h3 className="font-semibold text-sm text-gray-700">{t('gradebook.newGrade')}</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <select
                   value={newGrade.studentId}
@@ -460,7 +460,7 @@ export default function GradebookPage() {
                   onClick={() => setShowAddGrade(false)}
                   className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
             </div>
@@ -471,10 +471,10 @@ export default function GradebookPage() {
             <table className="w-full text-sm">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="text-left px-4 py-3 font-semibold text-gray-600">Student</th>
-                  <th className="text-center px-4 py-3 font-semibold text-gray-600">Grades</th>
-                  <th className="text-center px-4 py-3 font-semibold text-gray-600">Average</th>
-                  <th className="text-center px-4 py-3 font-semibold text-gray-600">Attendance</th>
+                  <th className="text-left px-4 py-3 font-semibold text-gray-600">{t('attendance.studentLabel')}</th>
+                  <th className="text-center px-4 py-3 font-semibold text-gray-600">{t('gradebook.gradesCol')}</th>
+                  <th className="text-center px-4 py-3 font-semibold text-gray-600">{t('gradebook.averageCol')}</th>
+                  <th className="text-center px-4 py-3 font-semibold text-gray-600">{t('gradebook.attendanceCol')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -559,7 +559,7 @@ export default function GradebookPage() {
         <div className="space-y-4">
           <div className="flex justify-between items-center">
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Date</label>
+              <label className="block text-xs font-medium text-gray-500 mb-1">{t('attendance.dateLabel')}</label>
               <input
                 type="date"
                 value={attendanceDate}
@@ -582,7 +582,7 @@ export default function GradebookPage() {
           {/* Attendance grid */}
           <div className="bg-white rounded-xl border border-gray-200 divide-y divide-gray-100">
             {overview.length === 0 ? (
-              <p className="text-center text-gray-400 py-8">No students</p>
+              <p className="text-center text-gray-400 py-8">{t('gradebook.noStudents')}</p>
             ) : (
               overview.map((item) => (
                 <div key={item.student.id} className="flex items-center justify-between px-4 py-3">

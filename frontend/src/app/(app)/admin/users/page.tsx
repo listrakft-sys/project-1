@@ -155,7 +155,7 @@ export default function UsersAdminPage() {
   const columns: Column<UserRecord>[] = [
     {
       key: 'name',
-      header: 'User',
+      header: t('users.userCol'),
       sortable: true,
       render: (row) => {
         const fullName = `${row.profile?.firstName || ''} ${row.profile?.lastName || ''}`.trim();
@@ -174,21 +174,21 @@ export default function UsersAdminPage() {
     },
     {
       key: 'email',
-      header: 'Email',
+      header: t('users.emailCol'),
       sortable: true,
       render: (row) => <span className="text-muted-foreground">{row.email}</span>,
     },
     {
       key: 'role',
-      header: 'Role',
+      header: t('users.roleCol'),
       sortable: true,
-      render: (row) => <Badge status={row.role}>{row.role.replace('_', ' ')}</Badge>,
+      render: (row) => <Badge status={row.role}>{t(`users.roles.${row.role}`)}</Badge>,
     },
     {
       key: 'status',
-      header: 'Status',
+      header: t('users.statusCol'),
       sortable: true,
-      render: (row) => <Badge status={row.status.toLowerCase()}>{row.status}</Badge>,
+      render: (row) => <Badge status={row.status.toLowerCase()}>{t(`users.statuses.${row.status.toLowerCase()}`)}</Badge>,
     },
   ];
 
@@ -238,7 +238,7 @@ export default function UsersAdminPage() {
                 }}
                 className="h-10 rounded-md border border-input bg-background px-3 text-xs font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="ALL">All Roles</option>
+                <option value="ALL">{t('users.allRoles')}</option>
                 <option value="SUPER_ADMIN">SUPER_ADMIN</option>
                 <option value="SCHOOL_ADMIN">SCHOOL_ADMIN</option>
                 <option value="TEACHER">TEACHER</option>
@@ -255,10 +255,10 @@ export default function UsersAdminPage() {
                 }}
                 className="h-10 rounded-md border border-input bg-background px-3 text-xs font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <option value="ALL">All Statuses</option>
-                <option value="ACTIVE">ACTIVE</option>
-                <option value="SUSPENDED">SUSPENDED</option>
-                <option value="PENDING">PENDING</option>
+                <option value="ALL">{t('users.allStatuses')}</option>
+                <option value="ACTIVE">{t('users.statuses.active')}</option>
+                <option value="SUSPENDED">{t('users.statuses.suspended')}</option>
+                <option value="PENDING">{t('users.statuses.pending')}</option>
               </select>
             </div>
           }
@@ -267,7 +267,7 @@ export default function UsersAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Edit Role"
+                title={t('users.editRole')}
                 onClick={() => {
                   setEditRoleUser(row);
                   setSelectedRole(row.role);
@@ -279,7 +279,7 @@ export default function UsersAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title={row.status === 'ACTIVE' ? 'Suspend User' : 'Activate User'}
+                title={row.status === 'ACTIVE' ? t('users.suspendUser') : t('users.activateUser')}
                 onClick={() => setSuspendUserTarget(row)}
               >
                 {row.status === 'ACTIVE' ? (
@@ -292,7 +292,7 @@ export default function UsersAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Delete User"
+                title={t('users.deleteUser')}
                 onClick={() => setDeleteUserTarget(row)}
               >
                 <Trash2 className="h-4 w-4 text-rose-500 hover:text-rose-600" />
@@ -305,21 +305,21 @@ export default function UsersAdminPage() {
         <Modal
           isOpen={!!editRoleUser}
           onClose={() => setEditRoleUser(null)}
-          title={`Edit Role: ${editRoleUser?.username}`}
-          description="Assign a new access role for this account."
+          title={`${t('users.editRole')}: ${editRoleUser?.username}`}
+          description={t('users.editRoleDesc')}
           footer={
             <>
               <Button variant="outline" onClick={() => setEditRoleUser(null)} disabled={isUpdatingRole}>
-                Cancel
+                {t('common.cancel')}
               </Button>
               <Button onClick={handleRoleSave} isLoading={isUpdatingRole}>
-                Save Role
+                {t('users.saveRole')}
               </Button>
             </>
           }
         >
           <div className="space-y-4 py-2">
-            <label className="text-sm font-medium text-foreground block">Select System Role</label>
+            <label className="text-sm font-medium text-foreground block">{t('users.selectSystemRole')}</label>
             <div className="grid grid-cols-1 gap-2">
               {(['SUPER_ADMIN', 'SCHOOL_ADMIN', 'TEACHER', 'STUDENT', 'PARENT'] as UserRole[]).map((r) => (
                 <label
@@ -337,9 +337,9 @@ export default function UsersAdminPage() {
                       onChange={() => setSelectedRole(r)}
                       className="text-primary focus:ring-primary"
                     />
-                    <span className="font-semibold text-sm text-foreground">{r.replace('_', ' ')}</span>
+                    <span className="font-semibold text-sm text-foreground">{t(`users.roles.${r}`)}</span>
                   </div>
-                  <Badge status={r} />
+                  <Badge status={r}>{t(`users.roles.${r}`)}</Badge>
                 </label>
               ))}
             </div>
@@ -353,16 +353,16 @@ export default function UsersAdminPage() {
           onConfirm={handleToggleSuspend}
           title={
             suspendUserTarget?.status === 'ACTIVE'
-              ? `Suspend ${suspendUserTarget?.username}?`
-              : `Activate ${suspendUserTarget?.username}?`
+              ? `${t('users.suspendUser')} ${suspendUserTarget?.username}?`
+              : `${t('users.activateUser')} ${suspendUserTarget?.username}?`
           }
           description={
             suspendUserTarget?.status === 'ACTIVE'
-              ? 'Suspending this account will revoke login access immediately.'
-              : 'Re-activating this account will restore full user access.'
+              ? t('users.suspendConfirm')
+              : t('users.activateConfirm')
           }
           variant={suspendUserTarget?.status === 'ACTIVE' ? 'warning' : 'info'}
-          confirmText={suspendUserTarget?.status === 'ACTIVE' ? 'Suspend Account' : 'Activate Account'}
+          confirmText={suspendUserTarget?.status === 'ACTIVE' ? t('users.suspendAccount') : t('users.activateAccount')}
           isLoading={isProcessingAction}
         />
 
@@ -371,10 +371,10 @@ export default function UsersAdminPage() {
           isOpen={!!deleteUserTarget}
           onClose={() => setDeleteUserTarget(null)}
           onConfirm={handleDeleteUser}
-          title={`Delete ${deleteUserTarget?.username}?`}
-          description="Are you sure you want to permanently delete this user account? This action cannot be undone."
+          title={`${t('users.deleteUser')} ${deleteUserTarget?.username}?`}
+          description={t('users.deleteConfirm')}
           variant="danger"
-          confirmText="Delete Account"
+          confirmText={t('users.deleteAccount')}
           isLoading={isProcessingAction}
         />
       </div>

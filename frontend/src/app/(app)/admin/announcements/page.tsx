@@ -107,7 +107,7 @@ export default function AdminAnnouncementsPage() {
             {t('Anuncios')}
           </h1>
           <Button onClick={() => { setShowForm(true); setEditing(null); setForm({ title: '', content: '', audience: 'school', classId: '' }); }}>
-            <Plus className="h-4 w-4 mr-1" /> Nuevo
+            <Plus className="h-4 w-4 mr-1" /> {t('announcements.add')}
           </Button>
         </div>
 
@@ -115,30 +115,30 @@ export default function AdminAnnouncementsPage() {
         {(showForm || editing) && (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">{editing ? 'Editar anuncio' : 'Nuevo anuncio'}</CardTitle>
+              <CardTitle className="text-lg">{editing ? t('announcements.edit') : t('announcements.add')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Input
-                placeholder="Título"
+                placeholder={t('announcements.titleLabel')}
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
               <textarea
                 className="w-full min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
-                placeholder="Contenido..."
+                placeholder={t('announcements.contentLabel')}
                 value={form.content}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
               />
               <div>
-                <label className="text-sm font-medium block mb-1">Audiencia</label>
+                <label className="text-sm font-medium block mb-1">{t('announcements.audienceLabel')}</label>
                 <select
                   className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   value={form.audience}
                   onChange={(e) => setForm({ ...form, audience: e.target.value })}
                 >
-                  <option value="school">Toda la escuela</option>
-                  <option value="class">Una clase</option>
-                  <option value="all">Todos</option>
+                  <option value="school">{t('announcements.audience.ALL')}</option>
+                  <option value="class">{t('announcements.audience.CLASS')}</option>
+                  <option value="all">{t('announcements.audience.ALL')}</option>
                 </select>
               </div>
             </CardContent>
@@ -158,7 +158,7 @@ export default function AdminAnnouncementsPage() {
           {announcements.length === 0 ? (
             <div className="text-center py-16">
               <Megaphone className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-              <p className="text-muted-foreground">No hay anuncios</p>
+              <p className="text-muted-foreground">{t('announcements.empty')}</p>
             </div>
           ) : (
             announcements.map((a) => (

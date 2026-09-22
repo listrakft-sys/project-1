@@ -150,7 +150,7 @@ export default function SubjectsAdminPage() {
   const columns: Column<SubjectRecord>[] = [
     {
       key: 'name',
-      header: 'Subject Name',
+      header: t('subjects.nameCol'),
       sortable: true,
       render: (row) => (
         <div className="flex items-center gap-3">
@@ -167,7 +167,7 @@ export default function SubjectsAdminPage() {
     },
     {
       key: 'code',
-      header: 'Code',
+      header: t('subjects.code'),
       sortable: true,
       render: (row) => (
         <span className="font-mono text-xs px-2 py-1 bg-muted rounded font-bold text-foreground">
@@ -177,7 +177,7 @@ export default function SubjectsAdminPage() {
     },
     {
       key: 'language',
-      header: 'Language',
+      header: t('subjects.language'),
       render: (row) => (
         <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted-foreground uppercase">
           <Globe className="h-3.5 w-3.5" />
@@ -217,7 +217,7 @@ export default function SubjectsAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Edit Subject"
+                title={t('subjects.edit')}
                 onClick={() => handleOpenEdit(row)}
               >
                 <Edit2 className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -225,7 +225,7 @@ export default function SubjectsAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Delete Subject"
+                title={t('subjects.delete')}
                 onClick={() => setDeleteTarget(row)}
               >
                 <Trash2 className="h-4 w-4 text-rose-500 hover:text-rose-600" />
@@ -252,8 +252,8 @@ export default function SubjectsAdminPage() {
         >
           <form onSubmit={handleSaveSubject} className="space-y-4 py-2">
             <Input
-              label="Subject Name"
-              placeholder="e.g. Mathematics"
+              label={t('subjects.nameCol')}
+              placeholder={t('subjects.namePh')}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
@@ -261,7 +261,7 @@ export default function SubjectsAdminPage() {
             <div className="grid grid-cols-2 gap-4">
               <Input
                 label={t('subjects.code')}
-                placeholder="e.g. MATH101"
+                placeholder={t('subjects.codePh')}
                 value={formData.code}
                 onChange={(e) => setFormData({ ...formData, code: e.target.value })}
                 required
@@ -281,8 +281,8 @@ export default function SubjectsAdminPage() {
             </div>
 
             <Input
-              label="Description"
-              placeholder="Short summary of course curriculum"
+              label={t('subjects.descriptionLabel')}
+              placeholder={t('subjects.descPh')}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
             />
@@ -312,10 +312,10 @@ export default function SubjectsAdminPage() {
           isOpen={!!deleteTarget}
           onClose={() => setDeleteTarget(null)}
           onConfirm={handleDeleteSubject}
-          title={`Delete ${deleteTarget?.name}?`}
-          description="Are you sure you want to delete this subject? Lessons and assignments linked to this subject will be affected."
+          title={`${t('subjects.deleteTitle')} ${deleteTarget?.name}?`}
+          description={t('subjects.deleteConfirm')}
           variant="danger"
-          confirmText="Delete Subject"
+          confirmText={t('subjects.delete')}
           isLoading={deleting}
         />
       </div>

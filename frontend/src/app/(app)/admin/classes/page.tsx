@@ -163,7 +163,7 @@ export default function ClassesAdminPage() {
   const columns: Column<ClassRecord>[] = [
     {
       key: 'name',
-      header: 'Class Name',
+      header: t('classes.name'),
       sortable: true,
       render: (row) => (
         <div className="font-semibold text-foreground flex items-center gap-2">
@@ -174,7 +174,7 @@ export default function ClassesAdminPage() {
     },
     {
       key: 'grade',
-      header: 'Grade & Section',
+      header: t('classes.gradeSection'),
       sortable: true,
       render: (row) => (
         <span className="text-muted-foreground font-medium">
@@ -184,7 +184,7 @@ export default function ClassesAdminPage() {
     },
     {
       key: 'students',
-      header: 'Enrolled / Capacity',
+      header: t('classes.enrolled'),
       render: (row) => (
         <span className="text-foreground font-medium">
           {row.students?.length ?? row._count?.students ?? 0} / {row.capacity || 30}
@@ -193,12 +193,12 @@ export default function ClassesAdminPage() {
     },
     {
       key: 'room',
-      header: 'Room',
+      header: t('classes.room'),
       render: (row) => <span className="text-muted-foreground">{row.room || 'N/A'}</span>,
     },
     {
       key: 'homeroomTeacher',
-      header: 'Homeroom Teacher',
+      header: t('classes.homeroomTeacher'),
       render: (row) => {
         const teacherName = row.homeroomTeacher?.profile
           ? `${row.homeroomTeacher.profile.firstName || ''} ${row.homeroomTeacher.profile.lastName || ''}`
@@ -238,7 +238,7 @@ export default function ClassesAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="View Class Details"
+                title={t('classes.viewDetails')}
                 onClick={() => handleOpenDetails(row)}
               >
                 <Eye className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -246,7 +246,7 @@ export default function ClassesAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Edit Class"
+                title={t('common.edit')}
                 onClick={() => handleOpenEdit(row)}
               >
                 <Edit2 className="h-4 w-4 text-muted-foreground hover:text-primary" />
@@ -254,7 +254,7 @@ export default function ClassesAdminPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                title="Delete Class"
+                title={t('common.delete')}
                 onClick={() => setDeleteTarget(row)}
               >
                 <Trash2 className="h-4 w-4 text-rose-500 hover:text-rose-600" />
@@ -282,7 +282,7 @@ export default function ClassesAdminPage() {
           <form onSubmit={handleSaveClass} className="space-y-4 py-2">
             <Input
               label={t('classes.name')}
-              placeholder="e.g. Grade 10-A"
+              placeholder={t('classes.namePh')}
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
@@ -297,7 +297,7 @@ export default function ClassesAdminPage() {
               />
               <Input
                 label={t('classes.section')}
-                placeholder="A, B, C"
+                placeholder={t('classes.sectionPh')}
                 value={formData.section}
                 onChange={(e) => setFormData({ ...formData, section: e.target.value })}
               />
@@ -311,7 +311,7 @@ export default function ClassesAdminPage() {
               />
               <Input
                 label={t('classes.room')}
-                placeholder="e.g. Room 101"
+                placeholder={t('classes.roomPh')}
                 value={formData.room}
                 onChange={(e) => setFormData({ ...formData, room: e.target.value })}
               />
@@ -366,7 +366,7 @@ export default function ClassesAdminPage() {
                   ))}
                 </div>
               ) : (
-                <p className="text-xs text-muted-foreground italic">No students assigned to this class yet.</p>
+                <p className="text-xs text-muted-foreground italic">{t('classes.noStudentsAssigned')}</p>
               )}
             </div>
           </div>
@@ -377,10 +377,10 @@ export default function ClassesAdminPage() {
           isOpen={!!deleteTarget}
           onClose={() => setDeleteTarget(null)}
           onConfirm={handleDeleteClass}
-          title={`Delete ${deleteTarget?.name}?`}
-          description="Are you sure you want to delete this class record? All schedule links and class assignments will be unlinked."
+          title={`${t('classes.deleteTitle')} ${deleteTarget?.name}?`}
+          description={t('classes.deleteConfirm')}
           variant="danger"
-          confirmText="Delete Class"
+          confirmText={t('classes.deleteClass')}
           isLoading={deleting}
         />
       </div>

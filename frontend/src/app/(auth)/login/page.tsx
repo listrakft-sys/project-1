@@ -157,7 +157,7 @@ export default function LoginPage() {
           <div className="mt-6 p-4 rounded-lg bg-primary/5 border border-primary/15 space-y-3">
             <div className="flex items-center gap-2 text-primary font-medium text-sm">
               <Info className="h-4 w-4" />
-              <span>Demo accounts — click to fill</span>
+              <span>{t('auth.demoAccounts')}</span>
             </div>
             <div className="grid grid-cols-2 gap-2">
               {Object.entries(DEMO_USERS).map(([key, user]) => (

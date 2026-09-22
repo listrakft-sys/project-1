@@ -221,7 +221,7 @@ export default function RegisterPage() {
         {demo && (
           <div className="mt-4 p-3 rounded-lg bg-primary/5 border border-primary/15 text-xs text-muted-foreground flex items-start gap-2">
             <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-            <span>Demo mode: your account will be saved locally in this browser only.</span>
+            <span>{t('auth.demoModeNote')}</span>
           </div>
         )}
       </CardContent>

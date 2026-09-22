@@ -50,7 +50,7 @@ export default function NotificationSettingsPage() {
     try {
       // Could call a backend endpoint to send a test email
       await new Promise(resolve => setTimeout(resolve, 1000));
-      alert('✅ Test email sent (if SMTP is configured)');
+      alert(t('notifSettings.testSent'));
     } finally {
       setTestSending(false);
     }
@@ -64,7 +64,7 @@ export default function NotificationSettingsPage() {
   }, []);
 
   const settings: Array<{ key: keyof NotificationPref; icon: string; title: string; desc: string }> = [
-    { key: 'emailEnabled', icon: '📧', title: 'Email Notifications', desc: 'Master switch for all email notifications' },
+    { key: 'emailEnabled', icon: '📧', title: t('notifSettings.emailTitle'), desc: t('notifSettings.masterSwitchLong') },
     { key: 'gradeAlerts', icon: '📊', title: 'Grade Alerts', desc: 'Get notified when a new grade is posted' },
     { key: 'attendanceAlerts', icon: '📅', title: 'Attendance Alerts', desc: 'Get notified about attendance updates' },
     { key: 'homeworkAlerts', icon: '📝', title: 'Homework Alerts', desc: 'Get notified about new homework assignments' },
@@ -75,16 +75,16 @@ export default function NotificationSettingsPage() {
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">🔔 Notification Settings</h1>
-        <p className="text-sm text-gray-500 mt-1">Choose what notifications you want to receive via email</p>
+        <h1 className="text-2xl font-bold text-gray-800">{t('notifSettings.title')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('notifSettings.subtitle')}</p>
       </div>
 
       {/* Master toggle */}
       <div className={`p-4 rounded-xl border-2 transition ${prefs.emailEnabled ? 'border-indigo-200 bg-indigo-50/50' : 'border-gray-200 bg-gray-50'}`}>
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-semibold text-gray-800">📧 Email Notifications</h3>
-            <p className="text-xs text-gray-500 mt-0.5">Master switch — disable to stop all emails</p>
+            <h3 className="font-semibold text-gray-800">{t('notifSettings.emailTitle')}</h3>
+            <p className="text-xs text-gray-500 mt-0.5">{t('notifSettings.masterSwitch')}</p>
           </div>
           <button
             onClick={() => toggle('emailEnabled')}
@@ -142,14 +142,14 @@ export default function NotificationSettingsPage() {
 
       {saved && (
         <div className="px-4 py-2 bg-green-50 text-green-600 text-sm rounded-lg">
-          ✅ Settings saved
+          {t('notifSettings.saved')}
         </div>
       )}
 
       {/* Info box */}
       <div className="p-4 bg-blue-50 rounded-xl border border-blue-100">
         <p className="text-sm text-blue-700">
-          📬 <strong>How it works:</strong> When a teacher posts a grade or marks attendance, the system automatically sends a beautifully formatted email to the parent/guardian's email address. In-app notifications are also created for the student.
+          📬 <strong>{t('notifSettings.howItWorks')}</strong> {t('notifSettings.howItWorksBody')}
         </p>
       </div>
     </div>

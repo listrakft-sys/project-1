@@ -118,8 +118,8 @@ export default function MyGradesPage() {
   return (
     <div className="space-y-6 p-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">📊 My Grades & Attendance</h1>
-        <p className="text-sm text-gray-500 mt-1">Track your academic progress</p>
+        <h1 className="text-2xl font-bold text-gray-800">{t('myGrades.title')}</h1>
+        <p className="text-sm text-gray-500 mt-1">{t('myGrades.subtitle')}</p>
       </div>
 
       {error && (
@@ -129,7 +129,7 @@ export default function MyGradesPage() {
       {/* ── Summary Cards ───────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-5 bg-white rounded-xl border border-gray-200">
-          <p className="text-xs font-medium text-gray-500 mb-1">Overall Average</p>
+          <p className="text-xs font-medium text-gray-500 mb-1">{t('myGrades.overallAverage')}</p>
           <p className={`text-3xl font-bold ${average?.overallAverage && average.overallAverage >= 70 ? 'text-green-600' : average?.overallAverage && average.overallAverage >= 50 ? 'text-yellow-600' : 'text-red-600'}`}>
             {average?.overallAverage ? `${average.overallAverage}%` : '—'}
           </p>
@@ -137,7 +137,7 @@ export default function MyGradesPage() {
         </div>
 
         <div className="p-5 bg-white rounded-xl border border-gray-200">
-          <p className="text-xs font-medium text-gray-500 mb-1">Attendance Rate</p>
+          <p className="text-xs font-medium text-gray-500 mb-1">{t('myGrades.attendanceRate')}</p>
           <p className={`text-3xl font-bold ${(attendanceSummary?.attendanceRate || 0) >= 80 ? 'text-green-600' : 'text-yellow-600'}`}>
             {attendanceSummary?.attendanceRate ? `${attendanceSummary.attendanceRate}%` : '—'}
           </p>
@@ -147,9 +147,9 @@ export default function MyGradesPage() {
         </div>
 
         <div className="p-5 bg-white rounded-xl border border-gray-200">
-          <p className="text-xs font-medium text-gray-500 mb-1">Subjects</p>
+          <p className="text-xs font-medium text-gray-500 mb-1">{t('myGrades.subjects')}</p>
           <p className="text-3xl font-bold text-indigo-600">{average?.subjects?.length || 0}</p>
-          <p className="text-xs text-gray-400 mt-1">en progress</p>
+          <p className="text-xs text-gray-400 mt-1">{t('myGrades.inProgress')}</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@ export default function MyGradesPage() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          📊 Grades
+          {t('gradebook.gradesTab')}
         </button>
         <button
           onClick={() => setActiveTab('attendance')}
@@ -173,7 +173,7 @@ export default function MyGradesPage() {
               : 'text-gray-500 hover:text-gray-700'
           }`}
         >
-          📅 Attendance
+          {t('gradebook.attendanceTab')}
         </button>
       </div>
 
@@ -181,7 +181,7 @@ export default function MyGradesPage() {
         /* ── GRADES LIST ────────────────────────────────────── */
         <div className="space-y-3">
           {grades.length === 0 ? (
-            <p className="text-center text-gray-400 py-12">No grades yet</p>
+            <p className="text-center text-gray-400 py-12">{t('myGrades.noGrades')}</p>
           ) : (
             // Group by subject
             Object.entries(
@@ -224,7 +224,7 @@ export default function MyGradesPage() {
         /* ── ATTENDANCE LIST ────────────────────────────────── */
         <div className="space-y-2">
           {attendance.length === 0 ? (
-            <p className="text-center text-gray-400 py-12">No attendance records</p>
+            <p className="text-center text-gray-400 py-12">{t('myGrades.noAttendance')}</p>
           ) : (
             attendance.map((rec) => (
               <div key={rec.id} className="flex items-center justify-between px-4 py-3 bg-white rounded-xl border border-gray-200">

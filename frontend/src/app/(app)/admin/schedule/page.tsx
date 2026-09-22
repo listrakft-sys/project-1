@@ -248,7 +248,7 @@ export default function ScheduleAdminPage() {
               <thead>
                 <tr className="bg-muted/50 border-b border-border">
                   <th className="p-3 text-center text-xs font-semibold text-muted-foreground w-28 uppercase border-r border-border">
-                    Time
+                    {t('schedule.timeLabel')}
                   </th>
                   {daysOfWeek.map((day) => (
                     <th key={day.day} className="p-3 text-center text-xs font-semibold text-foreground uppercase border-r border-border last:border-r-0">
@@ -289,7 +289,7 @@ export default function ScheduleAdminPage() {
                               <div>
                                 <div className="flex items-center justify-between gap-1">
                                   <span className="font-bold text-xs text-foreground truncate">
-                                    {slot.subject?.name || 'Subject'}
+                                    {slot.subject?.name || t('schedule.subjectLabel')}
                                   </span>
                                   <button
                                     onClick={(e) => {
@@ -309,7 +309,7 @@ export default function ScheduleAdminPage() {
                               <div className="flex items-center justify-between text-[11px] text-muted-foreground mt-2">
                                 <span className="flex items-center gap-1">
                                   <MapPin className="h-3 w-3" />
-                                  {slot.room || 'Room'}
+                                  {slot.room || t('schedule.room')}
                                 </span>
                               </div>
                             </div>
@@ -349,7 +349,7 @@ export default function ScheduleAdminPage() {
         >
           <form onSubmit={handleSaveSlot} className="space-y-4 py-2">
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-medium text-foreground">Subject</label>
+              <label className="text-sm font-medium text-foreground">{t('schedule.subjectLabel')}</label>
               <select
                 value={slotForm.subjectId}
                 onChange={(e) => setSlotForm({ ...slotForm, subjectId: e.target.value })}
@@ -380,8 +380,8 @@ export default function ScheduleAdminPage() {
               </div>
 
               <Input
-                label="Room"
-                placeholder="Room 101"
+                label={t('schedule.room')}
+                placeholder={t('schedule.roomPlaceholder')}
                 value={slotForm.room}
                 onChange={(e) => setSlotForm({ ...slotForm, room: e.target.value })}
               />
@@ -409,10 +409,10 @@ export default function ScheduleAdminPage() {
           isOpen={!!deleteTarget}
           onClose={() => setDeleteTarget(null)}
           onConfirm={handleDeleteSlot}
-          title="Remove Time Slot?"
-          description="Are you sure you want to remove this schedule slot from the timetable?"
+          title={t('schedule.removeTitle')}
+          description={t('schedule.deleteConfirm')}
           variant="danger"
-          confirmText="Remove Slot"
+          confirmText={t('schedule.deleteSlot')}
           isLoading={deleting}
         />
       </div>

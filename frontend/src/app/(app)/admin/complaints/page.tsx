@@ -93,7 +93,7 @@ export default function AdminComplaintsPage() {
             {complaints.length === 0 ? (
               <div className="text-center py-16">
                 <CheckCircle className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-                <p className="text-muted-foreground">No hay quejas pendientes</p>
+                <p className="text-muted-foreground">{t('complaints.empty')}</p>
               </div>
             ) : (
               complaints.map((c) => (
@@ -127,7 +127,7 @@ export default function AdminComplaintsPage() {
           {selected && (
             <Card className="lg:sticky lg:top-6 h-fit">
               <CardHeader>
-                <CardTitle className="text-lg">Resolver queja</CardTitle>
+                <CardTitle className="text-lg">{t('complaints.resolveTitle')}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -135,28 +135,28 @@ export default function AdminComplaintsPage() {
                   <p className="text-sm">{selected.description}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium block mb-1">Estado</label>
+                  <label className="text-sm font-medium block mb-1">{t('complaints.statusLabel')}</label>
                   <select
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="REVIEWING">En revisión</option>
-                    <option value="RESOLVED">Resuelto</option>
-                    <option value="DISMISSED">Desestimado</option>
+                    <option value="REVIEWING">{t('complaints.stReviewing')}</option>
+                    <option value="RESOLVED">{t('complaints.stResolved')}</option>
+                    <option value="DISMISSED">{t('complaints.stDismissed')}</option>
                   </select>
                 </div>
                 <div>
-                  <label className="text-sm font-medium block mb-1">Resolución</label>
+                  <label className="text-sm font-medium block mb-1">{t('complaints.resolutionLabel')}</label>
                   <textarea
                     className="w-full min-h-[100px] rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    placeholder="Describe la resolución..."
+                    placeholder={t('complaints.resolutionPlaceholder')}
                     value={resolution}
                     onChange={(e) => setResolution(e.target.value)}
                   />
                 </div>
                 <Button onClick={handleResolve} disabled={saving} className="w-full">
-                  {saving ? t('saving') : 'Resolver'}
+                  {saving ? t('common.saving') : t('complaints.resolve')}
                 </Button>
               </CardContent>
             </Card>
